@@ -25,6 +25,8 @@ jobs:
     needs: release-please
     runs-on: ubuntu-latest
     if: needs.release-please.outputs.release_created == 'true'
+    permissions:
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -39,6 +41,4 @@ jobs:
 
       - run: npm run build
 
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --provenance --access public
