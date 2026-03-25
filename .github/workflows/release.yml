@@ -24,9 +24,7 @@ jobs:
   publish:
     needs: release-please
     runs-on: ubuntu-latest
-    # Remove the `if: false` line below to enable publishing once you have
-    # created at least one release and added an NPM_TOKEN secret.
-    if: false # && needs.release-please.outputs.release_created == 'true'
+    if: needs.release-please.outputs.release_created == 'true'
 
     steps:
       - uses: actions/checkout@v4
