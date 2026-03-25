@@ -4,7 +4,7 @@
   "description": "Decorator-based seeder library for TypeORM",
   "repository": {
     "type": "git",
-    "url": "https://github.com/joakimbugge/to-seeder.git"
+    "url": "git+https://github.com/joakimbugge/to-seeder.git"
   },
   "homepage": "https://github.com/joakimbugge/to-seeder#readme",
   "bugs": "https://github.com/joakimbugge/to-seeder/issues",
