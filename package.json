@@ -6,10 +6,7 @@
     "lint:fix": "pnpm -r run lint:fix",
     "fmt": "pnpm -r run fmt"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": ["better-sqlite3", "lefthook"]
-  },
-  "devDependencies": {
+"devDependencies": {
     "lefthook": "^2.1.4",
     "oxfmt": "^0.42.0",
     "oxlint": "^1.57.0",
