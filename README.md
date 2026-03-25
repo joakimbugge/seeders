@@ -1,4 +1,4 @@
-# typeorm-seeder
+# @joakimbugge/typeorm-seeder
 
 Decorator-based entity seeding for TypeORM. Annotate your entity properties with `@Seed()`, then create or persist fully populated entity graphs with a single function call — including relations, embedded types, and circular guards. Organise complex seeding scenarios into `@Seeder` classes with declared dependencies that are automatically ordered and executed for you.
 
@@ -7,7 +7,7 @@ Decorator-based entity seeding for TypeORM. Annotate your entity properties with
 ## Installation
 
 ```bash
-npm install typeorm-seeder
+npm install @joakimbugge/typeorm-seeder
 ```
 
 `typeorm` and `reflect-metadata` are peer dependencies and must be installed alongside it.
@@ -36,7 +36,7 @@ Use `@Seed()` on any entity property to describe how it should be populated. Pla
 ```ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm'
 import { faker } from '@faker-js/faker'
-import { Seed } from 'typeorm-seeder'
+import { Seed } from '@joakimbugge/typeorm-seeder'
 
 @Entity()
 class Author {
@@ -72,7 +72,7 @@ class Book {
 >
 > When seeding `Author`, its `books` are seeded too. Each `Book` has an `author` relation back to `Author` — but seeding that would loop back to `Author`, which would seed more books, and so on forever.
 >
-> typeorm-seeder breaks the cycle at the point where a type would re-enter itself. In the example above, `book.author` is left `undefined` when seeding from `Author`. Seeding a `Book` directly works fine and does populate `book.author` — the cycle only cuts when a type is already being seeded higher up in the same chain.
+> @joakimbugge/typeorm-seeder breaks the cycle at the point where a type would re-enter itself. In the example above, `book.author` is left `undefined` when seeding from `Author`. Seeding a `Book` directly works fine and does populate `book.author` — the cycle only cuts when a type is already being seeded higher up in the same chain.
 
 ---
 
@@ -81,22 +81,10 @@ class Book {
 Call `seed(EntityClass)` to get a builder with four methods: `create`, `createMany`, `save`, and `saveMany`.
 
 ```ts
-import { seed } from 'typeorm-seeder'
+import { seed } from '@joakimbugge/typeorm-seeder'
 ```
 
-### In memory
-
-`create()` and `createMany()` build entity instances without touching the database. Useful for unit tests or for preparing entities before passing them to your own persistence logic.
-
-```ts
-const author = await seed(Author).create()
-// Plain Author instance — no id, fully populated relations
-
-const books = await seed(Book).createMany(10)
-// [Book, Book, …] — each with its own seeded Author
-```
-
-### Persisting
+### Saving
 
 `save()` and `saveMany()` create instances and write them to the database in one step. Pass a `DataSource` in the options.
 
@@ -107,6 +95,18 @@ const author = await seed(Author).save({ dataSource })
 
 const authors = await seed(Author).saveMany(5, { dataSource })
 // [Author, Author, Author, Author, Author] — each with their own books
+```
+
+### Without saving
+
+`create()` and `createMany()` build entity instances without touching the database. Useful for unit tests or for preparing entities before passing them to your own persistence logic.
+
+```ts
+const author = await seed(Author).create()
+// Plain Author instance — no id, fully populated relations
+
+const books = await seed(Book).createMany(10)
+// [Book, Book, …] — each with its own seeded Author
 ```
 
 ### Multiple entity types at once
@@ -165,8 +165,8 @@ role!: Role
 For production seeding scripts or structured test fixtures, organise your seeding logic into `@Seeder` classes. Declare dependencies between seeders and let the library figure out the execution order.
 
 ```ts
-import { Seeder, runSeeders, seed } from 'typeorm-seeder'
-import type { SeederInterface, SeedContext } from 'typeorm-seeder'
+import { Seeder, runSeeders, seed } from '@joakimbugge/typeorm-seeder'
+import type { SeederInterface, SeedContext } from '@joakimbugge/typeorm-seeder'
 
 @Seeder()
 class UserSeeder implements SeederInterface {
