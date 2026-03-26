@@ -56,19 +56,23 @@ jobs:
 
       - name: Publish released packages
         if: github.event_name == 'push'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           for path in $(echo '${{ needs.release-please.outputs.paths_released }}' | jq -r '.[]'); do
             pnpm --filter "./$path" run build
-            cd "$path" && npm publish --access public --provenance && cd -
+            cd "$path" && npm publish --access public && cd -
           done
 
       - name: Publish packages from tags
         if: github.event_name == 'workflow_dispatch'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           for tag in ${{ inputs.tags }}; do
             pkg=$(echo "$tag" | sed 's/-v[0-9].*//')
             path="packages/$pkg"
             git checkout "$tag" -- "$path"
             pnpm --filter "./$path" run build
-            cd "$path" && npm publish --access public --provenance && cd -
+            cd "$path" && npm publish --access public && cd -
           done
