@@ -19,6 +19,8 @@ export interface RunSeedersOptions extends SeedContext {
   onAfter?: (seeder: SeederCtor, durationMs: number) => void | Promise<void>;
   /** Called when a seeder throws. The error is re-thrown after this callback returns. */
   onError?: (seeder: SeederCtor, error: unknown) => void | Promise<void>;
+  /** Called for each seeder before it runs. Return `true` to skip it entirely. */
+  skip?: (seeder: SeederCtor) => boolean | Promise<boolean>;
 }
 
 function topoSort(roots: SeederCtor[]): SeederCtor[] {
@@ -68,9 +70,13 @@ export async function runSeeders(
   seeders: SeederCtor[],
   options: RunSeedersOptions = {},
 ): Promise<void> {
-  const { logging = true, onBefore, onAfter, onError, ...context } = options;
+  const { logging = true, onBefore, onAfter, onError, skip, ...context } = options;
 
   for (const SeederClass of topoSort(seeders)) {
+    if (await skip?.(SeederClass)) {
+      continue;
+    }
+
     if (logging) {
       console.log(`[${SeederClass.name}] Starting...`);
     }

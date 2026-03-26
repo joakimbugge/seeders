@@ -65,6 +65,102 @@ describe('seeder suites', () => {
     }
   });
 
+  describe('skip', () => {
+    it('does not run a seeder when skip returns true', async () => {
+      const spy = vi.fn();
+
+      @Seeder()
+      class SkippedSeeder {
+        async run(_ctx: SeedContext) {
+          spy();
+        }
+      }
+
+      await runSeeders([SkippedSeeder], { logging: false, skip: () => true });
+
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('runs a seeder when skip returns false', async () => {
+      const spy = vi.fn();
+
+      @Seeder()
+      class NotSkippedSeeder {
+        async run(_ctx: SeedContext) {
+          spy();
+        }
+      }
+
+      await runSeeders([NotSkippedSeeder], { logging: false, skip: () => false });
+
+      expect(spy).toHaveBeenCalledOnce();
+    });
+
+    it('receives the seeder constructor', async () => {
+      let received: SeederCtor | undefined;
+
+      @Seeder()
+      class SkipArgSeeder {
+        async run(_ctx: SeedContext) {}
+      }
+
+      await runSeeders([SkipArgSeeder], {
+        logging: false,
+        skip: (seeder) => {
+          received = seeder;
+          return false;
+        },
+      });
+
+      expect(received).toBe(SkipArgSeeder);
+    });
+
+    it('skips only the seeders for which skip returns true', async () => {
+      const order: string[] = [];
+
+      @Seeder()
+      class SkipSelA {
+        async run(_ctx: SeedContext) {
+          order.push('A');
+        }
+      }
+
+      @Seeder({ dependencies: [SkipSelA] })
+      class SkipSelB {
+        async run(_ctx: SeedContext) {
+          order.push('B');
+        }
+      }
+
+      await runSeeders([SkipSelB], {
+        logging: false,
+        skip: (seeder) => seeder === SkipSelA,
+      });
+
+      expect(order).toEqual(['B']);
+    });
+
+    it('does not call onBefore or onAfter for skipped seeders', async () => {
+      const onBefore = vi.fn();
+      const onAfter = vi.fn();
+
+      @Seeder()
+      class SkipHookSeeder {
+        async run(_ctx: SeedContext) {}
+      }
+
+      await runSeeders([SkipHookSeeder], {
+        logging: false,
+        skip: () => true,
+        onBefore,
+        onAfter,
+      });
+
+      expect(onBefore).not.toHaveBeenCalled();
+      expect(onAfter).not.toHaveBeenCalled();
+    });
+  });
+
   describe('basic execution', () => {
     it('runs a seeder with no dependencies', async () => {
       const spy = vi.fn();
