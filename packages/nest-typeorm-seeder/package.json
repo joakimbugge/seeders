@@ -1,5 +1,5 @@
 {
-  "name": "@joakimbugge/nestjs-typeorm-seeder",
+  "name": "@joakimbugge/nest-typeorm-seeder",
   "version": "0.1.0",
   "description": "NestJS module for @joakimbugge/typeorm-seeder",
   "repository": {

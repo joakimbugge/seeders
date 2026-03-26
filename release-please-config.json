@@ -4,7 +4,7 @@
     "packages/typeorm-seeder": {
       "release-type": "node"
     },
-    "packages/nestjs-typeorm-seeder": {
+    "packages/nest-typeorm-seeder": {
       "release-type": "node"
     }
   }

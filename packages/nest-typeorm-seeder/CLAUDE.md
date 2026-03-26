@@ -1,4 +1,4 @@
-# nestjs-typeorm-seeder
+# nest-typeorm-seeder
 
 ## File naming
 
