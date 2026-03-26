@@ -8,6 +8,10 @@ on:
       tags:
         description: 'Space-separated git tags to publish (e.g. typeorm-seeder-v0.3.0 nest-typeorm-seeder-v0.2.0)'
         required: true
+      dist-tag:
+        description: 'npm dist-tag (use "backfill" for older versions, "latest" for the newest)'
+        required: true
+        default: latest
 
 permissions:
   contents: write
@@ -74,5 +78,5 @@ jobs:
             path="packages/$pkg"
             git checkout "$tag" -- "$path"
             pnpm --filter "./$path" run build
-            cd "$path" && npm publish --access public && cd -
+            cd "$path" && npm publish --access public --tag ${{ inputs.dist-tag }} && cd -
           done
