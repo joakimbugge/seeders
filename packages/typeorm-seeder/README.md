@@ -2,6 +2,8 @@
 
 Decorator-based entity seeding for TypeORM. Annotate your entity properties with `@Seed()`, then create or persist fully populated entity graphs with a single function call — including relations, embedded types, and circular guards. Organise complex seeding scenarios into `@Seeder` classes with declared dependencies that are automatically ordered and executed for you.
 
+Coded by AI. Reviewed by humans.
+
 ---
 
 ## Installation

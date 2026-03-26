@@ -5,6 +5,8 @@ NestJS module for [@joakimbugge/typeorm-seeder](../typeorm-seeder). Runs your `@
 > [!TIP]
 > This package handles the NestJS integration. The seeding itself — `@Seed()`, `@Seeder`, `seed()`, entity factories — is all defined in [@joakimbugge/typeorm-seeder](../typeorm-seeder/README.md). Familiarity with that package will make this one much easier to use.
 
+Coded by AI. Reviewed by humans.
+
 ---
 
 ## Installation
@@ -87,6 +89,20 @@ When TypeORM's `dropSchema: true` is set, the entire schema — including the `s
 | `false` | `false` | Always runs (tracking disabled) |
 
 `dropSchema: true` is typical in development when you want a clean slate on every restart — seeding every run is exactly what you want in that scenario. `runOnce: true` with a persistent schema is the right default for staging and production, where duplicate data is the concern.
+
+### Evolving seed data
+
+Treat seeders the way you treat migrations: once a seeder has run in a persistent environment, consider it immutable. If you need more data or different data, create a new seeder class rather than editing the existing one:
+
+```ts
+@Seeder()
+class UserSeeder implements SeederInterface { ... }      // already ran, leave it alone
+
+@Seeder({ dependencies: [UserSeeder] })
+class UserSeederV2 implements SeederInterface { ... }   // adds more users on next boot
+```
+
+This keeps the history table accurate and avoids the question of what re-running a seeder would mean for data that already exists. This applies to environments where `dropSchema: false` and `runOnce: true` — in development with `dropSchema: true`, the schema is wiped on every restart anyway.
 
 ### Re-seeding
 
