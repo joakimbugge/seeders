@@ -9,6 +9,28 @@ export interface SeederModuleOptions {
   seeders: SeederCtor[];
   dataSource?: DataSource;
   relations?: boolean;
+  /**
+   * When `false`, seeding is skipped entirely. Useful for gating on an env var.
+   *
+   * @default true
+   */
+  enabled?: boolean;
+  /**
+   * Track executed seeders in a database table and skip them on subsequent boots.
+   * Set to `false` to always run every seeder regardless.
+   *
+   * When TypeORM's `dropSchema` is `true`, the history table is dropped with the
+   * rest of the schema on every start, so all seeders run regardless of this setting.
+   *
+   * @default true
+   */
+  runOnce?: boolean;
+  /**
+   * Name of the table used to track which seeders have run.
+   *
+   * @default 'seeders'
+   */
+  historyTableName?: string;
 }
 
 export interface SeederModuleAsyncOptions {

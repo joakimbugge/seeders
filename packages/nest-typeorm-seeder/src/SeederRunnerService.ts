@@ -6,6 +6,8 @@ import type { SeederModuleOptions } from './SeederModule.js';
 
 export const SEEDER_MODULE_OPTIONS = Symbol('SEEDER_MODULE_OPTIONS');
 
+const DEFAULT_HISTORY_TABLE = 'seeders';
+
 @Injectable()
 export class SeederRunnerService implements OnApplicationBootstrap {
   private readonly logger = new Logger(SeederRunnerService.name);
@@ -16,20 +18,71 @@ export class SeederRunnerService implements OnApplicationBootstrap {
   ) {}
 
   async onApplicationBootstrap(): Promise<void> {
+    if (this.options.enabled === false) {
+      return;
+    }
+
     const dataSource = await this.resolveDataSource();
+    const runOnce = this.options.runOnce ?? true;
+    const tableName = this.options.historyTableName ?? DEFAULT_HISTORY_TABLE;
+
+    let executedSeeders = new Set<string>();
+
+    if (runOnce) {
+      await this.ensureHistoryTable(dataSource, tableName);
+      executedSeeders = await this.getExecutedSeeders(dataSource, tableName);
+    }
 
     await runSeeders(this.options.seeders, {
       dataSource,
       relations: this.options.relations,
       logging: false,
+      skip: (seeder) => {
+        const shouldSkip = executedSeeders.has(seeder.name);
+
+        if (shouldSkip) {
+          this.logger.log(`[${seeder.name}] Skipping (already run)`);
+        }
+
+        return shouldSkip;
+      },
       onBefore: (seeder) => this.logger.log(`[${seeder.name}] Starting...`),
-      onAfter: (seeder, durationMs) => this.logger.log(`[${seeder.name}] Done in ${durationMs}ms`),
+      onAfter: async (seeder, durationMs) => {
+        if (runOnce) {
+          await this.recordRun(dataSource, tableName, seeder.name);
+        }
+
+        this.logger.log(`[${seeder.name}] Done in ${durationMs}ms`);
+      },
       onError: (seeder, error) =>
         this.logger.error(
           `[${seeder.name}] Failed`,
           error instanceof Error ? error.stack : String(error),
         ),
     });
+  }
+
+  private async ensureHistoryTable(dataSource: DataSource, tableName: string): Promise<void> {
+    await dataSource.query(
+      `CREATE TABLE IF NOT EXISTS "${tableName}" (name VARCHAR(255) PRIMARY KEY NOT NULL, executed_at VARCHAR(32) NOT NULL)`,
+    );
+  }
+
+  private async getExecutedSeeders(
+    dataSource: DataSource,
+    tableName: string,
+  ): Promise<Set<string>> {
+    const rows: { name: string }[] = await dataSource.query(`SELECT name FROM "${tableName}"`);
+
+    return new Set(rows.map((r) => r.name));
+  }
+
+  private async recordRun(dataSource: DataSource, tableName: string, name: string): Promise<void> {
+    const executedAt = new Date().toISOString();
+
+    await dataSource.query(
+      `INSERT INTO "${tableName}" (name, executed_at) VALUES ('${name}', '${executedAt}')`,
+    );
   }
 
   private async resolveDataSource(): Promise<DataSource> {

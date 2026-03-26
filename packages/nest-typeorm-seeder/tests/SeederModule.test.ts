@@ -93,6 +93,81 @@ describe('SeederModule', () => {
     });
   });
 
+  describe('enabled', () => {
+    it('skips seeding when enabled is false', async () => {
+      const dataSource = await createDataSource().initialize();
+
+      const moduleRef = await compileModule({
+        imports: [SeederModule.forRoot({ seeders: [UserSeeder], dataSource, enabled: false })],
+      });
+
+      await moduleRef.init();
+
+      expect(await dataSource.getRepository(User).count()).toBe(0);
+
+      await moduleRef.close();
+      await dataSource.destroy();
+    });
+  });
+
+  describe('runOnce', () => {
+    async function bootstrap(dataSource: DataSource, options?: object): Promise<void> {
+      const moduleRef = await compileModule({
+        imports: [SeederModule.forRoot({ seeders: [UserSeeder], dataSource, ...options })],
+      });
+      await moduleRef.init();
+      await moduleRef.close();
+    }
+
+    it('does not re-run seeders on a second bootstrap by default', async () => {
+      const dataSource = await createDataSource().initialize();
+
+      await bootstrap(dataSource);
+      await bootstrap(dataSource);
+
+      expect(await dataSource.getRepository(User).count()).toBe(1);
+
+      await dataSource.destroy();
+    });
+
+    it('re-runs seeders on each bootstrap when runOnce is false', async () => {
+      const dataSource = await createDataSource().initialize();
+
+      await bootstrap(dataSource, { runOnce: false });
+      await bootstrap(dataSource, { runOnce: false });
+
+      expect(await dataSource.getRepository(User).count()).toBe(2);
+
+      await dataSource.destroy();
+    });
+
+    it('records each seeder in the history table after it runs', async () => {
+      const dataSource = await createDataSource().initialize();
+
+      await bootstrap(dataSource);
+
+      const rows: { name: string }[] = await dataSource.query('SELECT name FROM "seeders"');
+
+      expect(rows.map((r) => r.name)).toContain('UserSeeder');
+
+      await dataSource.destroy();
+    });
+
+    it('uses a custom history table name', async () => {
+      const dataSource = await createDataSource().initialize();
+
+      await bootstrap(dataSource, { historyTableName: 'custom_seed_history' });
+
+      const rows: { name: string }[] = await dataSource.query(
+        'SELECT name FROM "custom_seed_history"',
+      );
+
+      expect(rows.map((r) => r.name)).toContain('UserSeeder');
+
+      await dataSource.destroy();
+    });
+  });
+
   describe('forRootAsync', () => {
     it('runs seeders using a DataSource resolved from a factory', async () => {
       const dataSource = await createDataSource().initialize();
