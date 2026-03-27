@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { faker } from '@faker-js/faker';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Seed, createManySeed, createSeed } from '../../src';
+import { Seed, createMany, create } from '../../src';
 
 // ---------------------------------------------------------------------------
 // Embedded class — not an entity, just a group of columns with @Seed entries.
@@ -58,7 +58,7 @@ describe('embedded entities', () => {
   });
 
   it('auto-seeds an embedded class without @Seed on the parent property', async () => {
-    const customer = await createSeed(Customer);
+    const customer = await create(Customer);
 
     expect(customer.address).toBeDefined();
     expect(typeof customer.address.street).toBe('string');
@@ -68,7 +68,7 @@ describe('embedded entities', () => {
 
   it('persists the embedded columns to the database', async () => {
     const repo = dataSource.getRepository(Customer);
-    const saved = await repo.save(await createSeed(Customer));
+    const saved = await repo.save(await create(Customer));
     const fetched = await repo.findOneByOrFail({ id: saved.id });
 
     expect(fetched.address.street).toBe(saved.address.street);
@@ -78,7 +78,7 @@ describe('embedded entities', () => {
 
   it('each seeded instance gets an independently generated address', async () => {
     const repo = dataSource.getRepository(Customer);
-    const [a, b] = await repo.save(await createManySeed(Customer, { count: 2 }));
+    const [a, b] = await repo.save(await createMany(Customer, { count: 2 }));
 
     expect(a.id).not.toBe(b.id);
     expect(a.address).not.toBe(b.address);

@@ -419,7 +419,7 @@ seed([Author, Book]).save(options): Promise<[Author, Book]>
 seed([Author, Book]).saveMany(count, options): Promise<[Author[], Book[]]>
 ```
 
-**`SeedCreateOptions<T>`** — passed to `create()` and `createMany()` on the single-class form
+**`CreateOptions<T>`** — passed to `create()` and `createMany()` on the single-class form
 
 | Property | Type | Description |
 |---|---|---|
@@ -427,7 +427,7 @@ seed([Author, Book]).saveMany(count, options): Promise<[Author[], Book[]]>
 | `relations` | `boolean?` | Set to `false` to skip relation seeding. Defaults to `true`. |
 | `values` | `Partial<T>?` | Property values applied after all `@Seed` factories have run. Wins unconditionally — factories still execute but their output is overwritten. Also works for properties with no `@Seed` decorator. |
 
-**`SeedSaveOptions<T>`** — passed to `save()` and `saveMany()` on the single-class form
+**`SaveOptions<T>`** — passed to `save()` and `saveMany()` on the single-class form
 
 | Property | Type | Description |
 |---|---|---|

@@ -9,10 +9,10 @@ import type {
 import { getSeeds } from './registry.js';
 
 /**
- * Options for {@link createSeed} and {@link createManySeed} on the single-class form.
+ * Options for {@link create} and {@link createMany} on the single-class form.
  * Extends {@link SeedContext} with a typed `values` override map.
  */
-export interface SeedCreateOptions<T extends EntityInstance> extends SeedContext {
+export interface CreateOptions<T extends EntityInstance> extends SeedContext {
   /**
    * Property values to apply after all `@Seed` factories have run.
    * Wins unconditionally — factories still execute but their output is overwritten.
@@ -25,9 +25,10 @@ export interface SeedCreateOptions<T extends EntityInstance> extends SeedContext
   values?: Partial<T>;
 }
 
-/** Options for {@link createManySeed}. Extends {@link SeedContext} with a required instance count. */
-export interface SeedCreateManyOptions extends SeedContext {
+/** Options for {@link createMany}. Extends {@link SeedContext} with a required instance count. */
+export interface CreateManyOptions<T extends EntityInstance = EntityInstance> extends SeedContext {
   count: number;
+  values?: Partial<T>;
 }
 
 // Internal extension of SeedContext — never exposed in the public API.
@@ -69,7 +70,7 @@ function getClassHierarchy(target: Function): Function[] {
  * 3. Bare relation decorators (`@Seed()` without a factory) — skipped when `relations` is `false`,
  *    and also skipped for any related class already present in the ancestor chain (circular guard).
  */
-async function createOneSeed<T extends EntityInstance>(
+async function createOne<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
   context: SeedContext,
 ): Promise<T> {
@@ -100,7 +101,7 @@ async function createOneSeed<T extends EntityInstance>(
     const EmbeddedClass = embedded.type() as EntityConstructor;
 
     if (getSeeds(EmbeddedClass).length > 0) {
-      record[embedded.propertyName] = await createOneSeed(EmbeddedClass, context);
+      record[embedded.propertyName] = await createOne(EmbeddedClass, context);
       seededProperties.add(embedded.propertyName);
     }
   }
@@ -135,12 +136,12 @@ async function createOneSeed<T extends EntityInstance>(
       relation.relationType === 'one-to-many' || relation.relationType === 'many-to-many';
 
     if (isArray) {
-      record[propertyKey] = await createManySeed(RelatedClass, {
+      record[propertyKey] = await createMany(RelatedClass, {
         count: options.count ?? 1,
         ...childContext,
       });
     } else {
-      record[propertyKey] = await createOneSeed(RelatedClass, childContext);
+      record[propertyKey] = await createOne(RelatedClass, childContext);
     }
 
     seededProperties.add(propertyKey);
@@ -156,32 +157,34 @@ async function createOneSeed<T extends EntityInstance>(
  * (pass `relations: true` in the context to override). Returns a tuple of
  * instances in the same order as the input array.
  */
-export async function createSeed<T extends EntityInstance>(
+export async function create<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  context?: SeedContext,
+  options?: CreateOptions<T>,
 ): Promise<T>;
-export async function createSeed<T extends readonly EntityConstructor[]>(
+export async function create<T extends readonly EntityConstructor[]>(
   EntityClasses: [...T],
   context?: SeedContext,
 ): Promise<MapToInstances<T>>;
-export async function createSeed<T extends EntityInstance>(
+export async function create<T extends EntityInstance>(
   classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
-  context: SeedContext = {},
+  options: CreateOptions<T> = {},
 ): Promise<T | EntityInstance[]> {
   if (Array.isArray(classOrClasses)) {
-    const effectiveContext: SeedContext = { relations: false, ...context };
+    const effectiveContext: SeedContext = { relations: false, ...options };
 
     return (await Promise.all(
-      (classOrClasses as EntityConstructor[]).map((cls) => createOneSeed(cls, effectiveContext)),
+      (classOrClasses as EntityConstructor[]).map((cls) => createOne(cls, effectiveContext)),
     )) as EntityInstance[];
   }
 
-  const [entity] = await createManySeed(classOrClasses as EntityConstructor<T>, {
-    count: 1,
-    ...context,
-  });
+  const { values, ...context } = options as CreateOptions<T>;
+  const instance = await createOne(classOrClasses as EntityConstructor<T>, context);
 
-  return entity!;
+  if (values) {
+    Object.assign(instance, values);
+  }
+
+  return instance;
 }
 
 /**
@@ -191,31 +194,35 @@ export async function createSeed<T extends EntityInstance>(
  * containing `count` instances. Relation seeding is disabled by default for the
  * array variant; pass `relations: true` in the options to override.
  */
-export async function createManySeed<T extends EntityInstance>(
+export async function createMany<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  options: SeedCreateManyOptions,
+  options: CreateManyOptions<T>,
 ): Promise<T[]>;
-export async function createManySeed<T extends readonly EntityConstructor[]>(
+export async function createMany<T extends readonly EntityConstructor[]>(
   EntityClasses: [...T],
-  options: SeedCreateManyOptions,
+  options: CreateManyOptions,
 ): Promise<MapToInstanceArrays<T>>;
-export async function createManySeed<T extends EntityInstance>(
+export async function createMany<T extends EntityInstance>(
   classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
-  { count, ...context }: SeedCreateManyOptions,
+  { count, values, ...context }: CreateManyOptions<T>,
 ): Promise<T[] | EntityInstance[][]> {
   if (Array.isArray(classOrClasses)) {
     const effectiveContext: SeedContext = { relations: false, ...context };
 
     return (await Promise.all(
       (classOrClasses as EntityConstructor[]).map((cls) =>
-        Promise.all(Array.from({ length: count }, () => createOneSeed(cls, effectiveContext))),
+        Promise.all(Array.from({ length: count }, () => createOne(cls, effectiveContext))),
       ),
     )) as EntityInstance[][];
   }
 
-  return await Promise.all(
-    Array.from({ length: count }, () =>
-      createOneSeed(classOrClasses as EntityConstructor<T>, context),
-    ),
+  const instances = await Promise.all(
+    Array.from({ length: count }, () => createOne(classOrClasses as EntityConstructor<T>, context)),
   );
+
+  if (values) {
+    instances.forEach((e) => Object.assign(e, values));
+  }
+
+  return instances;
 }

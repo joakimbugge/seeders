@@ -13,7 +13,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Seed, createSeed, saveSeed } from '../../src';
+import { Seed, create, save } from '../../src';
 
 // ---------------------------------------------------------------------------
 // One-to-one: User owns one Profile
@@ -164,7 +164,7 @@ describe('relation seeding', () => {
 
   describe('one-to-one', () => {
     it('seeds and persists both sides without cascade on the entity', async () => {
-      const saved = await saveSeed(User, { dataSource });
+      const saved = await save(User, { dataSource });
       const fetched = await dataSource
         .getRepository(User)
         .findOneOrFail({ where: { id: saved.id }, relations: { profile: true } });
@@ -176,7 +176,7 @@ describe('relation seeding', () => {
 
   describe('one-to-many', () => {
     it('seeds and persists all related entities without cascade on the entity', async () => {
-      const saved = await saveSeed(Project, { dataSource });
+      const saved = await save(Project, { dataSource });
       const fetched = await dataSource
         .getRepository(Project)
         .findOneOrFail({ where: { id: saved.id }, relations: { tasks: true } });
@@ -186,7 +186,7 @@ describe('relation seeding', () => {
     });
 
     it('undecorated back-reference on Task is not seeded', async () => {
-      const project = await createSeed(Project);
+      const project = await create(Project);
 
       project.tasks.forEach((t) => expect(t.project).toBeUndefined());
     });
@@ -194,7 +194,7 @@ describe('relation seeding', () => {
 
   describe('many-to-many', () => {
     it('seeds and persists the join table without cascade on the entity', async () => {
-      const saved = await saveSeed(Article, { dataSource });
+      const saved = await save(Article, { dataSource });
       const fetched = await dataSource
         .getRepository(Article)
         .findOneOrFail({ where: { id: saved.id }, relations: { tags: true } });
@@ -205,19 +205,19 @@ describe('relation seeding', () => {
 
   describe('relations: false', () => {
     it('skips relation properties and leaves them undefined', async () => {
-      const author = await createSeed(Author, { relations: false });
+      const author = await create(Author, { relations: false });
 
       expect(author.books).toBeUndefined();
     });
 
     it('still seeds scalar properties', async () => {
-      const author = await createSeed(Author, { relations: false });
+      const author = await create(Author, { relations: false });
 
       expect(typeof author.name).toBe('string');
     });
 
     it('saves and skips relation properties', async () => {
-      const saved = await saveSeed(User, { dataSource, relations: false });
+      const saved = await save(User, { dataSource, relations: false });
       const fetched = await dataSource
         .getRepository(User)
         .findOneOrFail({ where: { id: saved.id }, relations: { profile: true } });
@@ -228,7 +228,7 @@ describe('relation seeding', () => {
 
   describe('circular relations', () => {
     it('cuts the cycle at the ancestor boundary — books are created, their author is not', async () => {
-      const author = await createSeed(Author);
+      const author = await create(Author);
 
       expect(author.books).toHaveLength(2);
       author.books.forEach((book) => {
@@ -239,7 +239,7 @@ describe('relation seeding', () => {
     });
 
     it('standalone Book seeding (no cycle) does create its author', async () => {
-      const book = await createSeed(Book);
+      const book = await create(Book);
 
       expect(book.author).toBeDefined();
       expect(typeof book.author.name).toBe('string');

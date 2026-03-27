@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { faker } from '@faker-js/faker';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Seed, createManySeed, createSeed } from '../../src';
+import { Seed, createMany, create } from '../../src';
 
 @Entity()
 class User {
@@ -61,7 +61,7 @@ describe('seeder integration', () => {
   });
 
   it('seeds and persists a User', async () => {
-    const saved = await dataSource.getRepository(User).save(await createSeed(User));
+    const saved = await dataSource.getRepository(User).save(await create(User));
 
     expect(saved.id).toBeGreaterThan(0);
     expect(typeof saved.name).toBe('string');
@@ -72,7 +72,7 @@ describe('seeder integration', () => {
   });
 
   it('seeds and persists a Post', async () => {
-    const saved = await dataSource.getRepository(Post).save(await createSeed(Post));
+    const saved = await dataSource.getRepository(Post).save(await create(Post));
 
     expect(saved.id).toBeGreaterThan(0);
     expect(typeof saved.title).toBe('string');
@@ -80,10 +80,8 @@ describe('seeder integration', () => {
     expect(typeof saved.published).toBe('boolean');
   });
 
-  it('seeds multiple entities via createManySeed', async () => {
-    const saved = await dataSource
-      .getRepository(User)
-      .save(await createManySeed(User, { count: 3 }));
+  it('seeds multiple entities via createMany', async () => {
+    const saved = await dataSource.getRepository(User).save(await createMany(User, { count: 3 }));
 
     expect(saved).toHaveLength(3);
     expect(new Set((saved as User[]).map((u) => u.id)).size).toBe(3);
@@ -91,7 +89,7 @@ describe('seeder integration', () => {
 
   it('persisted values survive a fresh repository query', async () => {
     const repo = dataSource.getRepository(User);
-    const saved = await repo.save(await createSeed(User));
+    const saved = await repo.save(await create(User));
     const fetched = await repo.findOneByOrFail({ id: saved.id });
 
     expect(fetched.name).toBe(saved.name);
@@ -111,7 +109,7 @@ describe('seeder integration', () => {
       value!: string;
     }
 
-    await createSeed(Probe, { dataSource });
+    await create(Probe, { dataSource });
 
     expect(receivedDataSource).toBe(dataSource);
   });

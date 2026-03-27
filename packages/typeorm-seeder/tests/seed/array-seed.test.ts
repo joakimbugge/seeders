@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
 } from 'typeorm';
-import { Seed, createManySeed, createSeed, saveManySeed, saveSeed } from '../../src';
+import { Seed, createMany, create, saveMany, save } from '../../src';
 
 // ---------------------------------------------------------------------------
 // Entities
@@ -78,37 +78,37 @@ describe('array seed', () => {
     }
   });
 
-  describe('createSeed', () => {
+  describe('create', () => {
     it('returns a tuple of instances matching the input array', async () => {
-      const [writer, publisher] = await createSeed([Writer, Publisher]);
+      const [writer, publisher] = await create([Writer, Publisher]);
 
       expect(writer).toBeInstanceOf(Writer);
       expect(publisher).toBeInstanceOf(Publisher);
     });
 
     it('seeds scalar properties on each entity', async () => {
-      const [writer, publisher] = await createSeed([Writer, Publisher]);
+      const [writer, publisher] = await create([Writer, Publisher]);
 
       expect(typeof writer.name).toBe('string');
       expect(typeof publisher.name).toBe('string');
     });
 
     it('skips relation seeding by default', async () => {
-      const [writer] = await createSeed([Writer, Publisher]);
+      const [writer] = await create([Writer, Publisher]);
 
       expect(writer.novels).toBeUndefined();
     });
 
     it('seeds relations when relations: true is passed', async () => {
-      const [writer] = await createSeed([Writer, Publisher], { relations: true });
+      const [writer] = await create([Writer, Publisher], { relations: true });
 
       expect(writer.novels).toHaveLength(2);
     });
   });
 
-  describe('createManySeed', () => {
+  describe('createMany', () => {
     it('returns arrays of instances per class', async () => {
-      const [writers, publishers] = await createManySeed([Writer, Publisher], { count: 3 });
+      const [writers, publishers] = await createMany([Writer, Publisher], { count: 3 });
 
       expect(writers).toHaveLength(3);
       expect(publishers).toHaveLength(3);
@@ -117,21 +117,21 @@ describe('array seed', () => {
     });
 
     it('skips relations by default', async () => {
-      const [writers] = await createManySeed([Writer, Publisher], { count: 2 });
+      const [writers] = await createMany([Writer, Publisher], { count: 2 });
 
       writers.forEach((w) => expect(w.novels).toBeUndefined());
     });
 
     it('seeds relations when relations: true is passed', async () => {
-      const [writers] = await createManySeed([Writer, Publisher], { count: 2, relations: true });
+      const [writers] = await createMany([Writer, Publisher], { count: 2, relations: true });
 
       writers.forEach((w) => expect(w.novels).toHaveLength(2));
     });
   });
 
-  describe('saveManySeed', () => {
+  describe('saveMany', () => {
     it('persists arrays of instances per class', async () => {
-      const [writers, publishers] = await saveManySeed([Writer, Publisher], {
+      const [writers, publishers] = await saveMany([Writer, Publisher], {
         count: 2,
         dataSource,
       });
@@ -143,7 +143,7 @@ describe('array seed', () => {
     });
 
     it('skips relation seeding by default', async () => {
-      const [writers] = await saveManySeed([Writer, Publisher], { count: 1, dataSource });
+      const [writers] = await saveMany([Writer, Publisher], { count: 1, dataSource });
       const fetched = await dataSource
         .getRepository(Writer)
         .findOneOrFail({ where: { id: writers[0]!.id }, relations: { novels: true } });
@@ -152,16 +152,16 @@ describe('array seed', () => {
     });
   });
 
-  describe('saveSeed', () => {
+  describe('save', () => {
     it('persists each entity independently', async () => {
-      const [writer, publisher] = await saveSeed([Writer, Publisher], { dataSource });
+      const [writer, publisher] = await save([Writer, Publisher], { dataSource });
 
       expect(writer.id).toBeGreaterThan(0);
       expect(publisher.id).toBeGreaterThan(0);
     });
 
     it('skips relation seeding by default', async () => {
-      const [writer] = await saveSeed([Writer, Publisher], { dataSource });
+      const [writer] = await save([Writer, Publisher], { dataSource });
       const fetched = await dataSource
         .getRepository(Writer)
         .findOneOrFail({ where: { id: writer.id }, relations: { novels: true } });
@@ -170,7 +170,7 @@ describe('array seed', () => {
     });
 
     it('seeds and persists relations when relations: true is passed', async () => {
-      const [writer] = await saveSeed([Writer, Publisher], { dataSource, relations: true });
+      const [writer] = await save([Writer, Publisher], { dataSource, relations: true });
       const fetched = await dataSource
         .getRepository(Writer)
         .findOneOrFail({ where: { id: writer.id }, relations: { novels: true } });

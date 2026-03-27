@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   TableInheritance,
 } from 'typeorm';
-import { Seed, createSeed } from '../../src';
+import { Seed, create } from '../../src';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -61,7 +61,7 @@ describe('entity inheritance', () => {
   });
 
   it('seeds inherited parent properties alongside child properties', async () => {
-    const car = await createSeed(Car);
+    const car = await create(Car);
 
     expect(typeof car.make).toBe('string');
     expect(typeof car.model).toBe('string');
@@ -70,7 +70,7 @@ describe('entity inheritance', () => {
   });
 
   it('persists a child entity including inherited columns', async () => {
-    const car = await dataSource.getRepository(Vehicle).save(await createSeed(Car));
+    const car = await dataSource.getRepository(Vehicle).save(await create(Car));
 
     expect(car.id).toBeGreaterThan(0);
     expect(typeof car.make).toBe('string');
@@ -79,8 +79,8 @@ describe('entity inheritance', () => {
 
   it('different child types share the same table but seed independently', async () => {
     const repo = dataSource.getRepository(Vehicle);
-    const car = await repo.save(await createSeed(Car));
-    const truck = await repo.save(await createSeed(Truck));
+    const car = await repo.save(await create(Car));
+    const truck = await repo.save(await create(Truck));
 
     const all = await repo.find();
     const ids = all.map((v) => v.id);
@@ -89,8 +89,8 @@ describe('entity inheritance', () => {
   });
 
   it('child-only properties are not present on sibling child instances', async () => {
-    const car = await createSeed(Car);
-    const truck = await createSeed(Truck);
+    const car = await create(Car);
+    const truck = await create(Truck);
 
     expect((car as unknown as Truck).payloadTons).toBeUndefined();
     expect((truck as unknown as Car).doors).toBeUndefined();

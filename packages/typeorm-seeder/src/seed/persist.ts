@@ -1,6 +1,5 @@
 import { type DataSource } from 'typeorm';
-
-import { createManySeed } from './creator.js';
+import { createMany } from './creator.js';
 import type {
   EntityConstructor,
   EntityInstance,
@@ -9,8 +8,8 @@ import type {
   SeedContext,
 } from './registry.js';
 
-/** Options for {@link saveSeed}. Extends {@link SeedContext} with a required DataSource. */
-export interface SeedSaveOptions<T extends EntityInstance = EntityInstance> extends SeedContext {
+/** Options for {@link save}. Extends {@link SeedContext} with a required DataSource. */
+export interface SaveOptions<T extends EntityInstance = EntityInstance> extends SeedContext {
   dataSource: DataSource;
   /**
    * Property values to apply to each entity after seeding and before persisting.
@@ -26,10 +25,8 @@ export interface SeedSaveOptions<T extends EntityInstance = EntityInstance> exte
   values?: Partial<T>;
 }
 
-/** Options for {@link saveManySeed}. Extends {@link SeedSaveOptions} with a required instance count. */
-export interface SeedSaveManyOptions<
-  T extends EntityInstance = EntityInstance,
-> extends SeedSaveOptions<T> {
+/** Options for {@link saveMany}. Extends {@link SaveOptions} with a required instance count. */
+export interface SaveManyOptions<T extends EntityInstance = EntityInstance> extends SaveOptions<T> {
   count: number;
 }
 
@@ -114,35 +111,34 @@ function restoreCascade(states: CascadeState[]): void {
 
 /**
  * Creates and persists a seed entity and all its seeded relations.
- * Delegates to {@link saveManySeed} with `count: 1` and unwraps the result.
  */
-export async function saveSeed<T extends EntityInstance>(
+export async function save<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  options: SeedSaveOptions<T>,
+  options: SaveOptions<T>,
 ): Promise<T>;
 /**
  * Creates and persists one instance of each entity class in the array.
  * Relation seeding is disabled by default; pass `relations: true` to override.
  */
-export async function saveSeed<T extends readonly EntityConstructor[]>(
+export async function save<T extends readonly EntityConstructor[]>(
   EntityClasses: [...T],
-  options: SeedSaveOptions,
+  options: SaveOptions,
 ): Promise<MapToInstances<T>>;
-export async function saveSeed<T extends EntityInstance>(
+export async function save<T extends EntityInstance>(
   classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
-  options: SeedSaveOptions<T>,
+  options: SaveOptions<T>,
 ): Promise<T | EntityInstance[]> {
   if (Array.isArray(classOrClasses)) {
     const effectiveOptions = { relations: false, ...options, count: 1 };
 
     return (await Promise.all(
       (classOrClasses as EntityConstructor[]).map((cls) =>
-        saveManySeed(cls, effectiveOptions).then(([entity]) => entity!),
+        saveBatch(cls, effectiveOptions).then(([entity]) => entity!),
       ),
     )) as EntityInstance[];
   }
 
-  const [entity] = await saveManySeed(classOrClasses as EntityConstructor<T>, {
+  const [entity] = await saveBatch(classOrClasses as EntityConstructor<T>, {
     ...options,
     count: 1,
   });
@@ -152,43 +148,46 @@ export async function saveSeed<T extends EntityInstance>(
 
 /**
  * Creates and persists multiple seed entities of the same class.
- * Applies the same logic as {@link saveSeed} for each entity.
+ * Applies the same logic as {@link save} for each entity.
  */
-export async function saveManySeed<T extends EntityInstance>(
+export async function saveMany<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  options: SeedSaveManyOptions<T>,
+  options: SaveManyOptions<T>,
 ): Promise<T[]>;
 /**
  * Creates and persists multiple instances of each entity class in the array.
  * Relation seeding is disabled by default; pass `relations: true` to override.
  */
-export async function saveManySeed<T extends readonly EntityConstructor[]>(
+export async function saveMany<T extends readonly EntityConstructor[]>(
   EntityClasses: [...T],
-  options: SeedSaveManyOptions,
+  options: SaveManyOptions,
 ): Promise<MapToInstanceArrays<T>>;
-export async function saveManySeed<T extends EntityInstance>(
+export async function saveMany<T extends EntityInstance>(
   classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
-  options: SeedSaveManyOptions<T>,
+  options: SaveManyOptions<T>,
 ): Promise<T[] | EntityInstance[][]> {
   if (Array.isArray(classOrClasses)) {
     const effectiveOptions = { relations: false, ...options };
 
     return (await Promise.all(
-      (classOrClasses as EntityConstructor[]).map((cls) => saveManySeedOne(cls, effectiveOptions)),
+      (classOrClasses as EntityConstructor[]).map((cls) => saveBatch(cls, effectiveOptions)),
     )) as EntityInstance[][];
   }
 
-  return await saveManySeedOne(classOrClasses as EntityConstructor<T>, options);
+  return await saveBatch(classOrClasses as EntityConstructor<T>, options);
 }
 
 /**
- * Creates and persists `count` instances of a single entity class.
+ * Creates and persists `count` instances of a single entity class in one batched
+ * `repository.save()` call. Batching is intentional — it is more efficient than
+ * saving each instance individually, as TypeORM can consolidate the inserts.
+ *
  * Enables cascade inserts on every entity class in the object graph before saving,
  * then restores the original flags — regardless of whether the save succeeds or fails.
  */
-async function saveManySeedOne<T extends EntityInstance>(
+async function saveBatch<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  options: SeedSaveManyOptions<T>,
+  options: SaveManyOptions<T>,
 ): Promise<T[]> {
   const { count, dataSource } = options;
 
@@ -196,11 +195,7 @@ async function saveManySeedOne<T extends EntityInstance>(
     return [];
   }
 
-  const entities = await createManySeed(EntityClass, options);
-
-  if (options.values) {
-    entities.forEach((e) => Object.assign(e, options.values));
-  }
+  const entities = await createMany(EntityClass, options);
 
   const visited = new Set<Function>();
   const states = entities
