@@ -15,4 +15,5 @@ export type {
 } from './seed/registry.js';
 export type { CreateManySeedOptions } from './seed/creator.js';
 export type { SaveSeedOptions, SaveManySeedOptions } from './seed/persist.js';
+export type { SeedCreateContext, SeedSaveOptions } from './seed/builder.js';
 export type { SeederInterface, SeederOptions } from './seeder/decorator.js';

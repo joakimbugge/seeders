@@ -12,6 +12,16 @@ import type {
 /** Options for {@link saveSeed}. Extends {@link SeedContext} with a required DataSource. */
 export interface SaveSeedOptions extends SeedContext {
   dataSource: DataSource;
+  /**
+   * Property values to apply to each entity after seeding and before persisting.
+   * Wins unconditionally over `@Seed` factory output — the factory still runs,
+   * but its result is overwritten. Also works for properties that have no `@Seed`
+   * decorator at all.
+   *
+   * Prefer the typed {@link SeedSaveOptions} from the `seed()` builder, which
+   * narrows this to `Partial<T>` for the specific entity class.
+   */
+  values?: object;
 }
 
 /** Options for {@link saveManySeed}. Extends {@link SaveSeedOptions} with a required instance count. */
@@ -183,6 +193,10 @@ async function saveManySeedOne<T extends EntityInstance>(
   }
 
   const entities = await createManySeed(EntityClass, options);
+
+  if (options.values) {
+    entities.forEach((e) => Object.assign(e, options.values));
+  }
 
   const visited = new Set<Function>();
   const states = entities

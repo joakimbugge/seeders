@@ -5,6 +5,7 @@ import {
   Column,
   DataSource,
   Entity,
+  In,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -119,6 +120,50 @@ describe('seed() builder', () => {
 
       expect(directors).toHaveLength(3);
       directors.forEach((d) => expect(d.id).toBeGreaterThan(0));
+    });
+  });
+
+  describe('values — post-seed overrides', () => {
+    it('create() overrides a @Seed-decorated property', async () => {
+      const director = await seed(Director).create({ values: { name: 'Override' } });
+
+      expect(director.name).toBe('Override');
+    });
+
+    it('create() sets a property with no @Seed decorator', async () => {
+      const director = await seed(Director).create({ values: { id: 999 } });
+
+      expect(director.id).toBe(999);
+    });
+
+    it('createMany() applies the same values to every instance', async () => {
+      const directors = await seed(Director).createMany(3, { values: { name: 'Same' } });
+
+      expect(directors).toHaveLength(3);
+      directors.forEach((d) => expect(d.name).toBe('Same'));
+    });
+
+    it('save() persists the overridden value', async () => {
+      const saved = await seed(Director).save({ dataSource, values: { name: 'Persisted' } });
+
+      const fetched = await dataSource
+        .getRepository(Director)
+        .findOneOrFail({ where: { id: saved.id } });
+
+      expect(fetched.name).toBe('Persisted');
+    });
+
+    it('saveMany() applies values to all persisted instances', async () => {
+      const saved = await seed(Director).saveMany(3, {
+        dataSource,
+        values: { name: 'Shared' },
+      });
+
+      const ids = saved.map((d) => d.id);
+      const fetched = await dataSource.getRepository(Director).findBy({ id: In(ids) });
+
+      expect(fetched).toHaveLength(3);
+      fetched.forEach((d) => expect(d.name).toBe('Shared'));
     });
   });
 

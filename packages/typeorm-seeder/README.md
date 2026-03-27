@@ -173,6 +173,32 @@ If a factory needs to query the database, the `dataSource` you provide in option
 role!: Role
 ```
 
+> [!TIP]
+> For anything more complex than a simple lookup — such as picking a random element from a result set — prefer the [`values` option](#overriding-seeded-values) instead. It keeps that logic in the call site rather than the entity decorator.
+
+### Overriding seeded values
+
+Pass a `values` map to inject specific values after all `@Seed` factories have run:
+
+```ts
+const booking = await seed(Booking).create({ values: { status: 'confirmed' } })
+// status is set even if Booking has no @Seed on it
+
+const booking = await seed(Booking).save({ dataSource, values: { user, status: 'confirmed' } })
+
+const bookings = await seed(Booking).createMany(5, { values: { user } })
+// all 5 get the same user
+
+const bookings = await seed(Booking).saveMany(5, { dataSource, values: { user } })
+```
+
+`values` wins unconditionally: if a property has a `@Seed` factory, the factory still runs but its result is overwritten. `values` also works for properties with no `@Seed` decorator at all.
+
+> [!NOTE]
+> `values` are applied **after** all `@Seed` factories have finished, so they are never visible on `self` inside a factory callback.
+
+---
+
 ### Depending on earlier properties
 
 Properties are seeded in declaration order. Each factory receives the partially-built entity as its second argument (`self`), so a property can read any value that was seeded above it:
@@ -231,21 +257,22 @@ Circular dependencies between seeders are detected at runtime and throw an error
 
 ## Seeding without `@Seed()`
 
-`@Seed()` is a convenience — it is not required. If you want to seed with explicit, fixed values rather than generated ones, use TypeORM's `Repository` or `EntityManager` directly inside `run()`. Both are available through the `dataSource` from `SeedContext`:
+`@Seed()` is a convenience — it is not required. Complex seeding logic that would clutter entity decorators belongs in the seeder suite instead. Use the [`values` option](#overriding-seeded-values) to inject the result at call time, keeping your entities simple:
 
 ```ts
-@Seeder()
-class UserSeeder implements SeederInterface {
+@Seeder({ dependencies: [UserSeeder] })
+class BookingSeeder implements SeederInterface {
   async run({ dataSource }: SeedContext): Promise<void> {
-    await dataSource!.getRepository(User).save([
-      { name: 'Alice', role: 'admin' },
-      { name: 'Bob', role: 'user' },
-    ])
+    const users = await dataSource!.getRepository(User).find()
+    const user = faker.helpers.arrayElement(users)
+
+    // user is resolved here and injected — Booking stays simple
+    await seed(Booking).saveMany(10, { dataSource, values: { user } })
   }
 }
 ```
 
-You can mix both approaches freely — use `@Seed()` for entities where generated data is fine, and explicit values where the content matters.
+If you need full control — inserting specific rows, running raw queries, or using TypeORM's `EntityManager` — the `dataSource` from `SeedContext` gives you direct access to any TypeORM API.
 
 ---
 
@@ -391,6 +418,22 @@ seed([Author, Book]).createMany(count, context?): Promise<[Author[], Book[]]>
 seed([Author, Book]).save(options): Promise<[Author, Book]>
 seed([Author, Book]).saveMany(count, options): Promise<[Author[], Book[]]>
 ```
+
+**`SeedCreateContext<T>`** — passed to `create()` and `createMany()` on the single-class form
+
+| Property | Type | Description |
+|---|---|---|
+| `dataSource` | `DataSource?` | Forwarded to factory functions via `SeedContext`. |
+| `relations` | `boolean?` | Set to `false` to skip relation seeding. Defaults to `true`. |
+| `values` | `Partial<T>?` | Property values applied after all `@Seed` factories have run. Wins unconditionally — factories still execute but their output is overwritten. Also works for properties with no `@Seed` decorator. |
+
+**`SeedSaveOptions<T>`** — passed to `save()` and `saveMany()` on the single-class form
+
+| Property | Type | Description |
+|---|---|---|
+| `dataSource` | `DataSource` | Required. Active TypeORM data source used to persist entities. |
+| `relations` | `boolean?` | Set to `false` to skip relation seeding. Defaults to `true`. |
+| `values` | `Partial<T>?` | Property values applied after seeding and before persisting. Wins unconditionally — factories still execute but their output is overwritten. Also works for properties with no `@Seed` decorator. |
 
 ---
 
