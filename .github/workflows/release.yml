@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       always() && (
-        (github.event_name == 'push' && needs.release-please.result == 'success' && needs.release-please.outputs.releases_created == 'true') ||
+        (github.event_name == 'workflow_run' && needs.release-please.result == 'success' && needs.release-please.outputs.releases_created == 'true') ||
         github.event_name == 'workflow_dispatch'
       )
     permissions:
@@ -61,7 +61,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Publish released packages
-        if: github.event_name == 'push'
+        if: github.event_name == 'workflow_run'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
