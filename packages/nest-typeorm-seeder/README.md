@@ -219,6 +219,10 @@ Registers the module with static options.
 
 Registers the module with options resolved from the DI container.
 
+### `SeederModule.forFeature(seeders)`
+
+Registers seeder classes scoped to a feature module. Accepts an array of `SeederCtor[]`. No additional options — `runOnce`, `historyTableName`, hooks, and `enabled` are all controlled from `forRoot`.
+
 **`SeederModuleAsyncOptions`**
 
 | Property | Type | Description |
