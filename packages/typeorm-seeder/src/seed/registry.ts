@@ -33,18 +33,21 @@ export interface SeedContext {
  * Factory callback passed to `@Seed`. Receives the seed context and the partially built entity.
  *
  * Properties are seeded sequentially in declaration order, so any property declared above the
- * current one is already set on `self` and can be read to derive the current value:
+ * current one is already set on `self` and can be read to derive the current value.
+ *
+ * Annotate `self` with the entity class to get full type inference — TypeScript infers
+ * `TEntity` from the annotation, so no cast is needed:
  *
  * @example
  * @Seed(() => faker.date.past())
  * beginDate!: Date
  *
- * @Seed((_, self) => faker.date.future({ refDate: (self as MyEntity).beginDate }))
+ * @Seed((_, self: MyEntity) => faker.date.future({ refDate: self.beginDate }))
  * endDate!: Date
  */
-export type SeedFactory<T = unknown> = (
+export type SeedFactory<T = unknown, TEntity = any> = (
   context: SeedContext,
-  self: EntityInstance,
+  self: TEntity,
 ) => T | Promise<T>;
 
 /** Options for the `@Seed` decorator. */

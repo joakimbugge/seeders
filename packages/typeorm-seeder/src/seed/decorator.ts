@@ -40,9 +40,12 @@ export function Seed(options: SeedOptions): PropertyDecorator;
  * @Seed(async ({ dataSource }) => dataSource.getRepository(Role).findOneByOrFail({ name: 'admin' }))
  * role!: Role
  */
-export function Seed(factory: SeedFactory): PropertyDecorator;
+export function Seed<TEntity = any>(factory: SeedFactory<unknown, TEntity>): PropertyDecorator;
 /** Marks a property with a factory callback and additional options. */
-export function Seed(factory: SeedFactory, options: SeedOptions): PropertyDecorator;
+export function Seed<TEntity = any>(
+  factory: SeedFactory<unknown, TEntity>,
+  options: SeedOptions,
+): PropertyDecorator;
 export function Seed(
   factoryOrOptions?: SeedFactory | SeedOptions,
   options?: SeedOptions,

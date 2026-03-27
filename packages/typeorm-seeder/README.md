@@ -173,6 +173,27 @@ If a factory needs to query the database, the `dataSource` you provide in option
 role!: Role
 ```
 
+### Depending on earlier properties
+
+Properties are seeded in declaration order. Each factory receives the partially-built entity as its second argument (`self`), so a property can read any value that was seeded above it:
+
+```ts
+@Entity()
+class Event {
+  @Seed(() => faker.date.past())
+  @Column()
+  beginDate!: Date
+
+  @Seed((_, self: Event) => faker.date.future({ refDate: self.beginDate }))
+  @Column()
+  endDate!: Date
+}
+```
+
+Annotating `self` with the entity class (`self: Event` above) gives full type inference and autocompletion. Without the annotation `self` is typed as `any`, so property access still works — the annotation is only needed for type safety.
+
+Properties declared *below* the current property are not yet set and will be `undefined` on `self` at that point.
+
 ---
 
 ## Seeder suites
@@ -326,10 +347,22 @@ Property decorator. Marks a property for automatic seeding.
 
 | Signature | Behaviour |
 |---|---|
-| `@Seed(factory)` | Calls `factory(context)` and assigns the result |
+| `@Seed(factory)` | Calls `factory(context, self)` and assigns the result |
 | `@Seed(factory, options)` | Same, with additional options |
 | `@Seed(options)` | Relation seed with options (e.g. `count`) |
 | `@Seed()` | Bare relation seed — auto-creates one related entity |
+
+**`SeedFactory<T, TEntity>`**
+
+```ts
+type SeedFactory<T = unknown, TEntity = any> = (context: SeedContext, self: TEntity) => T | Promise<T>
+```
+
+`self` is the entity instance as it exists when the factory runs — properties declared above this one are already populated, properties below are `undefined`. Annotate `self` with the entity class to get type inference:
+
+```ts
+@Seed((_, self: MyEntity) => ...)
+```
 
 **`SeedOptions`**
 

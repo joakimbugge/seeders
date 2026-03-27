@@ -129,7 +129,7 @@ describe('seed() builder', () => {
         @Column({ type: 'text' })
         beginDate!: Date;
 
-        @Seed((_, self) => faker.date.future({ refDate: (self as Event).beginDate }))
+        @Seed((_, self: Event) => faker.date.future({ refDate: self.beginDate }))
         @Column({ type: 'text' })
         endDate!: Date;
       }
