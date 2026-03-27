@@ -165,6 +165,28 @@ describe('seed() builder', () => {
       expect(fetched).toHaveLength(3);
       fetched.forEach((d) => expect(d.name).toBe('Shared'));
     });
+
+    it('createMany() calls a factory value once per instance', async () => {
+      let counter = 0;
+      const directors = await seed(Director).createMany(3, {
+        values: { name: () => `Director ${++counter}` },
+      });
+
+      expect(directors.map((d) => d.name)).toEqual(['Director 1', 'Director 2', 'Director 3']);
+    });
+
+    it('saveMany() calls a factory value once per persisted instance', async () => {
+      let counter = 0;
+      const saved = await seed(Director).saveMany(3, {
+        dataSource,
+        values: { name: () => `Director ${++counter}` },
+      });
+
+      const ids = saved.map((d) => d.id);
+      const fetched = await dataSource.getRepository(Director).findBy({ id: In(ids) });
+
+      expect(fetched.map((d) => d.name).sort()).toEqual(['Director 1', 'Director 2', 'Director 3']);
+    });
   });
 
   describe('self — partial entity in factory', () => {

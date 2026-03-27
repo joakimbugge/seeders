@@ -5,8 +5,25 @@ import type {
   MapToInstanceArrays,
   MapToInstances,
   SeedContext,
+  SeedFactory,
 } from './registry.js';
 import { getSeeds } from './registry.js';
+
+/**
+ * A map of property overrides for seeded entities.
+ * Each property can be either a static value or a {@link SeedFactory} that is called
+ * once per entity — enabling unique random values across each created instance.
+ *
+ * @example
+ * // All 10 bookings get a unique random price
+ * await seed(Booking).saveMany(10, {
+ *   dataSource,
+ *   values: { price: () => faker.number.float({ min: 10, max: 500 }) },
+ * })
+ */
+export type SeedValues<T extends EntityInstance> = {
+  [K in keyof T]?: T[K] | SeedFactory<T[K], T>;
+};
 
 /**
  * Options for {@link create} and {@link createMany} on the single-class form.
@@ -22,13 +39,13 @@ export interface CreateOptions<T extends EntityInstance> extends SeedContext {
    * const user = await dataSource.getRepository(User).findOneByOrFail({ name: 'Alice' })
    * const post = await seed(Post).create({ values: { author: user } })
    */
-  values?: Partial<T>;
+  values?: SeedValues<T>;
 }
 
 /** Options for {@link createMany}. Extends {@link SeedContext} with a required instance count. */
 export interface CreateManyOptions<T extends EntityInstance = EntityInstance> extends SeedContext {
   count: number;
-  values?: Partial<T>;
+  values?: SeedValues<T>;
 }
 
 // Internal extension of SeedContext — never exposed in the public API.
@@ -39,6 +56,28 @@ interface InternalContext extends SeedContext {
 /** Extracts the ancestor set from an internal context, returning an empty set for external callers. */
 function getAncestors(context: SeedContext): Set<Function> {
   return (context as InternalContext)._ancestors ?? new Set();
+}
+
+/**
+ * Applies a {@link SeedValues} map to an instance.
+ * Factory entries are called once per instance so each entity can get unique values.
+ */
+async function applyValues<T extends EntityInstance>(
+  instance: T,
+  values: SeedValues<T>,
+  context: SeedContext,
+): Promise<void> {
+  const record = instance as Record<string | symbol, unknown>;
+
+  for (const key of Object.keys(values) as (keyof T & string)[]) {
+    const value = values[key];
+
+    if (typeof value === 'function') {
+      record[key] = await (value as SeedFactory)(context, instance);
+    } else {
+      record[key] = value;
+    }
+  }
 }
 
 /** Returns a new context with `cls` added to the ancestor set, used to detect circular relation chains. */
@@ -181,7 +220,7 @@ export async function create<T extends EntityInstance>(
   const instance = await createOne(classOrClasses as EntityConstructor<T>, context);
 
   if (values) {
-    Object.assign(instance, values);
+    await applyValues(instance, values, context);
   }
 
   return instance;
@@ -221,7 +260,7 @@ export async function createMany<T extends EntityInstance>(
   );
 
   if (values) {
-    instances.forEach((e) => Object.assign(e, values));
+    await Promise.all(instances.map((instance) => applyValues(instance, values, context)));
   }
 
   return instances;

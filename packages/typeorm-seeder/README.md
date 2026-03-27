@@ -9,12 +9,20 @@ Coded by AI. Reviewed by humans.
 - [Installation](#installation)
 - [Decorating entities](#decorating-entities)
 - [Seeding entities](#seeding-entities)
+  - [Saving](#saving)
+  - [Without saving](#without-saving)
+  - [Multiple entity types at once](#multiple-entity-types-at-once)
+  - [Skipping relations](#skipping-relations)
+  - [Passing a DataSource to factories](#passing-a-datasource-to-factories)
+  - [Overriding seeded values](#overriding-seeded-values)
+  - [Depending on earlier properties](#depending-on-earlier-properties)
 - [Seeder suites](#seeder-suites)
 - [Seeding without `@Seed()`](#seeding-without-seed)
 - [Logging](#logging)
 - [Hooks](#hooks)
 - [Skipping seeders](#skipping-seeders)
 - [Running seed scripts](#running-seed-scripts)
+  - [TypeScript execution](#typescript-execution)
 - [API reference](#api-reference)
 
 ---
@@ -181,21 +189,34 @@ role!: Role
 Pass a `values` map to inject specific values after all `@Seed` factories have run:
 
 ```ts
+// Status is set even if Booking has no @Seed on it
 const booking = await seed(Booking).create({ values: { status: 'confirmed' } })
-// status is set even if Booking has no @Seed on it
-
 const booking = await seed(Booking).save({ dataSource, values: { user, status: 'confirmed' } })
-
+// All 5 get the same user
 const bookings = await seed(Booking).createMany(5, { values: { user } })
-// all 5 get the same user
-
 const bookings = await seed(Booking).saveMany(5, { dataSource, values: { user } })
 ```
+
+Each property in `values` can also be a factory function — it is called once per entity, so every instance can receive a unique generated value:
+
+```ts
+const bookings = await seed(Booking).saveMany(10, {
+  dataSource,
+  values: {
+    // Unique per booking
+    price: () => faker.number.float({ min: 10, max: 500 }),
+    // Same for all
+    status: 'confirmed',                                     
+  },
+})
+```
+
+Factory entries in `values` receive the same `(context, self)` arguments as `@Seed` factories, so you can read already-applied properties from `self` or query the database via `context.dataSource`.
 
 `values` wins unconditionally: if a property has a `@Seed` factory, the factory still runs but its result is overwritten. `values` also works for properties with no `@Seed` decorator at all.
 
 > [!NOTE]
-> `values` are applied **after** all `@Seed` factories have finished, so they are never visible on `self` inside a factory callback.
+> `values` are applied **after** all `@Seed` factories have finished, so they are never visible on `self` inside a `@Seed` factory callback.
 
 ---
 
@@ -425,7 +446,7 @@ seed([Author, Book]).saveMany(count, options): Promise<[Author[], Book[]]>
 |---|---|---|
 | `dataSource` | `DataSource?` | Forwarded to factory functions via `SeedContext`. |
 | `relations` | `boolean?` | Set to `false` to skip relation seeding. Defaults to `true`. |
-| `values` | `Partial<T>?` | Property values applied after all `@Seed` factories have run. Wins unconditionally — factories still execute but their output is overwritten. Also works for properties with no `@Seed` decorator. |
+| `values` | `SeedValues<T>?` | Property values applied after all `@Seed` factories have run. Each entry can be a static value or a factory called once per entity. Wins unconditionally — `@Seed` factories still execute but their output is overwritten. Also works for properties with no `@Seed` decorator. |
 
 **`SaveOptions<T>`** — passed to `save()` and `saveMany()` on the single-class form
 
@@ -433,7 +454,7 @@ seed([Author, Book]).saveMany(count, options): Promise<[Author[], Book[]]>
 |---|---|---|
 | `dataSource` | `DataSource` | Required. Active TypeORM data source used to persist entities. |
 | `relations` | `boolean?` | Set to `false` to skip relation seeding. Defaults to `true`. |
-| `values` | `Partial<T>?` | Property values applied after seeding and before persisting. Wins unconditionally — factories still execute but their output is overwritten. Also works for properties with no `@Seed` decorator. |
+| `values` | `SeedValues<T>?` | Property values applied after seeding and before persisting. Each entry can be a static value or a factory called once per entity. Wins unconditionally — `@Seed` factories still execute but their output is overwritten. Also works for properties with no `@Seed` decorator. |
 
 ---
 

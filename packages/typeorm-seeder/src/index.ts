@@ -13,6 +13,6 @@ export type {
   SeedOptions,
   SeedEntry,
 } from './seed/registry.js';
-export type { CreateOptions, CreateManyOptions } from './seed/creator.js';
+export type { CreateOptions, CreateManyOptions, SeedValues } from './seed/creator.js';
 export type { SaveOptions, SaveManyOptions } from './seed/persist.js';
 export type { SeederInterface, SeederOptions } from './seeder/decorator.js';

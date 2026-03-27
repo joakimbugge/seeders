@@ -1,5 +1,6 @@
 import { type DataSource } from 'typeorm';
 import { createMany } from './creator.js';
+import type { SeedValues } from './creator.js';
 import type {
   EntityConstructor,
   EntityInstance,
@@ -22,7 +23,7 @@ export interface SaveOptions<T extends EntityInstance = EntityInstance> extends 
    * const user = faker.helpers.arrayElement(users)
    * await seed(Booking).saveMany(10, { dataSource, values: { user } })
    */
-  values?: Partial<T>;
+  values?: SeedValues<T>;
 }
 
 /** Options for {@link saveMany}. Extends {@link SaveOptions} with a required instance count. */
