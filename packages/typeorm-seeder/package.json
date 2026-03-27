@@ -54,7 +54,10 @@
     "reflect-metadata": ">=0.1.0",
     "typeorm": ">=0.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "1.0.0-nightly.20260327"
+  },
   "dependencies": {
     "dependency-graph": "^1.0.0"
   }

@@ -13,10 +13,8 @@
     "lefthook": "^2.1.4",
     "oxfmt": "^0.42.0",
     "oxlint": "^1.57.0",
-    "reflect-metadata": "^0.2.2",
     "tsdown": "^0.21.6",
     "tsx": "^4.21.0",
-    "typeorm": "1.0.0-nightly.20260327",
     "typescript": "^6.0.2",
     "vitest": "^4.1.2"
   }
