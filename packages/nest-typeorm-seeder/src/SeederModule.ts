@@ -2,6 +2,8 @@ import { type DynamicModule, Module } from '@nestjs/common';
 import type { RunSeedersOptions, SeederInterface } from '@joakimbugge/typeorm-seeder';
 import type { DataSource } from 'typeorm';
 import { SeederRunnerService, SEEDER_MODULE_OPTIONS } from './SeederRunnerService.js';
+import { SeederRegistry } from './SeederRegistry.js';
+import { SeederFeatureService, FEATURE_SEEDERS_TOKEN } from './SeederFeatureService.js';
 
 export type SeederCtor = new () => SeederInterface;
 
@@ -62,7 +64,18 @@ interface SeederModuleRunOptions extends SeederModuleBaseOptions {
   historyTableName?: never;
 }
 
-export type SeederModuleOptions = SeederModuleSeedersOptions | SeederModuleRunOptions;
+/** Root module configured with no seeders of its own — all seeders come from `forFeature()`. */
+interface SeederModuleFeatureOnlyOptions extends SeederModuleBaseOptions {
+  seeders?: never;
+  run?: never;
+  runOnce?: boolean;
+  historyTableName?: string;
+}
+
+export type SeederModuleOptions =
+  | SeederModuleSeedersOptions
+  | SeederModuleRunOptions
+  | SeederModuleFeatureOnlyOptions;
 
 export interface SeederModuleAsyncOptions {
   imports?: any[];
@@ -74,13 +87,20 @@ export interface SeederModuleAsyncOptions {
 export class SeederModule {
   static forRoot(options: SeederModuleOptions): DynamicModule {
     return {
+      global: true,
       module: SeederModule,
-      providers: [{ provide: SEEDER_MODULE_OPTIONS, useValue: options }, SeederRunnerService],
+      providers: [
+        { provide: SEEDER_MODULE_OPTIONS, useValue: options },
+        SeederRegistry,
+        SeederRunnerService,
+      ],
+      exports: [SeederRegistry],
     };
   }
 
   static forRootAsync(options: SeederModuleAsyncOptions): DynamicModule {
     return {
+      global: true,
       module: SeederModule,
       imports: options.imports ?? [],
       providers: [
@@ -89,8 +109,17 @@ export class SeederModule {
           inject: options.inject ?? [],
           useFactory: options.useFactory,
         },
+        SeederRegistry,
         SeederRunnerService,
       ],
+      exports: [SeederRegistry],
+    };
+  }
+
+  static forFeature(seeders: SeederCtor[]): DynamicModule {
+    return {
+      module: SeederModule,
+      providers: [{ provide: FEATURE_SEEDERS_TOKEN, useValue: seeders }, SeederFeatureService],
     };
   }
 }

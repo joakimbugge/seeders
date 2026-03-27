@@ -3,6 +3,7 @@ import { ModuleRef } from '@nestjs/core';
 import { runSeeders } from '@joakimbugge/typeorm-seeder';
 import { DataSource } from 'typeorm';
 import type { SeederModuleOptions } from './SeederModule.js';
+import { SeederRegistry } from './SeederRegistry.js';
 
 export const SEEDER_MODULE_OPTIONS = Symbol('SEEDER_MODULE_OPTIONS');
 
@@ -15,6 +16,7 @@ export class SeederRunnerService implements OnApplicationBootstrap {
   constructor(
     @Inject(SEEDER_MODULE_OPTIONS) private readonly options: SeederModuleOptions,
     private readonly moduleRef: ModuleRef,
+    private readonly registry: SeederRegistry,
   ) {}
 
   async onApplicationBootstrap(): Promise<void> {
@@ -24,7 +26,9 @@ export class SeederRunnerService implements OnApplicationBootstrap {
 
     const dataSource = await this.resolveDataSource();
 
-    if (this.options.seeders) {
+    const seeders = [...(this.options.seeders ?? []), ...this.registry.getAll()];
+
+    if (seeders.length > 0) {
       const runOnce = this.options.runOnce ?? true;
       const tableName = this.options.historyTableName ?? DEFAULT_HISTORY_TABLE;
 
@@ -35,7 +39,7 @@ export class SeederRunnerService implements OnApplicationBootstrap {
         executedSeeders = await this.getExecutedSeeders(dataSource, tableName);
       }
 
-      await runSeeders(this.options.seeders, {
+      await runSeeders(seeders, {
         dataSource,
         relations: this.options.relations,
         logging: false,
