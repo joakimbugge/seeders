@@ -10,7 +10,7 @@ import type {
 } from './registry.js';
 
 /** Options for {@link saveSeed}. Extends {@link SeedContext} with a required DataSource. */
-export interface SaveSeedOptions extends SeedContext {
+export interface SeedSaveOptions<T extends EntityInstance = EntityInstance> extends SeedContext {
   dataSource: DataSource;
   /**
    * Property values to apply to each entity after seeding and before persisting.
@@ -18,14 +18,18 @@ export interface SaveSeedOptions extends SeedContext {
    * but its result is overwritten. Also works for properties that have no `@Seed`
    * decorator at all.
    *
-   * Prefer the typed {@link SeedSaveOptions} from the `seed()` builder, which
-   * narrows this to `Partial<T>` for the specific entity class.
+   * @example
+   * const users = await dataSource.getRepository(User).find()
+   * const user = faker.helpers.arrayElement(users)
+   * await seed(Booking).saveMany(10, { dataSource, values: { user } })
    */
-  values?: object;
+  values?: Partial<T>;
 }
 
-/** Options for {@link saveManySeed}. Extends {@link SaveSeedOptions} with a required instance count. */
-export interface SaveManySeedOptions extends SaveSeedOptions {
+/** Options for {@link saveManySeed}. Extends {@link SeedSaveOptions} with a required instance count. */
+export interface SeedSaveManyOptions<
+  T extends EntityInstance = EntityInstance,
+> extends SeedSaveOptions<T> {
   count: number;
 }
 
@@ -114,7 +118,7 @@ function restoreCascade(states: CascadeState[]): void {
  */
 export async function saveSeed<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  options: SaveSeedOptions,
+  options: SeedSaveOptions<T>,
 ): Promise<T>;
 /**
  * Creates and persists one instance of each entity class in the array.
@@ -122,11 +126,11 @@ export async function saveSeed<T extends EntityInstance>(
  */
 export async function saveSeed<T extends readonly EntityConstructor[]>(
   EntityClasses: [...T],
-  options: SaveSeedOptions,
+  options: SeedSaveOptions,
 ): Promise<MapToInstances<T>>;
 export async function saveSeed<T extends EntityInstance>(
   classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
-  options: SaveSeedOptions,
+  options: SeedSaveOptions<T>,
 ): Promise<T | EntityInstance[]> {
   if (Array.isArray(classOrClasses)) {
     const effectiveOptions = { relations: false, ...options, count: 1 };
@@ -152,7 +156,7 @@ export async function saveSeed<T extends EntityInstance>(
  */
 export async function saveManySeed<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  options: SaveManySeedOptions,
+  options: SeedSaveManyOptions<T>,
 ): Promise<T[]>;
 /**
  * Creates and persists multiple instances of each entity class in the array.
@@ -160,11 +164,11 @@ export async function saveManySeed<T extends EntityInstance>(
  */
 export async function saveManySeed<T extends readonly EntityConstructor[]>(
   EntityClasses: [...T],
-  options: SaveManySeedOptions,
+  options: SeedSaveManyOptions,
 ): Promise<MapToInstanceArrays<T>>;
 export async function saveManySeed<T extends EntityInstance>(
   classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
-  options: SaveManySeedOptions,
+  options: SeedSaveManyOptions<T>,
 ): Promise<T[] | EntityInstance[][]> {
   if (Array.isArray(classOrClasses)) {
     const effectiveOptions = { relations: false, ...options };
@@ -184,7 +188,7 @@ export async function saveManySeed<T extends EntityInstance>(
  */
 async function saveManySeedOne<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  options: SaveManySeedOptions,
+  options: SeedSaveManyOptions<T>,
 ): Promise<T[]> {
   const { count, dataSource } = options;
 

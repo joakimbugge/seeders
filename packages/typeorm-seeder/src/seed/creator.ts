@@ -1,5 +1,4 @@
 import { getMetadataArgsStorage } from 'typeorm';
-import { getSeeds } from './registry.js';
 import type {
   EntityConstructor,
   EntityInstance,
@@ -7,9 +6,27 @@ import type {
   MapToInstances,
   SeedContext,
 } from './registry.js';
+import { getSeeds } from './registry.js';
+
+/**
+ * Options for {@link createSeed} and {@link createManySeed} on the single-class form.
+ * Extends {@link SeedContext} with a typed `values` override map.
+ */
+export interface SeedCreateOptions<T extends EntityInstance> extends SeedContext {
+  /**
+   * Property values to apply after all `@Seed` factories have run.
+   * Wins unconditionally — factories still execute but their output is overwritten.
+   * Also works for properties that have no `@Seed` decorator.
+   *
+   * @example
+   * const user = await dataSource.getRepository(User).findOneByOrFail({ name: 'Alice' })
+   * const post = await seed(Post).create({ values: { author: user } })
+   */
+  values?: Partial<T>;
+}
 
 /** Options for {@link createManySeed}. Extends {@link SeedContext} with a required instance count. */
-export interface CreateManySeedOptions extends SeedContext {
+export interface SeedCreateManyOptions extends SeedContext {
   count: number;
 }
 
@@ -176,15 +193,15 @@ export async function createSeed<T extends EntityInstance>(
  */
 export async function createManySeed<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  options: CreateManySeedOptions,
+  options: SeedCreateManyOptions,
 ): Promise<T[]>;
 export async function createManySeed<T extends readonly EntityConstructor[]>(
   EntityClasses: [...T],
-  options: CreateManySeedOptions,
+  options: SeedCreateManyOptions,
 ): Promise<MapToInstanceArrays<T>>;
 export async function createManySeed<T extends EntityInstance>(
   classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
-  { count, ...context }: CreateManySeedOptions,
+  { count, ...context }: SeedCreateManyOptions,
 ): Promise<T[] | EntityInstance[][]> {
   if (Array.isArray(classOrClasses)) {
     const effectiveContext: SeedContext = { relations: false, ...context };

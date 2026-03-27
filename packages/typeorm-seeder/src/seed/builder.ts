@@ -1,4 +1,6 @@
+import type { SeedCreateOptions } from './creator.js';
 import { createManySeed, createSeed } from './creator.js';
+import type { SeedSaveManyOptions, SeedSaveOptions } from './persist.js';
 import { saveManySeed, saveSeed } from './persist.js';
 import type {
   EntityConstructor,
@@ -7,51 +9,17 @@ import type {
   MapToInstances,
   SeedContext,
 } from './registry.js';
-import type { SaveSeedOptions } from './persist.js';
 
-/**
- * Options for {@link SingleSeed.create} and {@link SingleSeed.createMany}.
- * Extends {@link SeedContext} with a typed `values` override map.
- */
-export interface SeedCreateContext<T extends EntityInstance> extends SeedContext {
-  /**
-   * Property values to apply after all `@Seed` factories have run.
-   * Wins unconditionally — factories still execute but their output is overwritten.
-   * Also works for properties that have no `@Seed` decorator.
-   *
-   * @example
-   * const user = await dataSource.getRepository(User).findOneByOrFail({ name: 'Alice' })
-   * const post = await seed(Post).create({ values: { author: user } })
-   */
-  values?: Partial<T>;
-}
-
-/**
- * Options for {@link SingleSeed.save} and {@link SingleSeed.saveMany}.
- * Extends {@link SaveSeedOptions} with a typed `values` override map.
- */
-export interface SeedSaveOptions<T extends EntityInstance> extends SaveSeedOptions {
-  /**
-   * Property values to apply after seeding and before persisting.
-   * Wins unconditionally — factories still execute but their output is overwritten.
-   * Also works for properties that have no `@Seed` decorator.
-   *
-   * @example
-   * const users = await dataSource.getRepository(User).find()
-   * const user = faker.helpers.arrayElement(users)
-   * await seed(Booking).saveMany(10, { dataSource, values: { user } })
-   */
-  values?: Partial<T>;
-}
+export type { SeedCreateOptions } from './creator.js';
 
 /** Seed builder for a single entity class. Returned by {@link seed} when passed one class. */
 interface SingleSeed<T extends EntityInstance> {
   /** Creates a single instance in memory without persisting. */
-  create(context?: SeedCreateContext<T>): Promise<T>;
+  create(context?: SeedCreateOptions<T>): Promise<T>;
   /** Creates and persists a single instance. */
   save(options: SeedSaveOptions<T>): Promise<T>;
   /** Creates multiple instances in memory without persisting. */
-  createMany(count: number, context?: SeedCreateContext<T>): Promise<T[]>;
+  createMany(count: number, context?: SeedCreateOptions<T>): Promise<T[]>;
   /** Creates and persists multiple instances. */
   saveMany(count: number, options: SeedSaveOptions<T>): Promise<T[]>;
 }
@@ -65,11 +33,11 @@ interface MultiSeed<T extends readonly EntityConstructor[]> {
   /** Creates one instance of each class in memory without persisting. */
   create(context?: SeedContext): Promise<MapToInstances<T>>;
   /** Creates and persists one instance of each class. */
-  save(options: SaveSeedOptions): Promise<MapToInstances<T>>;
+  save(options: SeedSaveOptions): Promise<MapToInstances<T>>;
   /** Creates `count` instances of each class in memory without persisting. */
   createMany(count: number, context?: SeedContext): Promise<MapToInstanceArrays<T>>;
   /** Creates and persists `count` instances of each class. */
-  saveMany(count: number, options: SaveSeedOptions): Promise<MapToInstanceArrays<T>>;
+  saveMany(count: number, options: SeedSaveOptions): Promise<MapToInstanceArrays<T>>;
 }
 
 /**
@@ -107,7 +75,7 @@ export function seed<T extends EntityInstance>(
         createSeed(classes as [...typeof classes], context) as Promise<
           MapToInstances<typeof classes>
         >,
-      save: (options: SaveSeedOptions) =>
+      save: (options: SeedSaveOptions) =>
         saveSeed(classes as [...typeof classes], options) as Promise<
           MapToInstances<typeof classes>
         >,
@@ -115,17 +83,18 @@ export function seed<T extends EntityInstance>(
         createManySeed(classes as [...typeof classes], { count, ...context }) as Promise<
           MapToInstanceArrays<typeof classes>
         >,
-      saveMany: (count: number, options: SaveSeedOptions) =>
-        saveManySeed(classes as [...typeof classes], { count, ...options }) as Promise<
-          MapToInstanceArrays<typeof classes>
-        >,
+      saveMany: (count: number, options: SeedSaveOptions) =>
+        saveManySeed(
+          classes as [...typeof classes],
+          { count, ...options } as SeedSaveManyOptions,
+        ) as Promise<MapToInstanceArrays<typeof classes>>,
     };
   }
 
   const EntityClass = classOrClasses as EntityConstructor<T>;
 
   return {
-    create: async ({ values, ...context }: SeedCreateContext<T> = {}) => {
+    create: async ({ values, ...context }: SeedCreateOptions<T> = {}) => {
       const instance = await createSeed(EntityClass, context);
 
       if (values) {
@@ -135,7 +104,7 @@ export function seed<T extends EntityInstance>(
       return instance;
     },
     save: (options: SeedSaveOptions<T>) => saveSeed(EntityClass, options),
-    createMany: async (count: number, { values, ...context }: SeedCreateContext<T> = {}) => {
+    createMany: async (count: number, { values, ...context }: SeedCreateOptions<T> = {}) => {
       const instances = await createManySeed(EntityClass, { count, ...context });
 
       if (values) {

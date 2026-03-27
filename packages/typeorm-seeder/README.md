@@ -419,7 +419,7 @@ seed([Author, Book]).save(options): Promise<[Author, Book]>
 seed([Author, Book]).saveMany(count, options): Promise<[Author[], Book[]]>
 ```
 
-**`SeedCreateContext<T>`** — passed to `create()` and `createMany()` on the single-class form
+**`SeedCreateOptions<T>`** — passed to `create()` and `createMany()` on the single-class form
 
 | Property | Type | Description |
 |---|---|---|
