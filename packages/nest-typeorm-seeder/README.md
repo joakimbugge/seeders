@@ -5,6 +5,9 @@ NestJS module for [@joakimbugge/typeorm-seeder](../typeorm-seeder). Runs your `@
 > [!TIP]
 > This package handles the NestJS integration. The seeding itself — `@Seed()`, `@Seeder`, `seed()`, entity factories — is all defined in [@joakimbugge/typeorm-seeder](../typeorm-seeder/README.md). Familiarity with that package will make this one much easier to use.
 
+[![CI](https://github.com/joakimbugge/to-seeder/actions/workflows/ci.yml/badge.svg)](https://github.com/joakimbugge/to-seeder/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/joakimbugge/to-seeder/branch/main/graph/badge.svg)](https://codecov.io/gh/joakimbugge/to-seeder)
+
 Coded by AI. Reviewed by humans.
 
 ---
