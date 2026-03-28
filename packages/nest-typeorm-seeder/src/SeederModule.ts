@@ -35,8 +35,8 @@ interface SeederModuleBaseOptions extends Pick<
 }
 
 interface SeederModuleSeedersOptions extends SeederModuleBaseOptions {
-  /** Seeder classes to run. Transitive dependencies are resolved automatically. */
-  seeders: SeederCtor[];
+  /** Seeder classes or glob patterns resolving to seeder files. Transitive dependencies are resolved automatically. */
+  seeders: (SeederCtor | string)[];
   /**
    * Inline callback executed after all seeders have run. Always executes on
    * every boot — `runOnce` does not apply to it.
@@ -184,7 +184,7 @@ export class SeederModule {
    * // In a feature module:
    * SeederModule.forFeature([PostSeeder])
    */
-  static forFeature(seeders: SeederCtor[]): DynamicModule {
+  static forFeature(seeders: (SeederCtor | string)[]): DynamicModule {
     return {
       module: SeederModule,
       providers: [{ provide: FEATURE_SEEDERS_TOKEN, useValue: seeders }, SeederFeatureService],

@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { runSeeders } from '@joakimbugge/typeorm-seeder';
+import { loadSeeders, runSeeders } from '@joakimbugge/typeorm-seeder';
 import { DataSource } from 'typeorm';
 import type { SeederModuleOptions } from './SeederModule.js';
 import { SeederRegistry } from './SeederRegistry.js';
@@ -36,7 +36,7 @@ export class SeederRunnerService implements OnApplicationBootstrap {
 
     const dataSource = await this.resolveDataSource();
 
-    const seeders = [...(this.options.seeders ?? []), ...this.registry.getAll()];
+    const seeders = await loadSeeders([...(this.options.seeders ?? []), ...this.registry.getAll()]);
 
     if (seeders.length > 0) {
       const runOnce = this.options.runOnce ?? true;

@@ -7,15 +7,15 @@ import type { SeederCtor } from './SeederModule.js';
  */
 @Injectable()
 export class SeederRegistry {
-  private readonly seeders: SeederCtor[] = [];
+  private readonly seeders: (SeederCtor | string)[] = [];
 
   /** Adds seeders to the global list. Called by {@link SeederFeatureService} on module init. */
-  register(seeders: SeederCtor[]): void {
+  register(seeders: (SeederCtor | string)[]): void {
     this.seeders.push(...seeders);
   }
 
   /** Returns all registered seeders in the order they were registered. */
-  getAll(): SeederCtor[] {
+  getAll(): (SeederCtor | string)[] {
     return this.seeders;
   }
 }

@@ -59,6 +59,12 @@ export class AppModule {}
 
 If your seeders declare dependencies on each other via the `@Seeder` decorator, they are sorted and executed in the correct order automatically — see [@joakimbugge/typeorm-seeder](../typeorm-seeder#seeder-suites) for details.
 
+`seeders` also accepts glob patterns alongside constructors. Patterns are expanded at bootstrap time and only classes decorated with `@Seeder` are collected:
+
+```ts
+SeederModule.forRoot({ seeders: [UserSeeder, 'dist/seeders/**/*.js'] })
+```
+
 ### Providing a DataSource explicitly
 
 If you manage the `DataSource` yourself rather than through `TypeOrmModule`, pass it directly:
@@ -231,7 +237,7 @@ Registers the module with options resolved from the DI container.
 
 ### `SeederModule.forFeature(seeders)`
 
-Registers seeder classes scoped to a feature module. Accepts an array of `SeederCtor[]`. No additional options — `runOnce`, `historyTableName`, hooks, and `enabled` are all controlled from `forRoot`.
+Registers seeders scoped to a feature module. Accepts an array of `(SeederCtor | string)[]` — the same mix of constructors and glob patterns accepted by `forRoot`. No additional options — `runOnce`, `historyTableName`, hooks, and `enabled` are all controlled from `forRoot`.
 
 **`SeederModuleAsyncOptions`**
 
@@ -264,7 +270,7 @@ The hooks behave identically to the hooks in [`runSeeders`](../typeorm-seeder/RE
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `seeders` | `SeederCtor[]` | — | Seeder classes to run. Transitive dependencies are resolved automatically. |
+| `seeders` | `(SeederCtor \| string)[]` | — | Seeder classes or glob patterns resolving to seeder files. Patterns are expanded at bootstrap time — only classes decorated with `@Seeder` are collected. Transitive dependencies are resolved automatically. |
 | `run` | `RunCallback?` | — | Inline callback executed after all seeders. Always runs — `runOnce` does not apply to it. |
 | `runOnce` | `boolean?` | `true` | Track executed seeders in the database and skip them on subsequent boots. |
 | `historyTableName` | `string?` | `'seeders'` | Name of the table used to track which seeders have run. |

@@ -12,7 +12,7 @@ export const FEATURE_SEEDERS_TOKEN = Symbol('FEATURE_SEEDERS_TOKEN');
 @Injectable()
 export class SeederFeatureService implements OnModuleInit {
   constructor(
-    @Inject(FEATURE_SEEDERS_TOKEN) private readonly seeders: SeederCtor[],
+    @Inject(FEATURE_SEEDERS_TOKEN) private readonly seeders: (SeederCtor | string)[],
     private readonly registry: SeederRegistry,
   ) {}
 
