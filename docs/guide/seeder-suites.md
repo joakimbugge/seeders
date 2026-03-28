@@ -1,0 +1,53 @@
+# Seeder suites
+
+For production seeding scripts or structured test fixtures, organize your seeding logic into `@Seeder` classes. Declare dependencies between seeders and let the library figure out the execution order.
+
+```ts
+import { Seeder, runSeeders, seed } from '@joakimbugge/typeorm-seeder'
+import type { SeederInterface, SeedContext } from '@joakimbugge/typeorm-seeder'
+
+@Seeder()
+class UserSeeder implements SeederInterface {
+  async run(ctx: SeedContext) {
+    await seed(User).saveMany(10, ctx)
+  }
+}
+
+@Seeder({ dependencies: [UserSeeder] })
+class PostSeeder implements SeederInterface {
+  async run(ctx: SeedContext) {
+    await seed(Post).saveMany(50, ctx)
+  }
+}
+
+// Run from your seed script or test setup:
+await runSeeders([PostSeeder], { dataSource })
+// UserSeeder runs first, then PostSeeder
+```
+
+`runSeeders` accepts the root seeders you want to execute. It collects all transitive dependencies, topologically sorts them, and runs each once in the correct order. Passing the same seeder as both a root and a dependency of another root is safe — it will only run once.
+
+Circular dependencies between seeders are detected at runtime and throw an error naming the seeders involved.
+
+::: tip Using NestJS?
+[@joakimbugge/nest-typeorm-seeder](/nest/) wraps `runSeeders` in a `SeederModule` that runs your seeders automatically on application bootstrap — no seed script needed. It also tracks which seeders have already run so watch-mode restarts don't re-seed.
+:::
+
+## Seeding without `@Seed()`
+
+`@Seed()` is a convenience — it is not required. Complex seeding logic that would clutter entity decorators belongs in the seeder suite instead. Use the `values` option to inject the result at call time, keeping your entities simple:
+
+```ts
+@Seeder({ dependencies: [UserSeeder] })
+class BookingSeeder implements SeederInterface {
+  async run({ dataSource }: SeedContext): Promise<void> {
+    const users = await dataSource!.getRepository(User).find()
+    const user = faker.helpers.arrayElement(users)
+
+    // user is resolved here and injected — Booking stays simple
+    await seed(Booking).saveMany(10, { dataSource, values: { user } })
+  }
+}
+```
+
+If you need full control — inserting specific rows, running raw queries, or using TypeORM's `EntityManager` — the `dataSource` from `SeedContext` gives you direct access to any TypeORM API.

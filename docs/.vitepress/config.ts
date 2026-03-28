@@ -1,0 +1,65 @@
+import { defineConfig } from 'vitepress'
+
+export default defineConfig({
+  title: 'typeorm-seeder',
+  description: 'Decorator-based entity seeding for TypeORM',
+  base: '/to-seeder/',
+
+  themeConfig: {
+    nav: [
+      { text: 'Guide', link: '/guide/' },
+      { text: 'NestJS', link: '/nest/' },
+      {
+        text: 'API reference',
+        items: [
+          { text: 'typeorm-seeder', link: '/api/typeorm-seeder/' },
+          { text: 'nest-typeorm-seeder', link: '/api/nest-typeorm-seeder/' },
+        ],
+      },
+    ],
+
+    sidebar: {
+      '/guide/': [
+        {
+          text: 'typeorm-seeder',
+          items: [
+            { text: 'Getting started', link: '/guide/' },
+            { text: 'Decorating entities', link: '/guide/decorating-entities' },
+            { text: 'Seeding entities', link: '/guide/seeding-entities' },
+            { text: 'Tree entities', link: '/guide/tree-entities' },
+            { text: 'Seeder suites', link: '/guide/seeder-suites' },
+            { text: 'Logging & hooks', link: '/guide/logging-and-hooks' },
+            { text: 'Running scripts', link: '/guide/running-scripts' },
+            { text: 'CLI', link: '/guide/cli' },
+            { text: 'API reference', link: '/guide/api' },
+          ],
+        },
+      ],
+      '/nest/': [
+        {
+          text: 'nest-typeorm-seeder',
+          items: [
+            { text: 'Getting started', link: '/nest/' },
+            { text: 'Feature modules', link: '/nest/feature-modules' },
+            { text: 'Run once', link: '/nest/run-once' },
+            { text: 'Seed scripts', link: '/nest/seed-scripts' },
+            { text: 'API reference', link: '/nest/api' },
+          ],
+        },
+      ],
+    },
+
+    socialLinks: [{ icon: 'github', link: 'https://github.com/joakimbugge/to-seeder' }],
+
+    search: { provider: 'local' },
+
+    editLink: {
+      pattern: 'https://github.com/joakimbugge/to-seeder/edit/main/docs/:path',
+      text: 'Edit this page on GitHub',
+    },
+
+    footer: {
+      message: 'Released under the MIT License.',
+    },
+  },
+})
