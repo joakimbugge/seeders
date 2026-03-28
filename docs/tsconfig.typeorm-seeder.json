@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2020"],
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": []
+  },
+  "files": ["../packages/typeorm-seeder/src/index.ts"]
+}

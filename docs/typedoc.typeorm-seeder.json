@@ -1,6 +1,6 @@
 {
   "entryPoints": ["../packages/typeorm-seeder/src/index.ts"],
-  "tsconfig": "../packages/typeorm-seeder/tsconfig.json",
+  "tsconfig": "./tsconfig.typeorm-seeder.json",
   "plugin": ["typedoc-plugin-markdown"],
   "out": "api/typeorm-seeder",
   "name": "@joakimbugge/typeorm-seeder",

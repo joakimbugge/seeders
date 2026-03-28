@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",
-    "build": "typedoc --options typedoc.typeorm-seeder.json && typedoc --options typedoc.nest-typeorm-seeder.json && vitepress build",
+    "build": "npm run api:generate && vitepress build",
     "preview": "vitepress preview",
     "api:generate": "typedoc --options typedoc.typeorm-seeder.json && typedoc --options typedoc.nest-typeorm-seeder.json"
   },

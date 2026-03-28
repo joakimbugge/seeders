@@ -1,6 +1,6 @@
 {
   "entryPoints": ["../packages/nest-typeorm-seeder/src/index.ts"],
-  "tsconfig": "../packages/nest-typeorm-seeder/tsconfig.json",
+  "tsconfig": "./tsconfig.nest-typeorm-seeder.json",
   "plugin": ["typedoc-plugin-markdown"],
   "out": "api/nest-typeorm-seeder",
   "name": "@joakimbugge/nest-typeorm-seeder",
