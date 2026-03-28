@@ -65,6 +65,12 @@ If your seeders declare dependencies on each other via the `@Seeder` decorator, 
 SeederModule.forRoot({ seeders: [UserSeeder, 'dist/seeders/**/*.js'] })
 ```
 
+TypeScript source files work too — no extra configuration needed. When running via `nest start` or `ts-node`, the TypeScript loader is already active and `.ts` patterns resolve just like `.js` ones:
+
+```ts
+SeederModule.forRoot({ seeders: ['src/seeders/**/*.ts'] })
+```
+
 ### Providing a DataSource explicitly
 
 If you manage the `DataSource` yourself rather than through `TypeOrmModule`, pass it directly:
@@ -270,7 +276,7 @@ The hooks behave identically to the hooks in [`runSeeders`](../typeorm-seeder/RE
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `seeders` | `(SeederCtor \| string)[]` | — | Seeder classes or glob patterns resolving to seeder files. Patterns are expanded at bootstrap time — only classes decorated with `@Seeder` are collected. Transitive dependencies are resolved automatically. |
+| `seeders` | `(SeederCtor \| string)[]` | — | Seeder classes or glob patterns resolving to seeder files (`.js` or `.ts`). Patterns are expanded at bootstrap time — only classes decorated with `@Seeder` are collected. Transitive dependencies are resolved automatically. |
 | `run` | `RunCallback?` | — | Inline callback executed after all seeders. Always runs — `runOnce` does not apply to it. |
 | `runOnce` | `boolean?` | `true` | Track executed seeders in the database and skip them on subsequent boots. |
 | `historyTableName` | `string?` | `'seeders'` | Name of the table used to track which seeders have run. |
