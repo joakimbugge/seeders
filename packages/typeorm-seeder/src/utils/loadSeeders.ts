@@ -1,7 +1,7 @@
-import { importGlob } from '../utils/importGlob.js';
-import { collectConstructors } from '../utils/collectConstructors.js';
-import { getSeederMeta } from './registry.js';
-import type { SeederCtor } from './runner.js';
+import { importGlob } from './importGlob.js';
+import { collectConstructors } from './collectConstructors.js';
+import { getSeederMeta } from '../seeder/registry.js';
+import type { SeederCtor } from '../seeder/runner.js';
 
 /**
  * Resolves a mixed array of seeder constructors and glob patterns into a flat

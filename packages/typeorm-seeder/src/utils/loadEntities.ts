@@ -1,6 +1,6 @@
-import { importGlob } from '../utils/importGlob.js';
-import { collectConstructors } from '../utils/collectConstructors.js';
-import type { EntityConstructor, EntityInstance } from './registry.js';
+import { importGlob } from './importGlob.js';
+import { collectConstructors } from './collectConstructors.js';
+import type { EntityConstructor, EntityInstance } from '../seed/registry.js';
 
 /**
  * Resolves a mixed array of entity constructors and glob patterns into a flat
