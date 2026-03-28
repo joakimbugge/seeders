@@ -7,8 +7,7 @@
     "fmt": "pnpm -r run fmt",
     "docs:dev": "vitepress dev docs",
     "docs:build": "(cd docs && typedoc --options typedoc.typeorm-seeder.json && typedoc --options typedoc.nest-typeorm-seeder.json) && vitepress build docs",
-    "docs:preview": "vitepress preview docs",
-    "docs:api": "(cd docs && typedoc --options typedoc.typeorm-seeder.json && typedoc --options typedoc.nest-typeorm-seeder.json)"
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
