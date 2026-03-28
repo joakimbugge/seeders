@@ -4,7 +4,11 @@
   "scripts": {
     "dev:watch": "pnpm --parallel -r run dev",
     "lint:fix": "pnpm -r run lint:fix",
-    "fmt": "pnpm -r run fmt"
+    "fmt": "pnpm -r run fmt",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "(cd docs && typedoc --options typedoc.typeorm-seeder.json && typedoc --options typedoc.nest-typeorm-seeder.json) && vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "docs:api": "(cd docs && typedoc --options typedoc.typeorm-seeder.json && typedoc --options typedoc.nest-typeorm-seeder.json)"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
@@ -16,7 +20,10 @@
     "oxlint": "^1.57.0",
     "tsdown": "^0.21.6",
     "tsx": "^4.21.0",
+    "typedoc": "^0.28.0",
+    "typedoc-plugin-markdown": "^4.0.0",
     "typescript": "^6.0.2",
-    "vitest": "^4.1.2"
+    "vitest": "^4.1.2",
+    "vitepress": "^1.6.0"
   }
 }
