@@ -6,12 +6,12 @@ Monorepo for decorator-based TypeORM seeding. Two packages — a framework-agnos
 
 | Package | Version | Description |
 |---|---|---|
-| [`@joakimbugge/typeorm-seeder`](packages/typeorm-seeder) | [![npm](https://img.shields.io/npm/v/@joakimbugge/typeorm-seeder)](https://www.npmjs.com/package/@joakimbugge/typeorm-seeder) | Core seeding library |
-| [`@joakimbugge/nest-typeorm-seeder`](packages/nest-typeorm-seeder) | [![npm](https://img.shields.io/npm/v/@joakimbugge/nest-typeorm-seeder)](https://www.npmjs.com/package/@joakimbugge/nest-typeorm-seeder) | NestJS module |
+| [`typeorm-seeder`](packages/typeorm-seeder) | [![npm](https://img.shields.io/npm/v/@joakimbugge/typeorm-seeder)](https://www.npmjs.com/package/@joakimbugge/typeorm-seeder) | Core seeding library |
+| [`nest-typeorm-seeder`](packages/nest-typeorm-seeder) | [![npm](https://img.shields.io/npm/v/@joakimbugge/nest-typeorm-seeder)](https://www.npmjs.com/package/@joakimbugge/nest-typeorm-seeder) | NestJS module |
 
 ---
 
-## @joakimbugge/typeorm-seeder
+## typeorm-seeder
 
 Annotate entity properties with `@Seed()`, then create or persist fully populated entity graphs with a single call — including relations, embedded types, and circular guards.
 
@@ -50,7 +50,7 @@ await runSeeders([PostSeeder], { dataSource })
 
 ---
 
-## @joakimbugge/nest-typeorm-seeder
+## nest-typeorm-seeder
 
 A NestJS module that runs your `@Seeder` classes on application bootstrap. Import `SeederModule` with the seeders you want executed and they run automatically when the app starts.
 

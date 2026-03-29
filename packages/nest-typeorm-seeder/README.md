@@ -1,6 +1,6 @@
-# @joakimbugge/nest-typeorm-seeder
+# nest-typeorm-seeder
 
-NestJS module for [@joakimbugge/typeorm-seeder](../typeorm-seeder). Runs your `@Seeder` classes automatically on application bootstrap — once per seeder by default, tracked in a database table so watch-mode restarts do not re-seed.
+NestJS module for [typeorm-seeder](../typeorm-seeder). Runs your `@Seeder` classes automatically on application bootstrap — once per seeder by default, tracked in a database table so watch-mode restarts do not re-seed.
 
 [![CI](https://github.com/joakimbugge/to-seeder/actions/workflows/ci.yml/badge.svg)](https://github.com/joakimbugge/to-seeder/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/joakimbugge/to-seeder/branch/main/graph/badge.svg)](https://codecov.io/gh/joakimbugge/to-seeder)

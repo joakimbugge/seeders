@@ -30,7 +30,7 @@ await runSeeders([PostSeeder], { dataSource })
 Circular dependencies between seeders are detected at runtime and throw an error naming the seeders involved.
 
 ::: tip Using NestJS?
-[@joakimbugge/nest-typeorm-seeder](/nest/) wraps `runSeeders` in a `SeederModule` that runs your seeders automatically on application bootstrap — no seed script needed. It also tracks which seeders have already run so watch-mode restarts don't re-seed.
+[nest-typeorm-seeder](/nest/) wraps `runSeeders` in a `SeederModule` that runs your seeders automatically on application bootstrap — no seed script needed. It also tracks which seeders have already run so watch-mode restarts don't re-seed.
 :::
 
 ## Seeding without `@Seed()`

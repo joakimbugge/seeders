@@ -1,9 +1,9 @@
 # Getting started
 
-NestJS module for [@joakimbugge/typeorm-seeder](/guide/). Runs your `@Seeder` classes automatically on application bootstrap — once per seeder by default, tracked in a database table so watch-mode restarts do not re-seed. For simple cases, a `run` callback lets you seed without any class boilerplate.
+NestJS module for [typeorm-seeder](/guide/). Runs your `@Seeder` classes automatically on application bootstrap — once per seeder by default, tracked in a database table so watch-mode restarts do not re-seed. For simple cases, a `run` callback lets you seed without any class boilerplate.
 
 ::: info
-This package handles the NestJS integration. The seeding itself — `@Seed()`, `@Seeder`, `seed()`, entity factories — is all defined in [@joakimbugge/typeorm-seeder](/guide/). Familiarity with that package will make this one much easier to use.
+This package handles the NestJS integration. The seeding itself — `@Seed()`, `@Seeder`, `seed()`, entity factories — is all defined in [typeorm-seeder](/guide/). Familiarity with that package will make this one much easier to use.
 :::
 
 ## Installation
