@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 import { Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import type { SeedContext } from '../../src';
 import { runSeeders, saveMany, Seed, Seeder } from '../../src';
+import type { SeederLogger } from '../../src';
 import { registerSeeder } from '../../src/seeder/registry.js';
 import type { SeederCtor } from '../../src/seeder/runner.js';
 
@@ -467,8 +468,9 @@ describe('seeder suites', () => {
       vi.restoreAllMocks();
     });
 
-    it('logs a start and done message for each seeder by default', async () => {
+    it('produces no output by default', async () => {
       const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       @Seeder()
       class LogDefaultSeeder {
@@ -477,13 +479,27 @@ describe('seeder suites', () => {
 
       await runSeeders([LogDefaultSeeder], {});
 
-      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('[LogDefaultSeeder]'));
+      expect(logSpy).not.toHaveBeenCalled();
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
+
+    it('logs a start and done message via console when logging is true', async () => {
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+      @Seeder()
+      class LogTrueSeeder {
+        async run(_ctx: SeedContext) {}
+      }
+
+      await runSeeders([LogTrueSeeder], { logging: true });
+
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('[LogTrueSeeder]'));
       expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('Starting'));
       expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('Done'));
     });
 
-    it('logs a failure message to console.error when a seeder throws', async () => {
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    it('logs a failure message via console.warn when logging is true and a seeder throws', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       vi.spyOn(console, 'log').mockImplementation(() => {});
 
       @Seeder()
@@ -493,15 +509,36 @@ describe('seeder suites', () => {
         }
       }
 
-      await expect(runSeeders([LogErrorSeeder], {})).rejects.toThrow();
+      await expect(runSeeders([LogErrorSeeder], { logging: true })).rejects.toThrow();
 
-      expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('[LogErrorSeeder]'));
-      expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('Failed'));
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('[LogErrorSeeder]'));
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Failed'));
+    });
+
+    it('uses a custom logger when logging is true and logger is provided', async () => {
+      const custom: SeederLogger = {
+        log: vi.fn(),
+        info: vi.fn(),
+        warn: vi.fn(),
+        error: vi.fn(),
+        debug: vi.fn(),
+      };
+
+      @Seeder()
+      class CustomLogSeeder {
+        async run(_ctx: SeedContext) {}
+      }
+
+      await runSeeders([CustomLogSeeder], { logging: true, logger: custom });
+
+      expect(custom.log).toHaveBeenCalledWith(expect.stringContaining('[CustomLogSeeder]'));
+      expect(custom.log).toHaveBeenCalledWith(expect.stringContaining('Starting'));
+      expect(custom.log).toHaveBeenCalledWith(expect.stringContaining('Done'));
     });
 
     it('suppresses all console output when logging is false', async () => {
       const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       @Seeder()
       class SilentSeeder {
@@ -511,12 +548,12 @@ describe('seeder suites', () => {
       await runSeeders([SilentSeeder], { logging: false });
 
       expect(logSpy).not.toHaveBeenCalled();
-      expect(errorSpy).not.toHaveBeenCalled();
+      expect(warnSpy).not.toHaveBeenCalled();
     });
 
     it('suppresses the failure message when logging is false', async () => {
       const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       @Seeder()
       class SilentErrorSeeder {
@@ -528,10 +565,10 @@ describe('seeder suites', () => {
       await expect(runSeeders([SilentErrorSeeder], { logging: false })).rejects.toThrow();
 
       expect(logSpy).not.toHaveBeenCalled();
-      expect(errorSpy).not.toHaveBeenCalled();
+      expect(warnSpy).not.toHaveBeenCalled();
     });
 
-    it('routes logging through the TypeORM logger when a dataSource is provided', async () => {
+    it("routes logging through the TypeORM logger when logging is 'typeorm'", async () => {
       const loggerSpy = vi.spyOn(loggingSource.logger, 'log');
 
       @Seeder()
@@ -539,14 +576,14 @@ describe('seeder suites', () => {
         async run(_ctx: SeedContext) {}
       }
 
-      await runSeeders([TypeOrmLogSeeder], { dataSource: loggingSource });
+      await runSeeders([TypeOrmLogSeeder], { dataSource: loggingSource, logging: 'typeorm' });
 
       expect(loggerSpy).toHaveBeenCalledWith('log', expect.stringContaining('[TypeOrmLogSeeder]'));
       expect(loggerSpy).toHaveBeenCalledWith('log', expect.stringContaining('Starting'));
       expect(loggerSpy).toHaveBeenCalledWith('log', expect.stringContaining('Done'));
     });
 
-    it('logs a failure at warn level through the TypeORM logger', async () => {
+    it("logs a failure at warn level through the TypeORM logger when logging is 'typeorm'", async () => {
       const loggerSpy = vi.spyOn(loggingSource.logger, 'log');
 
       @Seeder()
@@ -557,7 +594,7 @@ describe('seeder suites', () => {
       }
 
       await expect(
-        runSeeders([TypeOrmWarnSeeder], { dataSource: loggingSource }),
+        runSeeders([TypeOrmWarnSeeder], { dataSource: loggingSource, logging: 'typeorm' }),
       ).rejects.toThrow();
 
       expect(loggerSpy).toHaveBeenCalledWith(
@@ -579,10 +616,7 @@ describe('seeder suites', () => {
       expect(loggerSpy).not.toHaveBeenCalled();
     });
 
-    it('calls the TypeORM logger even when TypeORM logging is disabled — suppression happens internally', async () => {
-      // dataSource has logging: false so TypeORM suppresses the output, but we still
-      // call logger.log() — the documented behaviour is that seeder logging follows
-      // TypeORM's own logging config, and console is never used when a dataSource is present.
+    it("calls the TypeORM logger when logging is 'typeorm' even if TypeORM logging is disabled — suppression happens inside TypeORM", async () => {
       const loggerSpy = vi.spyOn(dataSource.logger, 'log');
       const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
 
@@ -591,10 +625,25 @@ describe('seeder suites', () => {
         async run(_ctx: SeedContext) {}
       }
 
-      await runSeeders([TypeOrmDisabledLogSeeder], { dataSource });
+      await runSeeders([TypeOrmDisabledLogSeeder], { dataSource, logging: 'typeorm' });
 
       expect(loggerSpy).toHaveBeenCalled();
       expect(consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it("produces no output when logging is 'typeorm' and no dataSource is provided", async () => {
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      @Seeder()
+      class TypeOrmNoSourceSeeder {
+        async run(_ctx: SeedContext) {}
+      }
+
+      await runSeeders([TypeOrmNoSourceSeeder], { logging: 'typeorm' });
+
+      expect(logSpy).not.toHaveBeenCalled();
+      expect(warnSpy).not.toHaveBeenCalled();
     });
   });
 

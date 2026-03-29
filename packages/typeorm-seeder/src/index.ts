@@ -7,6 +7,8 @@ export { Seeder } from './seeder/decorator.js';
 export { runSeeders } from './seeder/runner.js';
 export { loadSeeders } from './utils/loadSeeders.js';
 export type { SeederCtor, RunSeedersOptions } from './seeder/runner.js';
+export type { SeederLogger } from './seeder/logger.js';
+export { ConsoleLogger } from './seeder/logger.js';
 export type {
   EntityInstance,
   EntityConstructor,

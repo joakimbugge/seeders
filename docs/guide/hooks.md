@@ -1,25 +1,4 @@
-# Logging & hooks
-
-## Logging
-
-By default `runSeeders` logs each seeder's progress:
-
-```
-[UserSeeder] Starting...
-[UserSeeder] Done in 42ms
-```
-
-When a seeder throws, a warning is logged before the error is re-thrown:
-
-```
-[UserSeeder] Failed after 3ms
-```
-
-Logging is routed through **TypeORM's own logger** when a `dataSource` is provided, so seeder output respects the same `logging` configuration as the rest of your TypeORM setup. To see seeder output, ensure your DataSource has `logging: true`, `logging: 'all'`, or `logging: ['log']`. Falls back to `console` when no `dataSource` is available.
-
-Pass `logging: false` to silence all built-in output regardless of TypeORM's configuration.
-
-## Hooks
+# Hooks
 
 `runSeeders` accepts lifecycle callbacks that fire around each seeder:
 

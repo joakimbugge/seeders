@@ -121,11 +121,32 @@ Throws if a circular dependency is detected.
 |---|---|---|---|
 | `dataSource` | `DataSource?` | — | Passed through to each seeder's `run()` and to factory functions. |
 | `relations` | `boolean?` | `true` | Passed through to each seeder's `run()`. |
-| `logging` | `boolean?` | `true` | Log seeder progress. Set to `false` when handling output via hooks. |
+| `logging` | `false \| true \| 'typeorm'?` | `false` | Controls seeder progress output. `true` uses `ConsoleLogger` (or the `logger` option). `'typeorm'` delegates to `dataSource.logger` — if TypeORM logging is disabled, seeder output is suppressed too. |
+| `logger` | `SeederLogger?` | — | Custom logger used when `logging` is `true`. Defaults to `ConsoleLogger`. |
 | `onBefore` | `(seeder) => void \| Promise<void>` | — | Called before each seeder runs. |
 | `onAfter` | `(seeder, durationMs) => void \| Promise<void>` | — | Called after each seeder completes successfully. |
 | `onError` | `(seeder, error) => void \| Promise<void>` | — | Called when a seeder throws. The error is re-thrown after this returns. |
 | `skip` | `(seeder) => boolean \| Promise<boolean>` | — | Return `true` to skip a seeder. Skipped seeders bypass all hooks. |
+
+---
+
+## `SeederLogger`
+
+Interface for seeder progress output. Mirrors the global `console` API so any console-compatible object satisfies it.
+
+| Method | Description |
+|---|---|
+| `log(message)` | General progress output (used for Starting / Done messages). |
+| `info(message)` | Informational output. |
+| `warn(message)` | Warning output (used for failure messages). |
+| `error(message)` | Error output. |
+| `debug(message)` | Debug output. |
+
+---
+
+## `ConsoleLogger`
+
+Default `SeederLogger` implementation. Delegates each method to the corresponding `console` method (`console.log`, `console.warn`, etc.).
 
 ---
 
