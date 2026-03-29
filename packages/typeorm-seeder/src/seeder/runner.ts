@@ -111,8 +111,9 @@ function logMessage(level: 'log' | 'warn', message: string, context: SeedContext
 export async function runSeeders(
   seeders: SeederCtor[],
   options: RunSeedersOptions = {},
-): Promise<void> {
+): Promise<Map<SeederCtor, unknown>> {
   const { logging = true, onBefore, onAfter, onError, skip, ...context } = options;
+  const results = new Map<SeederCtor, unknown>();
 
   for (const SeederClass of topoSort(seeders)) {
     if (await skip?.(SeederClass)) {
@@ -128,7 +129,7 @@ export async function runSeeders(
     const start = Date.now();
 
     try {
-      await new SeederClass().run(context);
+      results.set(SeederClass, await new SeederClass().run(context));
     } catch (err) {
       const durationMs = Date.now() - start;
 
@@ -148,4 +149,6 @@ export async function runSeeders(
 
     await onAfter?.(SeederClass, durationMs);
   }
+
+  return results;
 }

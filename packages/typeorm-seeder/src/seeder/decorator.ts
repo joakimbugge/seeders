@@ -9,7 +9,7 @@ import type { SeedContext } from '../seed/registry.js';
  * `seed().save()` or other seeding utilities.
  */
 export interface SeederInterface {
-  run(context: SeedContext): Promise<void>;
+  run(context: SeedContext): Promise<unknown>;
 }
 
 /** Configuration options for the {@link Seeder} decorator. */

@@ -33,6 +33,24 @@ Circular dependencies between seeders are detected at runtime and throw an error
 [nest-typeorm-seeder](/nest/) wraps `runSeeders` in a `SeederModule` that runs your seeders automatically on application bootstrap — no seed script needed. It also tracks which seeders have already run so watch-mode restarts don't re-seed.
 :::
 
+## Returning seeded entities
+
+A seeder's `run` method can return a value. `runSeeders` collects these into a `Map` keyed by seeder class:
+
+```ts
+@Seeder()
+class UserSeeder implements SeederInterface {
+  async run(ctx: SeedContext) {
+    return await seed(User).createMany(10, ctx)
+  }
+}
+
+const results = await runSeeders([UserSeeder], { dataSource })
+const users = results.get(UserSeeder) as User[]
+```
+
+This is especially useful with `create` and `createMany` — since those don't write to the database, the return value is often the only way to get the instances back. The map contains an entry for every seeder that ran; skipped seeders are not included.
+
 ## Seeding without `@Seed()`
 
 `@Seed()` is a convenience — it is not required. Complex seeding logic that would clutter entity decorators belongs in the seeder suite instead. Use the `values` option to inject the result at call time, keeping your entities simple:

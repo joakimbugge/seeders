@@ -110,7 +110,7 @@ Class decorator. Registers a class as a seeder and declares its dependencies.
 Topologically sorts and runs the given seeders plus all their transitive dependencies.
 
 ```ts
-runSeeders([PostSeeder], { dataSource }): Promise<void>
+runSeeders([PostSeeder], { dataSource }): Promise<Map<SeederCtor, unknown>>
 ```
 
 Throws if a circular dependency is detected.

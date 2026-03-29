@@ -598,6 +598,60 @@ describe('seeder suites', () => {
     });
   });
 
+  describe('return values', () => {
+    it('returns a Map with the return value of each seeder', async () => {
+      const users = [{ id: 1 }, { id: 2 }];
+
+      @Seeder()
+      class ReturnValueSeeder {
+        async run(_ctx: SeedContext) {
+          return users;
+        }
+      }
+
+      const results = await runSeeders([ReturnValueSeeder], { logging: false });
+
+      expect(results.get(ReturnValueSeeder)).toBe(users);
+    });
+
+    it('collects return values for all seeders in the suite', async () => {
+      @Seeder()
+      class ReturnA {
+        async run(_ctx: SeedContext) {
+          return 'a';
+        }
+      }
+
+      @Seeder({ dependencies: [ReturnA] })
+      class ReturnB {
+        async run(_ctx: SeedContext) {
+          return 'b';
+        }
+      }
+
+      const results = await runSeeders([ReturnB], { logging: false });
+
+      expect(results.get(ReturnA)).toBe('a');
+      expect(results.get(ReturnB)).toBe('b');
+    });
+
+    it('does not include skipped seeders in the results', async () => {
+      @Seeder()
+      class SkippedReturnSeeder {
+        async run(_ctx: SeedContext) {
+          return 'should not appear';
+        }
+      }
+
+      const results = await runSeeders([SkippedReturnSeeder], {
+        logging: false,
+        skip: () => true,
+      });
+
+      expect(results.has(SkippedReturnSeeder)).toBe(false);
+    });
+  });
+
   describe('circular dependencies', () => {
     it('throws when a cycle is detected', async () => {
       class CycleA {
