@@ -1,5 +1,9 @@
 # Running scripts
 
+::: tip Prefer skipping the script entirely?
+The [CLI](/guide/cli) can load and run your seeders directly from the terminal — no seed script needed.
+:::
+
 ## Running seed scripts
 
 When running a seed script directly with Node.js, `reflect-metadata` must be the very first import — before any entity is loaded. TypeORM's decorators depend on it being in place when the class is evaluated.
