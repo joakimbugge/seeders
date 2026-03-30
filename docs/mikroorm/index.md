@@ -17,68 +17,11 @@ pnpm add @joakimbugge/mikroorm-seeder @mikro-orm/core
 
 ## Metadata providers
 
-MikroORM requires a metadata provider to infer property types from decorators. `mikroorm-seeder` works with both — choose the one that fits your setup.
+`mikroorm-seeder` works with both `ReflectMetadataProvider` and `TsMorphMetadataProvider`. See the [MikroORM docs](https://mikro-orm.io/docs/using-decorators) for setup.
 
 ::: warning ES decorators are not supported
 `mikroorm-seeder` requires **legacy decorators** (`experimentalDecorators: true`). The newer TC39 ES decorator proposal — which MikroORM also supports via `@mikro-orm/decorators` — is not currently supported. Attempting to use ES decorators will result in relations and embedded properties not being auto-seeded.
 :::
-
-### ReflectMetadataProvider
-
-Reads type information emitted by the TypeScript compiler at runtime. Requires `reflect-metadata` and `emitDecoratorMetadata: true`.
-
-```bash
-npm install reflect-metadata
-```
-
-```ts
-import 'reflect-metadata'
-import { MikroORM, ReflectMetadataProvider } from '@mikro-orm/core'
-
-const orm = await MikroORM.init({
-  metadataProvider: ReflectMetadataProvider,
-  entities: [User, Post],
-  // ...
-})
-```
-
-```json
-{
-  "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
-  }
-}
-```
-
-If you use SWC, also enable `decoratorMetadata: true` in your SWC config.
-
-### TsMorphMetadataProvider
-
-Reads type information directly from TypeScript source files. Does not require `reflect-metadata` or `emitDecoratorMetadata`. Requires `@mikro-orm/reflection`:
-
-```bash
-npm install @mikro-orm/reflection
-```
-
-```ts
-import { MikroORM } from '@mikro-orm/core'
-import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
-
-const orm = await MikroORM.init({
-  metadataProvider: TsMorphMetadataProvider,
-  entities: [User, Post],
-  // ...
-})
-```
-
-```json
-{
-  "compilerOptions": {
-    "experimentalDecorators": true
-  }
-}
-```
 
 ## Basic usage
 

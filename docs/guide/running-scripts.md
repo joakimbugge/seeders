@@ -1,5 +1,7 @@
 # Running scripts
 
+A seed script is just a `.js` or `.ts` file you execute directly — there is nothing special about it. It can call `seed()`, `runSeeders()`, or anything else; the name just means "the file responsible for seeding."
+
 ::: tip Prefer skipping the script entirely?
 The [CLI](/guide/cli) can load and run your seeders directly from the terminal — no seed script needed.
 :::
@@ -18,28 +20,15 @@ await seed(User).save({ dataSource })
 
 ### TypeScript execution
 
-[tsx](https://github.com/privatenumber/tsx) is a popular choice for running TypeScript directly, but it uses esbuild under the hood which does not support `emitDecoratorMetadata`. This causes TypeORM to fail when inferring column types. Use [ts-node](https://github.com/TypeStrong/ts-node) instead.
-
-**ESM projects** (`"type": "module"` or `"module": "nodenext"` in tsconfig):
-
 ```bash
+# ESM
 node --no-warnings --loader ts-node/esm src/seed.ts
-```
 
-`--no-warnings` suppresses two noisy but harmless warnings emitted by ts-node itself: one about `--loader` being experimental, and one about ts-node internally using a deprecated `fs.Stats` constructor.
-
-**CommonJS projects:**
-
-```bash
-# npm
+# CommonJS
 npx ts-node src/seed.ts
-
-# yarn
-yarn ts-node src/seed.ts
-
-# pnpm
-pnpm exec ts-node src/seed.ts
 ```
+
+> [ts-node](https://github.com/TypeStrong/ts-node) is the right tool here — the popular [tsx](https://github.com/privatenumber/tsx) uses esbuild internally which strips decorator metadata, causing TypeORM to fail.
 
 ## Loading entities from paths
 
@@ -53,6 +42,12 @@ await seed(classes).saveMany(10, { dataSource })
 ```
 
 String entries are expanded with glob and each matched file is dynamically imported. Every exported class constructor found in the module is collected. Constructor entries are passed through as-is.
+
+When running with ts-node, you can point directly at source files:
+
+```ts
+const classes = await loadEntities(['src/entities/**/*.ts'])
+```
 
 ## Loading seeders from paths
 
@@ -70,4 +65,10 @@ Constructor entries are passed through as-is, so you can mix explicit references
 ```ts
 const seeders = await loadSeeders([UserSeeder, 'dist/seeders/Post*.js'])
 await runSeeders(seeders, { dataSource })
+```
+
+When running with ts-node, you can point directly at source files:
+
+```ts
+const seeders = await loadSeeders(['src/seeders/**/*.ts'])
 ```
