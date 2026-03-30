@@ -1,5 +1,57 @@
 # Changelog
 
+## [0.9.0](https://github.com/joakimbugge/seeders/compare/typeorm-seeder-v0.8.1...typeorm-seeder-v0.9.0) (2026-03-30)
+
+
+### Features
+
+* **packages/typeorm-seeder:** add CLI ([a1e64bc](https://github.com/joakimbugge/seeders/commit/a1e64bc776c0f9b85db8b61f4a32ade0dfbd65e8))
+* **packages/typeorm-seeder:** add logging and hooks ([a8581f7](https://github.com/joakimbugge/seeders/commit/a8581f778325658a5187116c871d2db6b78c02e4))
+* **packages/typeorm-seeder:** add skip option ([058f244](https://github.com/joakimbugge/seeders/commit/058f24461513142c0f45d89603ada275b3b83eaf))
+* **packages/typeorm-seeder:** add values option ([daaa351](https://github.com/joakimbugge/seeders/commit/daaa351779ad814d7b1bcb3dfc724c4b79509364))
+* **packages/typeorm-seeder:** collect returns from seeder suites ([28a400d](https://github.com/joakimbugge/seeders/commit/28a400dd0fd49b3ce8d73472227d8b25cac960af))
+* **packages/typeorm-seeder:** consistent types naming ([2f93900](https://github.com/joakimbugge/seeders/commit/2f9390005ee2353e09c5ce1afb252fb0668f736d))
+* **packages/typeorm-seeder:** custom logger option ([c5fe394](https://github.com/joakimbugge/seeders/commit/c5fe394cbc77be57bca245f7e828b1dc1ec3cd05))
+* **packages/typeorm-seeder:** path loading and TypeORM logging ([e748969](https://github.com/joakimbugge/seeders/commit/e748969e0403d83844ca781f9f7685edb9a4b0b5))
+* **packages/typeorm-seeder:** provide partial instance in @Seed ([9356d83](https://github.com/joakimbugge/seeders/commit/9356d8369bef1736b60852ac2055c267a86bd6c9))
+* **packages/typeorm-seeder:** simplify creator and persist methods naming ([7c50f6f](https://github.com/joakimbugge/seeders/commit/7c50f6fb93f1d31984106f2d0ae60b38ca901455))
+* **packages/typeorm-seeder:** support tree entities ([af0e097](https://github.com/joakimbugge/seeders/commit/af0e097b445e12a3f74349540bc56195b8fedc9a))
+
+
+### Bug Fixes
+
+* export missing types across all seeders ([cee1f69](https://github.com/joakimbugge/seeders/commit/cee1f69006124ad15c32296d5c7f44f7b26bcd5d))
+* **packages/typeorm-seeder:** add generic type to self argument ([c821126](https://github.com/joakimbugge/seeders/commit/c821126f69556d1f0772091fd57e3a6e189c92d7))
+* **packages/typeorm-seeder:** add missing argument in decorator test ([2de864e](https://github.com/joakimbugge/seeders/commit/2de864eeceda6f86e9aae0bf8480668f5b1b7360))
+* **packages/typeorm-seeder:** add more comments ([d806424](https://github.com/joakimbugge/seeders/commit/d806424944837444cf38260dd3f76a7db3d96dc6))
+* **packages/typeorm-seeder:** allow SeedFactory in values properties ([e6232b3](https://github.com/joakimbugge/seeders/commit/e6232b372881e6dae706dff0189e78116dbc244d))
+
+
+### Documentation
+
+* add section about evolving seed data ([b083578](https://github.com/joakimbugge/seeders/commit/b083578865e25bb409d645990b9a688464618266))
+* documentation with VitePress + TypeDoc ([afd3c3e](https://github.com/joakimbugge/seeders/commit/afd3c3e6dcb1b12a6f3f055c87ec80e00fabb2e1))
+* fix broken links to documentation ([9c72bbe](https://github.com/joakimbugge/seeders/commit/9c72bbeeb2aba26aeea1b955fb13e3bc63203447))
+* indexes, section on seeding without @Seed() ([19d92c8](https://github.com/joakimbugge/seeders/commit/19d92c863766807574c45bdc259bee1ed6d5da9e))
+* **packages/typeorm-seeder:** add playground for dx testing ([ad22db0](https://github.com/joakimbugge/seeders/commit/ad22db06431431a197965b0bfb518dd4f352b35d))
+* **packages/typeorm-seeder:** logging, hooks and skip options ([9b75a3f](https://github.com/joakimbugge/seeders/commit/9b75a3fb5c43daed449b02bc798952aa56b012f2))
+* remove scope from package names ([5460a26](https://github.com/joakimbugge/seeders/commit/5460a2622846d1649fcac23b0eef495b78b3f00c))
+
+
+### Miscellaneous
+
+* release main ([#15](https://github.com/joakimbugge/seeders/issues/15)) ([82bdae4](https://github.com/joakimbugge/seeders/commit/82bdae4d68f117fd66d7239b4e0fe8ba516bc46a))
+* release main ([#16](https://github.com/joakimbugge/seeders/issues/16)) ([1a41f40](https://github.com/joakimbugge/seeders/commit/1a41f401809c4de05f3866890a9591227a3c03f4))
+* release main ([#17](https://github.com/joakimbugge/seeders/issues/17)) ([95d4a7a](https://github.com/joakimbugge/seeders/commit/95d4a7ad61468d251830e1bdfcc5801d64b1c177))
+* release main ([#18](https://github.com/joakimbugge/seeders/issues/18)) ([d576bef](https://github.com/joakimbugge/seeders/commit/d576bef55f2ee674ba33f5b10694c30d9bcc1bcb))
+* release main ([#19](https://github.com/joakimbugge/seeders/issues/19)) ([f10a1a2](https://github.com/joakimbugge/seeders/commit/f10a1a2998f8ba5728143faea2a71dcf4983a437))
+* release main ([#2](https://github.com/joakimbugge/seeders/issues/2)) ([d47f96e](https://github.com/joakimbugge/seeders/commit/d47f96eeb4571188aab08fff83186be3018e282d))
+* release main ([#23](https://github.com/joakimbugge/seeders/issues/23)) ([1e24b7f](https://github.com/joakimbugge/seeders/commit/1e24b7fe68215cd5f533d82f30b2c5ad5f8826ad))
+* release main ([#3](https://github.com/joakimbugge/seeders/issues/3)) ([257f613](https://github.com/joakimbugge/seeders/commit/257f613c7ad90bfb931c24b4e75961f2b5ff6037))
+* release packages ([#32](https://github.com/joakimbugge/seeders/issues/32)) ([7efc2a2](https://github.com/joakimbugge/seeders/commit/7efc2a264a0ff3197201f534c68260512483247e))
+* rename repo to-seeder -&gt; seeders ([820b714](https://github.com/joakimbugge/seeders/commit/820b714ca1d5af0d01c8a4c0acecbbda4567cc79))
+* share configs, initial nestjs pacakge commit ([75c1d78](https://github.com/joakimbugge/seeders/commit/75c1d781d4b682310fc29899eed0a0c55d559848))
+
 ## 0.8.1
 
 ### Patch Changes

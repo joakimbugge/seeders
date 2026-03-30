@@ -1,5 +1,28 @@
 # @joakimbugge/nest-mikroorm-seeder
 
+## [0.2.0](https://github.com/joakimbugge/seeders/compare/nest-mikroorm-seeder-v0.1.1...nest-mikroorm-seeder-v0.2.0) (2026-03-30)
+
+
+### Features
+
+* initial mikroorm-seeder and nest-mikroorm-seeder ([c562092](https://github.com/joakimbugge/seeders/commit/c5620921a08b1e313ad512a8155644cb88a468f1))
+
+
+### Bug Fixes
+
+* export missing types across all seeders ([cee1f69](https://github.com/joakimbugge/seeders/commit/cee1f69006124ad15c32296d5c7f44f7b26bcd5d))
+
+
+### Documentation
+
+* fix broken links to documentation ([9c72bbe](https://github.com/joakimbugge/seeders/commit/9c72bbeeb2aba26aeea1b955fb13e3bc63203447))
+
+
+### Miscellaneous
+
+* release packages ([#32](https://github.com/joakimbugge/seeders/issues/32)) ([7efc2a2](https://github.com/joakimbugge/seeders/commit/7efc2a264a0ff3197201f534c68260512483247e))
+* rename repo to-seeder -&gt; seeders ([820b714](https://github.com/joakimbugge/seeders/commit/820b714ca1d5af0d01c8a4c0acecbbda4567cc79))
+
 ## 0.1.1
 
 ### Patch Changes
