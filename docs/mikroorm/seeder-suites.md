@@ -70,4 +70,34 @@ class BookingSeeder implements SeederInterface {
 
 If you need full control — inserting specific rows, running raw queries, or using MikroORM's `EntityManager` API directly — the `em` from `SeedContext` gives you direct access to any MikroORM operation.
 
+## Using MikroORM's seeder manager
+
+MikroORM has its own seeder package (`@mikro-orm/seeder`) with a `Seeder` base class, `SeedManager`, and CLI integration. You can use `@Seed()` and `seed()` inside MikroORM's native seeders — they are plain functions that work with any `EntityManager`:
+
+```ts
+import { Seeder } from '@mikro-orm/seeder'
+import type { EntityManager } from '@mikro-orm/core'
+import { seed } from '@joakimbugge/mikroorm-seeder'
+
+export class UserSeeder extends Seeder {
+  async run(em: EntityManager): Promise<void> {
+    await seed(User).saveMany(10, { em })
+  }
+}
+
+export class DatabaseSeeder extends Seeder {
+  async run(em: EntityManager): Promise<void> {
+    await this.call(em, [UserSeeder])
+  }
+}
+```
+
+Then run via MikroORM's CLI or `SeedManager`:
+
+```ts
+await orm.getSeeder().seed(DatabaseSeeder)
+```
+
+The `@Seeder()` decorator and `runSeeders` are not involved here — dependency ordering is handled by `this.call()` instead. If you already use `@mikro-orm/seeder` for CLI-driven seeding, `@Seed()` and `seed()` integrate naturally into that workflow.
+
 Next: [Running scripts](/mikroorm/running-scripts) covers how to execute a seeder suite directly with Node.js or ts-node.

@@ -52,8 +52,7 @@
     "node": ">=18.19.0"
   },
   "peerDependencies": {
-    "@mikro-orm/core": ">=7.0.0",
-    "reflect-metadata": ">=0.1.0"
+    "@mikro-orm/core": ">=7.0.0"
   },
   "devDependencies": {
     "@mikro-orm/core": "^7.0.0",

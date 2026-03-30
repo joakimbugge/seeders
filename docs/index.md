@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: to-seeder
+  name: seeders
   text: Decorator-based entity seeding
   tagline: Annotate entities with @Seed(), create or persist fully populated entity graphs — relations, embedded types, and circular guards included. Works with TypeORM and MikroORM.
   actions:

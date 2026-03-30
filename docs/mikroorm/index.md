@@ -4,22 +4,43 @@ Decorator-based entity seeding for MikroORM. Annotate entity properties with `@S
 
 ## Installation
 
-`@mikro-orm/core` and `reflect-metadata` are peer dependencies.
-
 ```bash
 # npm
-npm install @joakimbugge/mikroorm-seeder @mikro-orm/core reflect-metadata
+npm install @joakimbugge/mikroorm-seeder @mikro-orm/core
 
 # yarn
-yarn add @joakimbugge/mikroorm-seeder @mikro-orm/core reflect-metadata
+yarn add @joakimbugge/mikroorm-seeder @mikro-orm/core
 
 # pnpm
-pnpm add @joakimbugge/mikroorm-seeder @mikro-orm/core reflect-metadata
+pnpm add @joakimbugge/mikroorm-seeder @mikro-orm/core
 ```
 
-## TypeScript configuration
+## Metadata providers
 
-Enable legacy decorators in your `tsconfig.json`:
+MikroORM requires a metadata provider to infer property types from decorators. `mikroorm-seeder` works with both — choose the one that fits your setup.
+
+::: warning ES decorators are not supported
+`mikroorm-seeder` requires **legacy decorators** (`experimentalDecorators: true`). The newer TC39 ES decorator proposal — which MikroORM also supports via `@mikro-orm/decorators` — is not currently supported. Attempting to use ES decorators will result in relations and embedded properties not being auto-seeded.
+:::
+
+### ReflectMetadataProvider
+
+Reads type information emitted by the TypeScript compiler at runtime. Requires `reflect-metadata` and `emitDecoratorMetadata: true`.
+
+```bash
+npm install reflect-metadata
+```
+
+```ts
+import 'reflect-metadata'
+import { MikroORM, ReflectMetadataProvider } from '@mikro-orm/core'
+
+const orm = await MikroORM.init({
+  metadataProvider: ReflectMetadataProvider,
+  entities: [User, Post],
+  // ...
+})
+```
 
 ```json
 {
@@ -30,42 +51,17 @@ Enable legacy decorators in your `tsconfig.json`:
 }
 ```
 
-::: warning ES decorators are not supported
-`mikroorm-seeder` requires **legacy decorators** (`experimentalDecorators: true`). The newer TC39 ES decorator proposal — which MikroORM also supports via `@mikro-orm/decorators` — is not currently supported. Attempting to use ES decorators will result in relations and embedded properties not being auto-seeded.
-:::
-
-`emitDecoratorMetadata: true` is required when using `ReflectMetadataProvider` (the most common setup). If you use `TsMorphMetadataProvider` instead, it can be omitted — see [Metadata providers](#metadata-providers).
-
-## Metadata providers
-
-MikroORM needs a metadata provider to infer property types from decorators. `mikroorm-seeder` works with both supported providers — you must configure one explicitly.
-
-### ReflectMetadataProvider
-
-Reads `design:type` emitted by the TypeScript compiler. Requires `emitDecoratorMetadata: true` in `tsconfig.json` and a TypeScript compiler that emits it (SWC with `decoratorMetadata: true`, or `tsc`).
-
-```ts
-import 'reflect-metadata'
-import { MikroORM } from '@mikro-orm/core'
-import { ReflectMetadataProvider } from '@mikro-orm/decorators/legacy'
-
-const orm = await MikroORM.init({
-  metadataProvider: ReflectMetadataProvider,
-  entities: [User, Post],
-  // ...
-})
-```
+If you use SWC, also enable `decoratorMetadata: true` in your SWC config.
 
 ### TsMorphMetadataProvider
 
-Reads property types directly from TypeScript source files using ts-morph. Does not require `emitDecoratorMetadata`. Install it separately:
+Reads type information directly from TypeScript source files. Does not require `reflect-metadata` or `emitDecoratorMetadata`. Requires `@mikro-orm/reflection`:
 
 ```bash
 npm install @mikro-orm/reflection
 ```
 
 ```ts
-import 'reflect-metadata'
 import { MikroORM } from '@mikro-orm/core'
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
 
@@ -76,12 +72,19 @@ const orm = await MikroORM.init({
 })
 ```
 
+```json
+{
+  "compilerOptions": {
+    "experimentalDecorators": true
+  }
+}
+```
+
 ## Basic usage
 
 Import entity decorators from `@mikro-orm/decorators/legacy`, annotate properties with `@Seed()`, then call `create()` or `save()`:
 
 ```ts
-import 'reflect-metadata'
 import { Entity, PrimaryKey, Property, OneToMany, ManyToOne } from '@mikro-orm/decorators/legacy'
 import { faker } from '@faker-js/faker'
 import { Seed, create, save } from '@joakimbugge/mikroorm-seeder'
