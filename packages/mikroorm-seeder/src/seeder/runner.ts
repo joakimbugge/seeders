@@ -10,11 +10,20 @@ export type SeederCtor = new () => SeederInterface;
 export interface RunSeedersOptions extends SeedContext {
   /**
    * Controls seeder progress output.
+   *
    * - `false` (default) — no output.
-   * - `true` — logs via {@link ConsoleLogger} (or a custom {@link SeederLogger} if provided).
+   * - `true` — logs via {@link ConsoleLogger} (or a custom {@link SeederLogger} if {@link logger} is provided).
+   * - `'mikroorm'` — delegates to the MikroORM logger on the provided `em`. Output follows
+   *   MikroORM's own `debug` configuration: if MikroORM logging is disabled, seeder output is
+   *   suppressed too. Silently no-ops when no `em` is available.
+   *
    * @default false
    */
-  logging?: false | true;
+  logging?: false | true | 'mikroorm';
+  /**
+   * Custom logger used when `logging` is `true`. Ignored for other `logging` values.
+   * Defaults to {@link ConsoleLogger} when omitted.
+   */
   logger?: SeederLogger;
   onBefore?: (seeder: SeederCtor) => void | Promise<void>;
   onAfter?: (seeder: SeederCtor, durationMs: number) => void | Promise<void>;
@@ -64,11 +73,27 @@ function topoSort(roots: SeederCtor[]): SeederCtor[] {
 }
 
 function resolveLog(
-  logging: false | true,
+  logging: false | true | 'mikroorm',
   logger: SeederLogger | undefined,
+  context: SeedContext,
 ): { progress(msg: string): void; failure(msg: string): void } | null {
   if (!logging) {
     return null;
+  }
+
+  if (logging === 'mikroorm') {
+    const { em } = context;
+
+    if (!em) {
+      return null;
+    }
+
+    const mikro = em.config.getLogger();
+
+    return {
+      progress: (msg) => mikro.log('info', msg),
+      failure: (msg) => mikro.warn('info', msg),
+    };
   }
 
   const log = logger ?? new ConsoleLogger();
@@ -85,7 +110,7 @@ export async function runSeeders(
 ): Promise<Map<SeederCtor, unknown>> {
   const { logging = false, logger, onBefore, onAfter, onError, skip, ...context } = options;
   const results = new Map<SeederCtor, unknown>();
-  const log = resolveLog(logging, logger);
+  const log = resolveLog(logging, logger, context);
 
   for (const SeederClass of topoSort(seeders)) {
     if (await skip?.(SeederClass)) {
