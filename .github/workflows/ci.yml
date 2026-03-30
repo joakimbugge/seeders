@@ -32,7 +32,7 @@ jobs:
 
       - run: pnpm -r run test:cov
 
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v6
         with:
           files: packages/typeorm-seeder/coverage/lcov.info,packages/nest-typeorm-seeder/coverage/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
