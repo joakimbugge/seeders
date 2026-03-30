@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "types": [],
+    "paths": {
+      "@joakimbugge/mikroorm-seeder": ["../packages/mikroorm-seeder/src/index.ts"]
+    }
+  },
+  "files": ["../packages/nest-mikroorm-seeder/src/index.ts"]
+}

@@ -1,19 +1,33 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'typeorm-seeder',
-  description: 'Decorator-based entity seeding for TypeORM',
+  title: 'to-seeder',
+  description: 'Decorator-based entity seeding for TypeORM and MikroORM',
   base: '/to-seeder/',
 
   themeConfig: {
     nav: [
-      { text: 'Guide', link: '/guide/' },
-      { text: 'NestJS', link: '/nest/' },
+      {
+        text: 'TypeORM',
+        items: [
+          { text: 'Guide', link: '/guide/' },
+          { text: 'NestJS', link: '/nest/' },
+        ],
+      },
+      {
+        text: 'MikroORM',
+        items: [
+          { text: 'Guide', link: '/mikroorm/' },
+          { text: 'NestJS', link: '/nest-mikroorm/' },
+        ],
+      },
       {
         text: 'API reference',
         items: [
           { text: 'typeorm-seeder', link: '/api/typeorm-seeder/' },
           { text: 'nest-typeorm-seeder', link: '/api/nest-typeorm-seeder/' },
+          { text: 'mikroorm-seeder', link: '/api/mikroorm-seeder/' },
+          { text: 'nest-mikroorm-seeder', link: '/api/nest-mikroorm-seeder/' },
         ],
       },
     ],
@@ -43,6 +57,31 @@ export default defineConfig({
             { text: 'Feature modules', link: '/nest/feature-modules' },
             { text: 'Run once', link: '/nest/run-once' },
             { text: 'Seed scripts', link: '/nest/seed-scripts' },
+          ],
+        },
+      ],
+      '/mikroorm/': [
+        {
+          text: 'mikroorm-seeder',
+          items: [
+            { text: 'Getting started', link: '/mikroorm/' },
+            { text: 'Decorating entities', link: '/mikroorm/decorating-entities' },
+            { text: 'Seeding entities', link: '/mikroorm/seeding-entities' },
+            { text: 'Seeder suites', link: '/mikroorm/seeder-suites' },
+            { text: 'Running scripts', link: '/mikroorm/running-scripts' },
+            { text: 'Logging', link: '/mikroorm/logging' },
+            { text: 'Hooks', link: '/mikroorm/hooks' },
+          ],
+        },
+      ],
+      '/nest-mikroorm/': [
+        {
+          text: 'nest-mikroorm-seeder',
+          items: [
+            { text: 'Getting started', link: '/nest-mikroorm/' },
+            { text: 'Feature modules', link: '/nest-mikroorm/feature-modules' },
+            { text: 'Run once', link: '/nest-mikroorm/run-once' },
+            { text: 'Seed scripts', link: '/nest-mikroorm/seed-scripts' },
           ],
         },
       ],

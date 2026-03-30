@@ -1,0 +1,69 @@
+{
+  "name": "@joakimbugge/mikroorm-seeder",
+  "version": "0.1.0",
+  "description": "Decorator-based seeder library for MikroORM",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joakimbugge/to-seeder.git"
+  },
+  "homepage": "https://github.com/joakimbugge/to-seeder#readme",
+  "bugs": "https://github.com/joakimbugge/to-seeder/issues",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepublishOnly": "pnpm run build",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:cov": "vitest run --coverage",
+    "lint": "oxlint src tests",
+    "lint:fix": "oxlint --fix src tests",
+    "fmt": "oxfmt src tests",
+    "fmt:check": "oxfmt --check src tests"
+  },
+  "keywords": [
+    "mikroorm",
+    "seeder",
+    "decorator",
+    "database",
+    "seed"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.19.0"
+  },
+  "peerDependencies": {
+    "@mikro-orm/core": ">=7.0.0",
+    "reflect-metadata": ">=0.1.0"
+  },
+  "devDependencies": {
+    "@mikro-orm/core": "^7.0.0",
+    "@mikro-orm/decorators": "^7.0.0",
+    "@mikro-orm/reflection": "^7.0.6",
+    "@mikro-orm/sqlite": "^7.0.0",
+    "reflect-metadata": "^0.2.2"
+  },
+  "dependencies": {
+    "dependency-graph": "^1.0.0",
+    "tinyglobby": "^0.2.15"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "types": []
+  },
+  "files": ["../packages/mikroorm-seeder/src/index.ts"]
+}

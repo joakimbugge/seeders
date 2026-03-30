@@ -1,0 +1,11 @@
+{
+  "entryPoints": ["../packages/mikroorm-seeder/src/index.ts"],
+  "tsconfig": "./tsconfig.mikroorm-seeder.json",
+  "plugin": ["typedoc-plugin-markdown"],
+  "out": "api/mikroorm-seeder",
+  "name": "@joakimbugge/mikroorm-seeder",
+  "readme": "none",
+  "hideGenerator": true,
+  "entryFileName": "index",
+  "useCodeBlocks": true
+}
