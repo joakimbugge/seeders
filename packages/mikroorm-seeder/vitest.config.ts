@@ -3,9 +3,8 @@ import swc from 'unplugin-swc'
 
 export default defineConfig({
   plugins: [swc.vite({ jsc: { transform: { decoratorMetadata: true } } })],
+  oxc: false,
   test: {
-    // @ts-ignore — oxc: false disables the Oxc transformer so SWC can run exclusively
-    oxc: false,
     globals: true,
     coverage: {
       provider: 'v8',
