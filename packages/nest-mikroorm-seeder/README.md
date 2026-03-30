@@ -2,8 +2,8 @@
 
 NestJS module for [mikroorm-seeder](../mikroorm-seeder). Runs your `@Seeder` classes automatically on application bootstrap — once per seeder by default, tracked in a database table so watch-mode restarts do not re-seed.
 
-[![CI](https://github.com/joakimbugge/to-seeder/actions/workflows/ci.yml/badge.svg)](https://github.com/joakimbugge/to-seeder/actions/workflows/ci.yml)
-[![Coverage](https://codecov.io/gh/joakimbugge/to-seeder/branch/main/graph/badge.svg)](https://codecov.io/gh/joakimbugge/to-seeder)
+[![CI](https://github.com/joakimbugge/seeders/actions/workflows/ci.yml/badge.svg)](https://github.com/joakimbugge/seeders/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/joakimbugge/seeders/branch/main/graph/badge.svg)](https://codecov.io/gh/joakimbugge/seeders)
 
 Coded by AI. Reviewed by humans.
 

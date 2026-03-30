@@ -14,7 +14,7 @@ hero:
       link: /mikroorm/
     - theme: alt
       text: GitHub
-      link: https://github.com/joakimbugge/to-seeder
+      link: https://github.com/joakimbugge/seeders
 
 features:
   - title: '@Seed() decorator'

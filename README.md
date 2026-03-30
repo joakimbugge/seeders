@@ -1,4 +1,4 @@
-# to-seeder
+# seeders
 
 Monorepo for decorator-based entity seeding. Four packages — framework-agnostic core libraries and NestJS integration modules for TypeORM and MikroORM.
 

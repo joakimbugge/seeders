@@ -2,8 +2,8 @@
 
 Decorator-based entity seeding for TypeORM. Annotate your entity properties with `@Seed()`, then create or persist fully populated entity graphs with a single function call — including relations, embedded types, and circular guards.
 
-[![CI](https://github.com/joakimbugge/to-seeder/actions/workflows/ci.yml/badge.svg)](https://github.com/joakimbugge/to-seeder/actions/workflows/ci.yml)
-[![Coverage](https://codecov.io/gh/joakimbugge/to-seeder/branch/main/graph/badge.svg)](https://codecov.io/gh/joakimbugge/to-seeder)
+[![CI](https://github.com/joakimbugge/seeders/actions/workflows/ci.yml/badge.svg)](https://github.com/joakimbugge/seeders/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/joakimbugge/seeders/branch/main/graph/badge.svg)](https://codecov.io/gh/joakimbugge/seeders)
 
 Coded by AI. Reviewed by humans.
 

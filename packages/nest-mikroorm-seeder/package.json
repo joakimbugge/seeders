@@ -4,10 +4,10 @@
   "description": "NestJS module for @joakimbugge/mikroorm-seeder",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joakimbugge/to-seeder.git"
+    "url": "git+https://github.com/joakimbugge/seeders.git"
   },
-  "homepage": "https://github.com/joakimbugge/to-seeder#readme",
-  "bugs": "https://github.com/joakimbugge/to-seeder/issues",
+  "homepage": "https://github.com/joakimbugge/seeders#readme",
+  "bugs": "https://github.com/joakimbugge/seeders/issues",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

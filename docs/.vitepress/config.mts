@@ -1,9 +1,9 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'to-seeder',
+  title: 'seeders',
   description: 'Decorator-based entity seeding for TypeORM and MikroORM',
-  base: '/to-seeder/',
+  base: '/seeders/',
 
   themeConfig: {
     nav: [
@@ -87,12 +87,12 @@ export default defineConfig({
       ],
     },
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/joakimbugge/to-seeder' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/joakimbugge/seeders' }],
 
     search: { provider: 'local' },
 
     editLink: {
-      pattern: 'https://github.com/joakimbugge/to-seeder/edit/main/docs/:path',
+      pattern: 'https://github.com/joakimbugge/seeders/edit/main/docs/:path',
       text: 'Edit this page on GitHub',
     },
 

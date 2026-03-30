@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "joakimbugge/to-seeder" }],
+  "changelog": ["@changesets/changelog-github", { "repo": "joakimbugge/seeders" }],
   "commit": false,
   "fixed": [],
   "linked": [],
