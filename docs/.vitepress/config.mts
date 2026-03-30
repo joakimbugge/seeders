@@ -71,6 +71,7 @@ export default defineConfig({
             { text: 'Running scripts', link: '/mikroorm/running-scripts' },
             { text: 'Logging', link: '/mikroorm/logging' },
             { text: 'Hooks', link: '/mikroorm/hooks' },
+            { text: 'CLI', link: '/mikroorm/cli' },
           ],
         },
       ],
