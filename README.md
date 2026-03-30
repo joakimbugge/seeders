@@ -151,25 +151,24 @@ pnpm install
 
 ### Release
 
-Releases are managed with [changesets](https://github.com/changesets/changesets). Each package is versioned independently.
+Releases are managed with [Release Please](https://github.com/googleapis/release-please). Each package is versioned independently based on [conventional commits](https://www.conventionalcommits.org/).
 
-**1. Add a changeset**
+**1. Commit to `main` using conventional commits**
 
-Run this at any point while working on your changes — once per logical release, not per commit:
+The commit prefix determines the version bump for whichever packages the commit touches:
 
-```bash
-pnpm changeset
-```
+| Prefix | Bump |
+|---|---|
+| `fix:` | patch |
+| `feat:` | minor |
+| `feat!:` / `BREAKING CHANGE` | minor (no 1.0 releases yet) |
+| `docs:`, `chore:`, `refactor:` | no release |
 
-Select the affected packages, choose a bump type (patch / minor / major), and write a short summary. This creates a `.changeset/*.md` file — commit it alongside your changes.
+Release Please detects which packages are affected by looking at which files the commit touches — no manual tagging or scoping required.
 
-**2. Push to `main`**
+**2. Merge the release PR**
 
-Once your commits and the changeset file land on `main`, CI runs and the release workflow automatically opens a "chore: release packages" PR. That PR bumps the versions and updates each package's `CHANGELOG.md`.
-
-**3. Merge the release PR**
-
-Merging triggers another run of the release workflow, which publishes all bumped packages to npm and redeploys the docs.
+After CI passes, Release Please automatically opens and maintains a "chore: release" PR that bumps the affected package versions and updates each `CHANGELOG.md`. Merging that PR triggers publishing to npm and redeployment of the docs.
 
 ## License
 

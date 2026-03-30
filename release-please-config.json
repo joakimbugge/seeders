@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "changelog-sections": [
+    { "type": "feat",     "section": "Features" },
+    { "type": "fix",      "section": "Bug Fixes" },
+    { "type": "perf",     "section": "Performance",    "hidden": false },
+    { "type": "revert",   "section": "Reverts",        "hidden": false },
+    { "type": "docs",     "section": "Documentation",  "hidden": false },
+    { "type": "style",    "section": "Styles",         "hidden": false },
+    { "type": "chore",    "section": "Miscellaneous",  "hidden": false }
+  ],
+  "packages": {
+    "packages/typeorm-seeder": {},
+    "packages/nest-typeorm-seeder": {},
+    "packages/mikroorm-seeder": {},
+    "packages/nest-mikroorm-seeder": {}
+  }
+}
