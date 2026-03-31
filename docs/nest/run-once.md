@@ -31,7 +31,25 @@ This keeps the history table accurate and avoids the question of what re-running
 
 ## Re-seeding
 
-To force a seeder to run again, delete its row from the `seeders` table:
+To force a seeder to run again, use `seed:untrack`:
+
+::: code-group
+
+```bash [npm]
+npx @joakimbugge/typeorm-seeder seed:untrack UserSeeder -d ./dist/datasource.js
+```
+
+```bash [yarn]
+yarn @joakimbugge/typeorm-seeder seed:untrack UserSeeder -d ./dist/datasource.js
+```
+
+```bash [pnpm]
+pnpm exec @joakimbugge/typeorm-seeder seed:untrack UserSeeder -d ./dist/datasource.js
+```
+
+:::
+
+Or delete its row directly from the `seeders` table:
 
 ```sql
 DELETE FROM "seeders" WHERE name = 'UserSeeder';

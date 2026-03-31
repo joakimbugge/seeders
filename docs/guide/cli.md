@@ -2,34 +2,74 @@
 
 The package ships a CLI binary so you can run seeders or seed entities directly from the terminal without writing a seed script.
 
+::: tip TypeScript
+To use `.ts` files directly, install `ts-node` as a dev dependency and the CLI will pick it up automatically. Compiled `.js` files work without it.
+:::
+
 ## `seed:run`
 
 Loads all `@Seeder`-decorated classes from a glob pattern and runs them in topological order:
 
-```bash
-# npm
-npx @joakimbugge/typeorm-seeder seed:run './dist/seeders/*.js' -d ./dist/datasource.js
+::: code-group
 
-# yarn
-yarn @joakimbugge/typeorm-seeder seed:run './dist/seeders/*.js' -d ./dist/datasource.js
-
-# pnpm
-pnpm exec @joakimbugge/typeorm-seeder seed:run './dist/seeders/*.js' -d ./dist/datasource.js
+```bash [npm]
+npx @joakimbugge/typeorm-seeder seed:run './src/seeders/*.ts' -d ./src/datasource.ts
 ```
+
+```bash [yarn]
+yarn @joakimbugge/typeorm-seeder seed:run './src/seeders/*.ts' -d ./src/datasource.ts
+```
+
+```bash [pnpm]
+pnpm exec @joakimbugge/typeorm-seeder seed:run './src/seeders/*.ts' -d ./src/datasource.ts
+```
+
+:::
 
 ## `seed:entities`
 
 Loads entity constructors from a glob pattern, filters to those with at least one `@Seed` decorator, and persists `--count` instances of each (default: 1):
 
+::: code-group
+
+```bash [npm]
+npx @joakimbugge/typeorm-seeder seed:entities './src/entities/*.ts' -d ./src/datasource.ts --count 20
+```
+
+```bash [yarn]
+yarn @joakimbugge/typeorm-seeder seed:entities './src/entities/*.ts' -d ./src/datasource.ts --count 20
+```
+
+```bash [pnpm]
+pnpm exec @joakimbugge/typeorm-seeder seed:entities './src/entities/*.ts' -d ./src/datasource.ts --count 20
+```
+
+:::
+
+## `seed:untrack`
+
+Removes a seeder from the history table so it runs again on the next application boot:
+
+::: code-group
+
+```bash [npm]
+npx @joakimbugge/typeorm-seeder seed:untrack UserSeeder -d ./src/datasource.ts
+```
+
+```bash [yarn]
+yarn @joakimbugge/typeorm-seeder seed:untrack UserSeeder -d ./src/datasource.ts
+```
+
+```bash [pnpm]
+pnpm exec @joakimbugge/typeorm-seeder seed:untrack UserSeeder -d ./src/datasource.ts
+```
+
+:::
+
+If your NestJS module uses a custom `historyTableName`, pass `--table` (`-t`) to match:
+
 ```bash
-# npm
-npx @joakimbugge/typeorm-seeder seed:entities './dist/entities/*.js' -d ./dist/datasource.js --count 20
-
-# yarn
-yarn @joakimbugge/typeorm-seeder seed:entities './dist/entities/*.js' -d ./dist/datasource.js --count 20
-
-# pnpm
-pnpm exec @joakimbugge/typeorm-seeder seed:entities './dist/entities/*.js' -d ./dist/datasource.js --count 20
+npx @joakimbugge/typeorm-seeder seed:untrack UserSeeder -d ./src/datasource.ts --table seed_history
 ```
 
 ## npm scripts
@@ -47,19 +87,39 @@ A common pattern is to define scripts in `package.json` with the paths baked in:
 
 Run them with your package manager:
 
-```bash
+::: code-group
+
+```bash [npm]
 npm run seed:run
+```
+
+```bash [yarn]
 yarn seed:run
+```
+
+```bash [pnpm]
 pnpm seed:run
 ```
 
+:::
+
 To pass extra arguments at call time, npm and pnpm require a `--` separator before any flags; yarn does not:
 
-```bash
+::: code-group
+
+```bash [npm]
 npm run seed:entities -- --count 50
+```
+
+```bash [yarn]
 yarn seed:entities --count 50
+```
+
+```bash [pnpm]
 pnpm seed:entities -- --count 50
 ```
+
+:::
 
 ## DataSource
 
@@ -72,40 +132,6 @@ export default new DataSource({ ... })
 ```
 
 If the flag is omitted the CLI looks for `typeorm-seeder.config.ts` then `typeorm-seeder.config.js` in the current working directory.
-
-## TypeScript files
-
-Install `ts-node` as a dev dependency and the CLI will pick it up automatically — no extra flags needed:
-
-```bash
-# npm
-npm install --save-dev ts-node
-
-# yarn
-yarn add --dev ts-node
-
-# pnpm
-pnpm add --save-dev ts-node
-```
-
-```bash
-# npm
-npx @joakimbugge/typeorm-seeder seed:run './src/seeders/*.ts' -d ./src/datasource.ts
-
-# yarn
-yarn @joakimbugge/typeorm-seeder seed:run './src/seeders/*.ts' -d ./src/datasource.ts
-
-# pnpm
-pnpm exec @joakimbugge/typeorm-seeder seed:run './src/seeders/*.ts' -d ./src/datasource.ts
-```
-
-Alternatively, pass `--loader ts-node/esm` explicitly via Node's options:
-
-```bash
-node --loader ts-node/esm ./node_modules/.bin/@joakimbugge/typeorm-seeder seed:run './src/seeders/*.ts' -d ./src/datasource.ts
-```
-
-If ts-node is not installed, the CLI will print an error with install instructions. You can also point to compiled JS files in your `dist/` directory instead.
 
 ::: tip
 Wrap glob patterns in single quotes to prevent your shell from expanding them before they reach the CLI. Without quotes, the shell resolves the glob and the CLI receives a list of individual file paths — which also works, but prevents the CLI from using tinyglobby's pattern matching.
