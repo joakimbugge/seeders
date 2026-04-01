@@ -34,6 +34,7 @@ async function applyValues<T extends EntityInstance>(
   instance: T,
   values: SeedValues<T>,
   context: SeedContext,
+  index: number,
 ): Promise<void> {
   const record = instance as Record<string | symbol, unknown>;
 
@@ -41,7 +42,7 @@ async function applyValues<T extends EntityInstance>(
     const value = values[key];
 
     if (typeof value === 'function') {
-      record[key] = await (value as SeedFactory)(context, instance);
+      record[key] = await (value as SeedFactory)(context, instance, index);
     } else {
       record[key] = value;
     }
@@ -97,6 +98,7 @@ function getMikroOrmProperties(
 async function createOne<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
   context: SeedContext,
+  index = 0,
 ): Promise<T> {
   const instance = new EntityClass();
   const ancestors = getAncestors(context);
@@ -112,7 +114,7 @@ async function createOne<T extends EntityInstance>(
       continue;
     }
 
-    record[propertyKey] = await factory(context, instance);
+    record[propertyKey] = await factory(context, instance, index);
     seededProperties.add(propertyKey);
   }
 
@@ -205,10 +207,10 @@ export async function create<T extends EntityInstance>(
   }
 
   const { values, ...context } = options as CreateOptions<T>;
-  const instance = await createOne(classOrClasses as EntityConstructor<T>, context);
+  const instance = await createOne(classOrClasses as EntityConstructor<T>, context, 0);
 
   if (values) {
-    await applyValues(instance, values, context);
+    await applyValues(instance, values, context, 0);
   }
 
   return instance;
@@ -231,17 +233,19 @@ export async function createMany<T extends EntityInstance>(
 
     return (await Promise.all(
       (classOrClasses as EntityConstructor[]).map((cls) =>
-        Promise.all(Array.from({ length: count }, () => createOne(cls, effectiveContext))),
+        Promise.all(Array.from({ length: count }, (_, i) => createOne(cls, effectiveContext, i))),
       ),
     )) as EntityInstance[][];
   }
 
   const instances = await Promise.all(
-    Array.from({ length: count }, () => createOne(classOrClasses as EntityConstructor<T>, context)),
+    Array.from({ length: count }, (_, i) =>
+      createOne(classOrClasses as EntityConstructor<T>, context, i),
+    ),
   );
 
   if (values) {
-    await Promise.all(instances.map((instance) => applyValues(instance, values, context)));
+    await Promise.all(instances.map((instance, i) => applyValues(instance, values, context, i)));
   }
 
   return instances;

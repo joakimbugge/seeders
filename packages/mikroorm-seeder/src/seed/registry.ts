@@ -20,9 +20,21 @@ export interface SeedContext {
   relations?: boolean;
 }
 
+/**
+ * Factory callback passed to `@Seed`. Receives the seed context, the partially built entity,
+ * and a zero-based index that counts up across a `createMany`/`saveMany` batch.
+ *
+ * Properties are seeded sequentially in declaration order, so any property declared above the
+ * current one is already set on `self` and can be read to derive the current value.
+ *
+ * @example
+ * @Seed((_, __, i) => `user-${i}@example.com`)
+ * email!: string
+ */
 export type SeedFactory<T = unknown, TEntity = any> = (
   context: SeedContext,
   self: TEntity,
+  index: number,
 ) => T | Promise<T>;
 
 export interface SeedOptions {

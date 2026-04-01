@@ -30,7 +30,8 @@ export interface SeedContext {
 }
 
 /**
- * Factory callback passed to `@Seed`. Receives the seed context and the partially built entity.
+ * Factory callback passed to `@Seed`. Receives the seed context, the partially built entity,
+ * and a zero-based index that counts up across a `createMany`/`saveMany` batch.
  *
  * Properties are seeded sequentially in declaration order, so any property declared above the
  * current one is already set on `self` and can be read to derive the current value.
@@ -39,6 +40,9 @@ export interface SeedContext {
  * `TEntity` from the annotation, so no cast is needed:
  *
  * @example
+ * @Seed((_, __, i) => `user-${i}@example.com`)
+ * email!: string
+ *
  * @Seed(() => faker.date.past())
  * beginDate!: Date
  *
@@ -48,6 +52,7 @@ export interface SeedContext {
 export type SeedFactory<T = unknown, TEntity = any> = (
   context: SeedContext,
   self: TEntity,
+  index: number,
 ) => T | Promise<T>;
 
 /** Options for the `@Seed` decorator. */

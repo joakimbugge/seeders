@@ -548,3 +548,66 @@ describe('self-referencing relations', () => {
     expect(dept.manager!.manager).toBeUndefined();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Sequence index
+// ---------------------------------------------------------------------------
+
+describe('sequence index', () => {
+  it('factory receives index 0 for a single create()', async () => {
+    class Item {
+      @Seed((_, __, i) => `item-${i}`)
+      value!: string;
+    }
+
+    const item = await create(Item);
+    expect(item.value).toBe('item-0');
+  });
+
+  it('factory receives sequential indices across a createMany() batch', async () => {
+    class Item {
+      @Seed((_, __, i) => `item-${i}`)
+      value!: string;
+    }
+
+    const items = await createMany(Item, { count: 4 });
+    expect(items.map((item) => item.value)).toEqual(['item-0', 'item-1', 'item-2', 'item-3']);
+  });
+
+  it('values factory receives index 0 for a single create()', async () => {
+    class Item {
+      value!: string;
+    }
+
+    const item = await create(Item, { values: { value: (_, __, i) => `item-${i}` } });
+    expect(item.value).toBe('item-0');
+  });
+
+  it('values factory receives sequential indices across a createMany() batch', async () => {
+    class Item {
+      value!: string;
+    }
+
+    const items = await createMany(Item, {
+      count: 4,
+      values: { value: (_, __, i) => `item-${i}` },
+    });
+    expect(items.map((item) => item.value)).toEqual(['item-0', 'item-1', 'item-2', 'item-3']);
+  });
+
+  it('each class in a multi-class createMany() gets its own 0-based sequence', async () => {
+    class ItemA {
+      @Seed((_, __, i) => `a-${i}`)
+      value!: string;
+    }
+
+    class ItemB {
+      @Seed((_, __, i) => `b-${i}`)
+      value!: string;
+    }
+
+    const [itemsA, itemsB] = await createMany([ItemA, ItemB], { count: 3 });
+    expect(itemsA.map((item) => item.value)).toEqual(['a-0', 'a-1', 'a-2']);
+    expect(itemsB.map((item) => item.value)).toEqual(['b-0', 'b-1', 'b-2']);
+  });
+});

@@ -110,7 +110,7 @@ const bookings = await seed(Booking).saveMany(10, {
 })
 ```
 
-Factory entries in `values` receive the same `(context, self)` arguments as `@Seed` factories, so you can read already-applied properties from `self` or query the database via `context.em`.
+Factory entries in `values` receive the same `(context, self, index)` arguments as `@Seed` factories, so you can read already-applied properties from `self`, query the database via `context.em`, or use the [sequence index](/mikroorm/decorating-entities#using-the-sequence-index) to generate unique values per entity.
 
 `values` wins unconditionally: if a property has a `@Seed` factory, the factory still runs but its result is overwritten. `values` also works for properties with no `@Seed` decorator at all.
 

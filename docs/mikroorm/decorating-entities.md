@@ -36,6 +36,18 @@ class Book {
 }
 ```
 
+## Using the sequence index
+
+Every factory receives a zero-based index as its third argument. When called from `createMany` or `saveMany`, the index counts up across the batch — useful for generating unique sequential values:
+
+```ts
+@Seed((_, __, i) => `user-${i}@example.com`)
+@Property()
+email!: string
+```
+
+When called from `create` or `save` (single entity), the index is always `0`.
+
 ::: warning Circular relations
 When seeding `Author`, its `books` are seeded too. Each `Book` has an `author` relation back to `Author` — but seeding that would loop back to `Author`, which would seed more books, and so on forever.
 
