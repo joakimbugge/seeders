@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { printTypeScriptError } from './commands/errors.js';
 import { seedEntitiesCommand } from './commands/seedEntities.js';
+import { seedListCommand } from './commands/seedList.js';
 import { seedRunCommand } from './commands/seedRun.js';
 import { seedUntrackCommand } from './commands/seedUntrack.js';
 
@@ -42,6 +43,8 @@ async function main(): Promise<void> {
       return seedRunCommand(args);
     case 'seed:entities':
       return seedEntitiesCommand(args);
+    case 'seed:list':
+      return seedListCommand(args);
     case 'seed:untrack':
       return seedUntrackCommand(args);
     default: {
@@ -51,6 +54,7 @@ async function main(): Promise<void> {
       console.error('Available commands:');
       console.error('  seed:run        Run @Seeder suites from a glob pattern');
       console.error('  seed:entities   Seed entity instances directly from a glob pattern');
+      console.error('  seed:list       List all tracked seeder runs from the history table');
       console.error('  seed:untrack    Remove a seeder from the history table');
       process.exit(1);
     }

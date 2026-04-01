@@ -1,7 +1,6 @@
 import { parseArgs } from 'node:util';
 import { loadOrm } from '../utils/loadOrm.js';
-
-const DEFAULT_TABLE = 'seeders';
+import { DEFAULT_HISTORY_TABLE } from './constants.js';
 
 /**
  * Handles the `seed:untrack` CLI command.
@@ -25,7 +24,7 @@ export async function seedUntrackCommand(args: string[]): Promise<void> {
   }
 
   const [name] = positionals;
-  const tableName = values.table ?? DEFAULT_TABLE;
+  const tableName = values.table ?? DEFAULT_HISTORY_TABLE;
   const orm = await loadOrm(values.orm);
 
   try {

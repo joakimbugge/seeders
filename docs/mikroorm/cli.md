@@ -70,6 +70,37 @@ npx @joakimbugge/mikroorm-seeder seed:entities './src/entities/*.ts' --dry-run -
 # User { name: 'Carol White', email: 'carol@example.com', age: 22 }
 ```
 
+## `seed:list`
+
+Prints all seeder runs recorded in the history table:
+
+::: code-group
+
+```bash [npm]
+npx @joakimbugge/mikroorm-seeder seed:list -o ./src/orm.ts
+```
+
+```bash [yarn]
+yarn @joakimbugge/mikroorm-seeder seed:list -o ./src/orm.ts
+```
+
+```bash [pnpm]
+pnpm exec @joakimbugge/mikroorm-seeder seed:list -o ./src/orm.ts
+```
+
+:::
+
+```
+┌─────────┬─────────────────────┬──────────────────────────────┐
+│ (index) │ name                │ executed_at                  │
+├─────────┼─────────────────────┼──────────────────────────────┤
+│ 0       │ 'UserSeeder'        │ '2026-04-01T10:00:00.000Z'   │
+│ 1       │ 'PostSeeder'        │ '2026-04-01T10:00:01.243Z'   │
+└─────────┴─────────────────────┴──────────────────────────────┘
+```
+
+If the history table does not exist yet, or no seeders have run, a descriptive message is printed instead. Pass `--table` (`-t`) if you use a custom `historyTableName`.
+
 ## `seed:untrack`
 
 Removes a seeder from the history table so it runs again on the next application boot:

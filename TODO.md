@@ -12,11 +12,9 @@ Items identified from documentation review. Ordered roughly by impact.
 
 ---
 
-## `seed:list` CLI command
+## ~~`seed:list` CLI command~~ ✓ done
 
-There is a `seed:untrack` command to remove history entries, but no way to inspect the history table — to see which seeders have run, which are pending, and when they last ran. A `seed:list` command is the natural companion.
-
-Affects `typeorm-seeder` and `mikroorm-seeder` CLIs.
+`seed:list` queries the history table and prints `name` + `executed_at` for all tracked runs via `console.table`. Handles missing table and empty table gracefully.
 
 ---
 
