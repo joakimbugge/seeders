@@ -84,3 +84,28 @@ class User {
 ```
 
 Calling `create(User)` builds a `User` with a fully populated `Address` instance on `user.address`.
+
+## MikroORM `defineEntity()`
+
+`@Seed()` is designed for the decorator-based entity style (`@Entity()`, `@Property()`, etc.) and is **not compatible** with `defineEntity()`.
+
+MikroORM's schema-first approach looks like this:
+
+```ts
+import { defineEntity, p } from '@mikro-orm/core'
+
+const BookSchema = defineEntity({
+  name: 'Book',
+  properties: {
+    title: p.string(),
+    author: () => p.manyToOne(Author),
+  },
+})
+
+export class Book extends BookSchema.class {}
+BookSchema.setClass(Book)
+```
+
+Even in this hybrid form, MikroORM never runs `@Entity()` on the class, so the seeder cannot resolve its property metadata at runtime. `@Seed()` applied to `Book` properties will not be picked up.
+
+Use standard MikroORM decorators (`@Entity()`, `@Property()`, `@ManyToOne()`, etc.) to take full advantage of `mikroorm-seeder`.

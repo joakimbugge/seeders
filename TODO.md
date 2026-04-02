@@ -26,14 +26,9 @@ Items identified from documentation review. Ordered roughly by impact.
 
 ---
 
-## MikroORM `defineEntity` support
+## ~~MikroORM `defineEntity` support~~ ✓ done
 
-MikroORM supports a `defineEntity()` function for schema-first / non-decorator entity definitions. Investigate whether `@Seed()` can be used alongside it — specifically when `defineEntity` is combined with a class body (the hybrid form). Two open questions:
-
-1. Can `@Seed()` decorators be applied to properties inside the class part of a `defineEntity` + class definition, and will `reflect-metadata` still pick them up?
-2. Is there anything useful `mikroorm-seeder` can hook into in the `defineEntity()` function call itself (e.g. a property schema passed to it)?
-
-If the class-based hybrid form works, no library changes may be needed — just documentation. If the pure schema-first form does not, a separate integration path may be required.
+`defineEntity()` is not compatible with `@Seed()`. The pure schema-first form has no class to decorate. The hybrid form (`defineEntity({ class: MyClass, ... })`) has a class but MikroORM does not run `@Entity()` on it, so `PATH_SYMBOL` is never set and `getMikroOrmProperties()` returns empty — `@Seed()` is not picked up. Documented as a limitation: the decorator-based approach is the only supported style.
 
 ---
 
