@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Seeder } from '../../src/seeder/decorator.js';
-import { getSeederMeta } from '../../src/seeder/registry.js';
+import { Seeder, getSeederMeta } from '../../src';
 
 describe('@Seeder', () => {
   it('registers the class in the seeder registry', () => {

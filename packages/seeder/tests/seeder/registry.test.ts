@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { runSeeders } from '../../src';
-import { registerSeeder } from '../../src/seeder/registry.js';
+import { runSeeders, registerSeeder } from '../../src';
 
 // The `throw err` re-throw branch at the end of sortSeeders() is not tested.
 // It fires only when dependency-graph throws an error that lacks a `cyclePath` property,

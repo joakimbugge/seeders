@@ -117,4 +117,8 @@ await orm.getSeeder().seed(DatabaseSeeder)
 
 The `@Seeder()` decorator and `runSeeders` are not involved here — dependency ordering is handled by `this.call()` instead. If you already use `@mikro-orm/seeder` for CLI-driven seeding, `@Seed()` and `seed()` integrate naturally into that workflow.
 
+::: info
+`@Seeder`, `runSeeders`, `SeederInterface`, and related types originate in [`@joakimbugge/seeder`](/seeder/) — the ORM-agnostic core. They are re-exported from `@joakimbugge/mikroorm-seeder` for convenience, so no additional dependency is needed.
+:::
+
 Next: [Running scripts](/mikroorm/running-scripts) covers how to execute a seeder suite directly with Node.js or ts-node.

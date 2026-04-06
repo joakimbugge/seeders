@@ -1,6 +1,6 @@
 import { importGlob } from './importGlob.js';
 import { collectConstructors } from './collectConstructors.js';
-import { getSeederMeta } from '../seeder/registry.js';
+import { getSeederMeta } from '@joakimbugge/seeder';
 import type { SeederCtor } from '../seeder/runner.js';
 
 /**

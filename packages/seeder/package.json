@@ -59,7 +59,11 @@
       "optional": true
     }
   },
+  "dependencies": {
+    "dependency-graph": "^1.0.0"
+  },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "reflect-metadata": "^0.2.2"
   }
 }

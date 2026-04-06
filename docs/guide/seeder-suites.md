@@ -87,4 +87,8 @@ class BookingSeeder implements SeederInterface {
 
 If you need full control — inserting specific rows, running raw queries, or using TypeORM's `EntityManager` — the `dataSource` from `SeedContext` gives you direct access to any TypeORM API.
 
+::: info
+`@Seeder`, `runSeeders`, `SeederInterface`, and related types originate in [`@joakimbugge/seeder`](/seeder/) — the ORM-agnostic core. They are re-exported from `@joakimbugge/typeorm-seeder` for convenience, so no additional dependency is needed.
+:::
+
 Next: [Running scripts](/guide/running-scripts) covers how to execute a seeder suite directly with Node.js or ts-node.

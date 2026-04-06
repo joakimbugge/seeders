@@ -1,12 +1,9 @@
 export { Seed } from './seed/decorator.js';
 export { seed } from './seed/builder.js';
 export { loadEntities } from './utils/loadEntities.js';
-export { Seeder } from './seeder/decorator.js';
 export { runSeeders } from './seeder/runner.js';
 export { loadSeeders } from './utils/loadSeeders.js';
 export type { SeederCtor, RunSeedersOptions } from './seeder/runner.js';
-export type { SeederLogger } from './seeder/logger.js';
-export { ConsoleLogger } from './seeder/logger.js';
 export type {
   EntityInstance,
   EntityConstructor,
@@ -17,9 +14,12 @@ export type {
   CreateOptions,
   CreateManyOptions,
   SeedValues,
+  SeederLogger,
+  SeederInterface,
+  SeederOptions,
 } from '@joakimbugge/seeder';
+export { ConsoleLogger, Seeder } from '@joakimbugge/seeder';
 export type { SeedContext } from './seed/context.js';
 export type { SeedFactory } from './seed/decorator.js';
 export type { SingleSeed, MultiSeed } from './seed/builder.js';
-export type { SeederInterface, SeederOptions } from './seeder/decorator.js';
 export type { PersistContext } from './adapters/persistenceAdapter';

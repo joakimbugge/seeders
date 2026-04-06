@@ -26,3 +26,10 @@ export type {
 export { registerSeed, getSeeds } from './seed/registry.js';
 export type { CreateOptions, SeedValues } from './seed/creators/create.js';
 export type { CreateManyOptions } from './seed/creators/createMany.js';
+export { Seeder } from './seeder/decorator.js';
+export type { SeederInterface, SeederOptions } from './seeder/decorator.js';
+export { registerSeeder, getSeederMeta } from './seeder/registry.js';
+export { ConsoleLogger } from './seeder/logger.js';
+export type { SeederLogger } from './seeder/logger.js';
+export { runSeeders } from './seeder/runner.js';
+export type { SeederCtor, RunSeedersOptions } from './seeder/runner.js';

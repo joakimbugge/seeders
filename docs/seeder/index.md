@@ -126,6 +126,37 @@ const users = await builder.createMany(10)
 
 The same applies to `makeMultiSeedBuilder`.
 
+## Seeder suites
+
+`@joakimbugge/seeder` also ships the `@Seeder` decorator and `runSeeders` function used to organize seeding into ordered, concurrent-capable classes. These are the same primitives that `typeorm-seeder` and `mikroorm-seeder` re-export — you get them for free when building a custom adapter.
+
+```ts
+import { Seeder, runSeeders } from '@joakimbugge/seeder'
+import type { SeederInterface } from '@joakimbugge/seeder'
+
+@Seeder()
+class UserSeeder implements SeederInterface<MyContext> {
+  async run(ctx: MyContext) {
+    await seed(User).saveMany(10, ctx)
+  }
+}
+
+@Seeder({ dependencies: [UserSeeder] })
+class PostSeeder implements SeederInterface<MyContext> {
+  async run(ctx: MyContext) {
+    await seed(Post).saveMany(50, ctx)
+  }
+}
+
+// ctx must satisfy MyContext (your SeedContext extension)
+await runSeeders([PostSeeder], ctx)
+// UserSeeder runs first, then PostSeeder
+```
+
+`runSeeders` collects all transitive dependencies, topologically sorts them, and runs each seeder once in the correct order. Seeders with no dependency relationship run concurrently. It returns a `Map` of seeder class → return value of `run`.
+
+The `logging` option on the core `runSeeders` accepts `false | true`. ORM packages extend this with their own values (`'typeorm'`, `'mikroorm'`) by wrapping the core function. When building a custom adapter, use `logging: true` to route output through `ConsoleLogger` (or a custom `SeederLogger`).
+
 ## API reference
 
 See the [seeder API reference](/api/seeder/) for the full type reference.
