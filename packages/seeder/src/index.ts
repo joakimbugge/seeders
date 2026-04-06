@@ -3,8 +3,10 @@ export { create } from './seed/creators/create.js';
 export { createMany } from './seed/creators/createMany.js';
 export { save } from './seed/persist/save.js';
 export { saveMany } from './seed/persist/saveMany.js';
-export { makeSeedBuilder, makeMultiSeedBuilder } from './seed/builder.js';
-export type { SingleSeed, MultiSeed } from './seed/builder.js';
+export { makeSeedBuilder } from './seed/builder/makeSeedBuilder.js';
+export type { SingleSeed } from './seed/builder/makeSeedBuilder.js';
+export { makeMultiSeedBuilder } from './seed/builder/makeMultiSeedBuilder.js';
+export type { MultiSeed } from './seed/builder/makeMultiSeedBuilder.js';
 export type {
   MetadataAdapter,
   PersistenceAdapter,
