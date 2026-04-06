@@ -29,6 +29,7 @@ export type { CreateManyOptions } from './seed/creators/createMany.js';
 export { Seeder } from './seeder/decorator.js';
 export type { SeederInterface, SeederOptions } from './seeder/decorator.js';
 export { registerSeeder, getSeederMeta } from './seeder/registry.js';
+export type { SeederMeta } from './seeder/registry.js';
 export { ConsoleLogger } from './seeder/logger.js';
 export type { SeederLogger } from './seeder/logger.js';
 export { runSeeders } from './seeder/runner.js';

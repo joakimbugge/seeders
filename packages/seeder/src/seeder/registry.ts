@@ -1,4 +1,4 @@
-interface SeederMeta {
+export interface SeederMeta {
   dependencies: Function[];
 }
 
