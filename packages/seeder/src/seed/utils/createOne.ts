@@ -1,6 +1,7 @@
 import type { MetadataAdapter } from '../adapter.js';
 import type { EntityConstructor, EntityInstance, SeedContext, SeedFactory } from '../registry.js';
 import { getSeeds } from '../registry.js';
+import { CreateManyOptions } from '../creators/createMany';
 
 /**
  * A map of property overrides for seeded entities.
@@ -8,8 +9,7 @@ import { getSeeds } from '../registry.js';
  * once per entity — enabling unique random values across each created instance.
  */
 export type SeedValues<T extends EntityInstance> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in keyof T]?: T[K] | SeedFactory<T[K], T, any>;
+  [K in keyof T]?: T[K] | SeedFactory<T[K], T, SeedContext>;
 };
 
 interface InternalContext extends SeedContext {
@@ -61,12 +61,11 @@ export async function applyValues<T extends EntityInstance>(
 
 export async function createManyInstances<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  count: number,
-  context: SeedContext,
+  options: CreateManyOptions<T>,
   adapter: MetadataAdapter,
 ): Promise<T[]> {
   return await Promise.all(
-    Array.from({ length: count }, (_, i) => createOne(EntityClass, context, i, adapter)),
+    Array.from({ length: options.count }, (_, i) => createOne(EntityClass, options, i, adapter)),
   );
 }
 
@@ -97,7 +96,7 @@ export async function createOne<T extends EntityInstance>(
     seededProperties.add(propertyKey);
   }
 
-  for (const { propertyName, getClass } of adapter.getEmbeddeds(hierarchy)) {
+  for (const { propertyName, getClass } of adapter.getEmbeds(hierarchy)) {
     if (seededProperties.has(propertyName)) {
       continue;
     }
@@ -136,8 +135,7 @@ export async function createOne<T extends EntityInstance>(
     if (relation.isArray) {
       record[propertyKey] = await createManyInstances(
         RelatedClass,
-        options.count ?? 1,
-        childContext,
+        { ...childContext, count: options.count ?? 1 },
         adapter,
       );
     } else {

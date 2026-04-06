@@ -1,7 +1,6 @@
 import type { MetadataAdapter, PersistenceAdapter } from '../adapter.js';
-import type { CreateManyOptions } from '../creators/createMany.js';
-import { create } from '../creators/create.js';
 import { createMany } from '../creators/createMany.js';
+import { create } from '../creators/create.js';
 import { save } from '../persist/save.js';
 import { saveMany } from '../persist/saveMany.js';
 import type {
@@ -21,7 +20,7 @@ import type {
  * persistence (e.g. `{ dataSource: DataSource }` for TypeORM).
  */
 export interface MultiSeed<
-  T extends readonly EntityConstructor[],
+  T extends EntityConstructor[],
   TContext extends SeedContext = SeedContext,
 > {
   /** Creates one instance of each class in memory without persisting. */
@@ -38,53 +37,38 @@ export interface MultiSeed<
  * Returns a create-only {@link MultiSeed} builder bound to the given entity classes.
  * Use this overload when you only need in-memory creation and will handle persistence yourself.
  */
-export function makeMultiSeedBuilder<T extends readonly EntityConstructor[]>(
+export function makeMultiSeedBuilder<T extends EntityConstructor[]>(
   classes: [...T],
   metadataAdapter: MetadataAdapter,
 ): Pick<MultiSeed<T>, 'create' | 'createMany'>;
+
 /**
  * Returns a full {@link MultiSeed} builder bound to the given entity classes and adapters.
  * ORM packages call this with their own adapters to produce the multi-class `seed()` return value.
  */
-export function makeMultiSeedBuilder<
-  T extends readonly EntityConstructor[],
-  TContext extends SeedContext,
->(
+export function makeMultiSeedBuilder<T extends EntityConstructor[], TContext extends SeedContext>(
   classes: [...T],
   metadataAdapter: MetadataAdapter,
   persistenceAdapter: PersistenceAdapter<TContext>,
 ): MultiSeed<T, TContext>;
-export function makeMultiSeedBuilder<
-  T extends readonly EntityConstructor[],
-  TContext extends SeedContext,
->(
+
+export function makeMultiSeedBuilder<T extends EntityConstructor[], TContext extends SeedContext>(
   classes: [...T],
   metadataAdapter: MetadataAdapter,
   persistenceAdapter?: PersistenceAdapter<TContext>,
 ): Pick<MultiSeed<T>, 'create' | 'createMany'> | MultiSeed<T, TContext> {
-  const base = {
-    create: (context?: SeedContext) =>
-      create(classes, context, metadataAdapter) as Promise<MapToInstances<T>>,
-    createMany: (count: number, context?: SeedContext) =>
-      createMany(classes, { count, ...context } as CreateManyOptions, metadataAdapter) as Promise<
-        MapToInstanceArrays<T>
-      >,
-  };
-
   if (!persistenceAdapter) {
-    return base;
+    return {
+      create: (context) => create(classes, context, metadataAdapter),
+      createMany: (count, context) => createMany(classes, { count, ...context }, metadataAdapter),
+    };
   }
 
   return {
-    ...base,
-    save: (options: TContext) =>
-      save(classes, options, metadataAdapter, persistenceAdapter) as Promise<MapToInstances<T>>,
-    saveMany: (count: number, options: TContext) =>
-      saveMany(
-        classes,
-        { count, ...options } as TContext & { count: number },
-        metadataAdapter,
-        persistenceAdapter,
-      ) as Promise<MapToInstanceArrays<T>>,
+    create: (context) => create(classes, context, metadataAdapter),
+    createMany: (count, context) => createMany(classes, { count, ...context }, metadataAdapter),
+    save: (options) => save(classes, options, metadataAdapter, persistenceAdapter),
+    saveMany: (count, options) =>
+      saveMany(classes, { count, ...options }, metadataAdapter, persistenceAdapter),
   };
 }

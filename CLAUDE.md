@@ -14,7 +14,7 @@ pnpm test           # Run all tests (vitest)
 pnpm typecheck      # Type-check all packages
 pnpm lint:fix       # Lint with oxlint
 pnpm fmt            # Format with oxfmt
-pnpm run dev:watch  # Watch mode for all packages in parallel
+pnpm run dev:watch  # Build + typecheck watch mode for all packages in parallel
 ```
 
 ## Tooling

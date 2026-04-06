@@ -24,7 +24,7 @@ export interface MetadataAdapter {
    * Returns embedded entity entries for the given class hierarchy.
    * The hierarchy is ordered from most-derived to base class.
    */
-  getEmbeddeds(hierarchy: EntityConstructor[]): EmbeddedEntry[];
+  getEmbeds(hierarchy: EntityConstructor[]): EmbeddedEntry[];
   /**
    * Returns relation entries for the given class hierarchy.
    * Only properties that have a resolvable entity constructor should be included.

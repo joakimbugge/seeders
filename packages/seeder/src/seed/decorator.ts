@@ -1,5 +1,5 @@
-import { registerSeed } from './registry.js';
-import type { SeedContext, SeedFactory, SeedOptions } from './registry.js';
+import type { EntityInstance, SeedContext, SeedFactory, SeedOptions } from './registry.js';
+import { EntityConstructor, registerSeed } from './registry.js';
 
 /**
  * Marks a relation property for auto-seeding.
@@ -11,6 +11,7 @@ import type { SeedContext, SeedFactory, SeedOptions } from './registry.js';
  * being seeded higher up in the same call chain, the property is left `undefined`.
  */
 export function Seed(): PropertyDecorator;
+
 /**
  * Marks a relation property for auto-seeding with options.
  *
@@ -22,6 +23,7 @@ export function Seed(): PropertyDecorator;
  * books!: Book[]
  */
 export function Seed(options: SeedOptions): PropertyDecorator;
+
 /**
  * Marks a property with a factory callback.
  *
@@ -33,17 +35,19 @@ export function Seed(options: SeedOptions): PropertyDecorator;
  * @Seed(() => faker.internet.email())
  * email!: string
  */
-export function Seed<TEntity = any, TContext extends SeedContext = SeedContext>(
-  factory: SeedFactory<unknown, TEntity, TContext>,
-): PropertyDecorator;
+export function Seed<
+  TEntity extends EntityInstance = EntityInstance,
+  TContext extends SeedContext = SeedContext,
+>(factory: SeedFactory<unknown, TEntity, TContext>): PropertyDecorator;
+
 /** Marks a property with a factory callback and additional options. */
-export function Seed<TEntity = any, TContext extends SeedContext = SeedContext>(
-  factory: SeedFactory<unknown, TEntity, TContext>,
-  options: SeedOptions,
-): PropertyDecorator;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function Seed<
+  TEntity extends EntityInstance = EntityInstance,
+  TContext extends SeedContext = SeedContext,
+>(factory: SeedFactory<unknown, TEntity, TContext>, options: SeedOptions): PropertyDecorator;
+
 export function Seed(
-  factoryOrOptions?: SeedFactory<unknown, any, any> | SeedOptions,
+  factoryOrOptions?: SeedFactory<unknown, EntityInstance, SeedContext> | SeedOptions,
   options?: SeedOptions,
 ): PropertyDecorator {
   const factory = typeof factoryOrOptions === 'function' ? factoryOrOptions : undefined;
@@ -51,6 +55,6 @@ export function Seed(
     (typeof factoryOrOptions === 'object' ? factoryOrOptions : options) ?? {};
 
   return (target, propertyKey) => {
-    registerSeed(target.constructor as Function, { propertyKey, factory, options: opts });
+    registerSeed(target.constructor as EntityConstructor, { propertyKey, factory, options: opts });
   };
 }

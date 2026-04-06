@@ -1,5 +1,5 @@
 import type { MetadataAdapter, PersistenceAdapter } from '../adapter.js';
-import type { SeedValues } from '../creators/create.js';
+import type { SeedValues } from './createOne';
 import { createMany } from '../creators/createMany.js';
 import type { EntityConstructor, EntityInstance, SeedContext } from '../registry.js';
 
@@ -19,7 +19,6 @@ export async function saveBatch<T extends EntityInstance, TContext extends SeedC
   }
 
   const entities = await createMany(EntityClass, options, metadataAdapter);
-
   const { count: _count, values: _values, ...context } = options;
 
   return persistenceAdapter.save(EntityClass, entities, context as unknown as TContext);

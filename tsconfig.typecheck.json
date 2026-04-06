@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/seeder/tsconfig.typecheck.json" },
+    { "path": "./packages/typeorm-seeder/tsconfig.typecheck.json" },
+    { "path": "./packages/mikroorm-seeder/tsconfig.typecheck.json" },
+    { "path": "./packages/nest-typeorm-seeder/tsconfig.typecheck.json" },
+    { "path": "./packages/nest-mikroorm-seeder/tsconfig.typecheck.json" }
+  ]
+}
+

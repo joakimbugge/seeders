@@ -17,7 +17,7 @@ const args = process.argv.slice(3);
  * - ts-node is not installed in the user's project
  * - The Node.js version does not support `module.register()`
  */
-async function tryRegisterTypeScript(): Promise<boolean> {
+async function tryRegisterTypeScript() {
   try {
     const mod: { register?: (spec: string, parentUrl: string) => void } =
       await import('node:module');
@@ -29,7 +29,7 @@ async function tryRegisterTypeScript(): Promise<boolean> {
   }
 }
 
-async function main(): Promise<void> {
+async function main() {
   const tsRegistered = await tryRegisterTypeScript();
   const hasTsArgs = args.some((a) => !a.startsWith('-') && a.includes('.ts'));
 

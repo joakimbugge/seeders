@@ -15,23 +15,23 @@ export interface SeederLogger {
  * `console` method so output goes to stdout/stderr via Node's standard streams.
  */
 export class ConsoleLogger implements SeederLogger {
-  log(message: string): void {
+  log(message: string) {
     console.log(message);
   }
 
-  info(message: string): void {
+  info(message: string) {
     console.info(message);
   }
 
-  warn(message: string): void {
+  warn(message: string) {
     console.warn(message);
   }
 
-  error(message: string): void {
+  error(message: string) {
     console.error(message);
   }
 
-  debug(message: string): void {
+  debug(message: string) {
     console.debug(message);
   }
 }

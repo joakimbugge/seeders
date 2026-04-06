@@ -7,7 +7,7 @@ import { DEFAULT_HISTORY_TABLE } from './constants.js';
  *
  * Queries the history table and prints all tracked seeder runs as a table.
  */
-export async function seedListCommand(args: string[]): Promise<void> {
+export async function seedListCommand(args: string[]) {
   const { values } = parseArgs({
     args,
     options: {

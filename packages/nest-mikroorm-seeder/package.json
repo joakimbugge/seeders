@@ -32,6 +32,7 @@
     "prepublishOnly": "pnpm run build",
     "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --noEmit --watch --preserveWatchOutput",
     "test": "vitest",
     "test:run": "vitest run",
     "test:cov": "vitest run --coverage",

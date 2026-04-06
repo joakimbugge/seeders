@@ -4,7 +4,7 @@ import type { MetadataAdapter } from '../../../src';
 
 /** Adapter that reports no embeddeds or relations — suitable for pure scalar tests. */
 const noOpAdapter: MetadataAdapter = {
-  getEmbeddeds: () => [],
+  getEmbeds: () => [],
   getRelations: () => [],
 };
 
@@ -142,7 +142,7 @@ class Customer {
 
 /** Adapter that only returns embedded for Customer, not for Address itself — prevents infinite recursion. */
 const embeddedAdapter: MetadataAdapter = {
-  getEmbeddeds: (hierarchy) => {
+  getEmbeds: (hierarchy) => {
     if (hierarchy.some((c) => c === Customer)) {
       return [{ propertyName: 'address', getClass: () => Address }];
     }
@@ -182,7 +182,7 @@ class Book {
 }
 
 const cycleAdapter: MetadataAdapter = {
-  getEmbeddeds: () => [],
+  getEmbeds: () => [],
   getRelations: (hierarchy) => {
     if (hierarchy.some((c) => c === Author)) {
       return [{ propertyName: 'books', getClass: () => Book, isArray: true }];

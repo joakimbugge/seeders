@@ -24,37 +24,35 @@ export async function create<T extends EntityInstance>(
   options: CreateOptions<T> | undefined,
   adapter: MetadataAdapter,
 ): Promise<T>;
+
 /**
  * Creates one in-memory instance per class in the provided tuple.
  * Relation seeding defaults to `false` for this overload.
  *
  * @internal The `adapter` parameter is supplied by ORM packages and is not part of the user-facing API.
  */
-export async function create<T extends readonly EntityConstructor[]>(
+export async function create<T extends EntityConstructor[]>(
   EntityClasses: [...T],
   context: SeedContext | undefined,
   adapter: MetadataAdapter,
 ): Promise<MapToInstances<T>>;
+
 export async function create<T extends EntityInstance>(
-  classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
+  ClassOrClasses: EntityConstructor<T> | EntityConstructor[],
   options: CreateOptions<T> | undefined,
   adapter: MetadataAdapter,
 ): Promise<T | EntityInstance[]> {
-  if (Array.isArray(classOrClasses)) {
-    const effectiveContext: SeedContext = { relations: false, ...options };
-
-    return (await Promise.all(
-      (classOrClasses as EntityConstructor[]).map((cls) =>
-        createOne(cls, effectiveContext, 0, adapter),
-      ),
-    )) as EntityInstance[];
+  if (Array.isArray(ClassOrClasses)) {
+    return await Promise.all(
+      ClassOrClasses.map((cls) => createOne(cls, { relations: false, ...options }, 0, adapter)),
+    );
   }
 
-  const { values, ...context } = (options ?? {}) as CreateOptions<T>;
-  const instance = await createOne(classOrClasses as EntityConstructor<T>, context, 0, adapter);
+  const context = options ?? {};
+  const instance = await createOne(ClassOrClasses, context, 0, adapter);
 
-  if (values) {
-    await applyValues(instance, values, context, 0);
+  if (context.values) {
+    await applyValues(instance, context.values, context, 0);
   }
 
   return instance;

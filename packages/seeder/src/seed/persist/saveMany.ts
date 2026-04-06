@@ -20,6 +20,7 @@ export async function saveMany<T extends EntityInstance, TContext extends SeedCo
   metadataAdapter: MetadataAdapter,
   persistenceAdapter: PersistenceAdapter<TContext>,
 ): Promise<T[]>;
+
 /**
  * Creates and persists `count` instances per class in the tuple.
  * Relation seeding defaults to `false` for this overload.
@@ -27,35 +28,26 @@ export async function saveMany<T extends EntityInstance, TContext extends SeedCo
  * @internal The `metadataAdapter` and `persistenceAdapter` parameters are supplied by ORM packages
  * and are not part of the user-facing API.
  */
-export async function saveMany<
-  T extends readonly EntityConstructor[],
-  TContext extends SeedContext,
->(
+export async function saveMany<T extends EntityConstructor[], TContext extends SeedContext>(
   EntityClasses: [...T],
   options: TContext & { count: number },
   metadataAdapter: MetadataAdapter,
   persistenceAdapter: PersistenceAdapter<TContext>,
 ): Promise<MapToInstanceArrays<T>>;
+
 export async function saveMany<T extends EntityInstance, TContext extends SeedContext>(
-  classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
+  classOrClasses: EntityConstructor<T> | EntityConstructor[],
   options: TContext & { count: number; values?: SeedValues<T> },
   metadataAdapter: MetadataAdapter,
   persistenceAdapter: PersistenceAdapter<TContext>,
 ): Promise<T[] | EntityInstance[][]> {
   if (Array.isArray(classOrClasses)) {
-    const effectiveOptions = { relations: false, ...options } as TContext & { count: number };
-
-    return (await Promise.all(
-      (classOrClasses as EntityConstructor[]).map((cls) =>
-        saveBatch(cls, effectiveOptions, metadataAdapter, persistenceAdapter),
+    return await Promise.all(
+      classOrClasses.map((cls) =>
+        saveBatch(cls, { relations: false, ...options }, metadataAdapter, persistenceAdapter),
       ),
-    )) as EntityInstance[][];
+    );
   }
 
-  return saveBatch(
-    classOrClasses as EntityConstructor<T>,
-    options,
-    metadataAdapter,
-    persistenceAdapter,
-  );
+  return saveBatch(classOrClasses, options, metadataAdapter, persistenceAdapter);
 }

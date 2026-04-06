@@ -32,6 +32,7 @@ export function makeSeedBuilder<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
   metadataAdapter: MetadataAdapter,
 ): Pick<SingleSeed<T>, 'create' | 'createMany'>;
+
 /**
  * Returns a full {@link SingleSeed} builder bound to the given entity class and adapters.
  * ORM packages call this with their own adapters to produce the `seed()` return value.
@@ -41,31 +42,25 @@ export function makeSeedBuilder<T extends EntityInstance, TContext extends SeedC
   metadataAdapter: MetadataAdapter,
   persistenceAdapter: PersistenceAdapter<TContext>,
 ): SingleSeed<T, TContext>;
+
 export function makeSeedBuilder<T extends EntityInstance, TContext extends SeedContext>(
   EntityClass: EntityConstructor<T>,
   metadataAdapter: MetadataAdapter,
   persistenceAdapter?: PersistenceAdapter<TContext>,
-): Pick<SingleSeed<T>, 'create' | 'createMany'> | SingleSeed<T, TContext> {
-  const base = {
-    create: (options?: CreateOptions<T>) => create(EntityClass, options, metadataAdapter),
-    createMany: (count: number, options?: CreateOptions<T>) =>
-      createMany(EntityClass, { count, ...options }, metadataAdapter),
-  };
-
+): Pick<SingleSeed<T, TContext>, 'create' | 'createMany'> | SingleSeed<T, TContext> {
   if (!persistenceAdapter) {
-    return base;
+    return {
+      create: (options) => create(EntityClass, options, metadataAdapter),
+      createMany: (count, options) =>
+        createMany(EntityClass, { count, ...options }, metadataAdapter),
+    };
   }
 
   return {
-    ...base,
-    save: (options: TContext & { values?: SeedValues<T> }) =>
-      save(EntityClass, options, metadataAdapter, persistenceAdapter),
-    saveMany: (count: number, options: TContext & { values?: SeedValues<T> }) =>
-      saveMany(
-        EntityClass,
-        { count, ...options } as TContext & { count: number; values?: SeedValues<T> },
-        metadataAdapter,
-        persistenceAdapter,
-      ),
+    create: (options) => create(EntityClass, options, metadataAdapter),
+    createMany: (count, options) => createMany(EntityClass, { count, ...options }, metadataAdapter),
+    save: (options) => save(EntityClass, options, metadataAdapter, persistenceAdapter),
+    saveMany: (count, options) =>
+      saveMany(EntityClass, { count, ...options }, metadataAdapter, persistenceAdapter),
   };
 }

@@ -3,7 +3,7 @@ import { Seed, createMany } from '../../../src';
 import type { MetadataAdapter } from '../../../src';
 
 const noOpAdapter: MetadataAdapter = {
-  getEmbeddeds: () => [],
+  getEmbeds: () => [],
   getRelations: () => [],
 };
 

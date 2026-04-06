@@ -16,7 +16,7 @@ export class SeederFeatureService implements OnModuleInit {
     private readonly registry: SeederRegistry,
   ) {}
 
-  onModuleInit(): void {
+  onModuleInit() {
     this.registry.register(this.seeders);
   }
 }

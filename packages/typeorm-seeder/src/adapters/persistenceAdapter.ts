@@ -1,45 +1,15 @@
-import { getMetadataArgsStorage } from 'typeorm';
-import type { DataSource } from 'typeorm';
 import type {
-  EmbeddedEntry,
   EntityConstructor,
   EntityInstance,
-  MetadataAdapter,
   PersistenceAdapter,
-  RelationEntry,
   SeedContext,
 } from '@joakimbugge/seeder';
-
-export const typeOrmAdapter: MetadataAdapter = {
-  getEmbeddeds(hierarchy): EmbeddedEntry[] {
-    return getMetadataArgsStorage()
-      .filterEmbeddeds(hierarchy)
-      .map((e) => ({
-        propertyName: e.propertyName,
-        getClass: e.type as () => never,
-      }));
-  },
-
-  getRelations(hierarchy): RelationEntry[] {
-    return getMetadataArgsStorage()
-      .filterRelations(hierarchy)
-      .filter((r) => typeof r.type === 'function')
-      .map((r) => ({
-        propertyName: r.propertyName,
-        getClass: r.type as () => never,
-        isArray: r.relationType === 'one-to-many' || r.relationType === 'many-to-many',
-      }));
-  },
-};
+import type { DataSource } from 'typeorm';
 
 /** Context required when persisting entities — `dataSource` is mandatory. */
-export interface TypeOrmPersistContext extends SeedContext {
+export interface PersistContext extends SeedContext {
   dataSource: DataSource;
 }
-
-// ---------------------------------------------------------------------------
-// Internal helpers (mirror of former utils/saveBatch.ts)
-// ---------------------------------------------------------------------------
 
 type RelationMetadata = DataSource extends { getMetadata(...args: never[]): infer M }
   ? M extends { relations: Array<infer R> }
@@ -64,7 +34,7 @@ function collectEntityClasses(
 
   visited.add(EntityClass);
 
-  const classes: EntityConstructor[] = [EntityClass];
+  const classes = [EntityClass];
 
   for (const value of Object.values(entity)) {
     if (Array.isArray(value)) {
@@ -101,7 +71,7 @@ function enableCascadeInsert(
   return states;
 }
 
-function restoreCascade(states: CascadeState[]): void {
+function restoreCascade(states: CascadeState[]) {
   for (const { relation, original } of states) {
     relation.isCascadeInsert = original;
   }
@@ -135,7 +105,7 @@ async function saveTreeEntity<T extends EntityInstance>(
   let savedParent: T | undefined;
 
   if (parent) {
-    [savedParent] = (await repo.save([parent])) as T[];
+    [savedParent] = await repo.save([parent]);
   }
 
   if (parentProp && savedParent) {
@@ -146,7 +116,7 @@ async function saveTreeEntity<T extends EntityInstance>(
     (entity as Record<string, unknown>)[String(childrenProp)] = [];
   }
 
-  const [savedRoot] = (await repo.save([entity])) as T[];
+  const [savedRoot] = await repo.save([entity]);
 
   if (children.length > 0 && parentProp) {
     for (const child of children) {
@@ -157,19 +127,11 @@ async function saveTreeEntity<T extends EntityInstance>(
     (savedRoot as Record<string, unknown>)[String(childrenProp!)] = children;
   }
 
-  return savedRoot as T;
+  return savedRoot;
 }
 
-// ---------------------------------------------------------------------------
-// Persistence adapter
-// ---------------------------------------------------------------------------
-
-export const typeOrmPersistenceAdapter: PersistenceAdapter<TypeOrmPersistContext> = {
-  async save<T extends EntityInstance>(
-    EntityClass: EntityConstructor<T>,
-    entities: T[],
-    context: TypeOrmPersistContext,
-  ): Promise<T[]> {
+export const persistenceAdapter: PersistenceAdapter<PersistContext> = {
+  async save(EntityClass, entities, context) {
     const { dataSource } = context;
 
     if (isTreeEntity(EntityClass, dataSource)) {
@@ -182,7 +144,7 @@ export const typeOrmPersistenceAdapter: PersistenceAdapter<TypeOrmPersistContext
       .flatMap((cls) => enableCascadeInsert(cls, dataSource));
 
     try {
-      return (await dataSource.getRepository(EntityClass).save(entities)) as T[];
+      return await dataSource.getRepository(EntityClass).save(entities);
     } finally {
       restoreCascade(states);
     }

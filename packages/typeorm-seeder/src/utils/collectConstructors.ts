@@ -6,7 +6,7 @@ export function collectConstructors<T extends Function>(
   value: unknown,
   out: T[],
   guard: (fn: Function) => boolean = () => true,
-): void {
+) {
   if (typeof value === 'function') {
     if (guard(value)) {
       out.push(value as T);

@@ -36,7 +36,7 @@ function buildLevels(roots: SeederCtor[]): SeederCtor[][] {
   const byName = new Map<string, SeederCtor>();
 
   const visited = new Set<SeederCtor>();
-  const queue: SeederCtor[] = [...roots];
+  const queue = [...roots];
 
   while (queue.length > 0) {
     const node = queue.shift()!;

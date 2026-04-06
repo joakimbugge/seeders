@@ -67,7 +67,7 @@ export type MapToInstanceArrays<T extends readonly EntityConstructor[]> = {
 const registry = new Map<Function, SeedEntry[]>();
 
 /** Registers a seed entry for the given class constructor. Called internally by the `@Seed` decorator. */
-export function registerSeed(target: Function, entry: SeedEntry): void {
+export function registerSeed(target: EntityConstructor, entry: SeedEntry) {
   const entries = registry.get(target) ?? [];
 
   entries.push(entry);
@@ -78,9 +78,9 @@ export function registerSeed(target: Function, entry: SeedEntry): void {
  * Returns all seed entries for the given class, including those inherited from
  * parent classes. Parent entries come first, preserving declaration order.
  */
-export function getSeeds(target: Function): SeedEntry[] {
+export function getSeeds(target: EntityConstructor): SeedEntry[] {
   const entries: SeedEntry[] = [];
-  let current: Function = target;
+  let current = target;
 
   while (current && current !== Function.prototype) {
     const own = registry.get(current);
@@ -89,7 +89,7 @@ export function getSeeds(target: Function): SeedEntry[] {
       entries.unshift(...own);
     }
 
-    current = Object.getPrototypeOf(current) as Function;
+    current = Object.getPrototypeOf(current);
   }
 
   return entries;

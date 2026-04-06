@@ -3,7 +3,7 @@ import { Seed, save } from '../../../src';
 import type { MetadataAdapter, PersistenceAdapter, SeedContext } from '../../../src';
 
 const noOpAdapter: MetadataAdapter = {
-  getEmbeddeds: () => [],
+  getEmbeds: () => [],
   getRelations: () => [],
 };
 

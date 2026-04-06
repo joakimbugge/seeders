@@ -37,6 +37,7 @@ export function Seeder(): ClassDecorator;
  * }
  */
 export function Seeder(options: SeederOptions): ClassDecorator;
+
 /**
  * Shared implementation for both overloads.
  * Normalizes missing options to an empty dependency list.

@@ -21,5 +21,5 @@ export type {
 export type { SeedContext } from './seed/context.js';
 export type { SeedFactory } from './seed/decorator.js';
 export type { SingleSeed, MultiSeed } from './seed/builder.js';
-export type { TypeOrmPersistContext } from './seed/adapter.js';
 export type { SeederInterface, SeederOptions } from './seeder/decorator.js';
+export type { PersistContext } from './adapters/persistenceAdapter';

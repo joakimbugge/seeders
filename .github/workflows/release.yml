@@ -35,7 +35,7 @@ jobs:
         run: pnpm -r run build
 
       - name: Type-check packages
-        run: pnpm -r run typecheck
+        run: pnpm run typecheck
 
       - name: Run tests with coverage
         run: pnpm -r run test:cov

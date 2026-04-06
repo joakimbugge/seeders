@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@joakimbugge/seeder": ["packages/seeder/src/index.ts"],
+      "@joakimbugge/typeorm-seeder": ["packages/typeorm-seeder/src/index.ts"],
+      "@joakimbugge/mikroorm-seeder": ["packages/mikroorm-seeder/src/index.ts"],
+      "@joakimbugge/nest-typeorm-seeder": ["packages/nest-typeorm-seeder/src/index.ts"],
+      "@joakimbugge/nest-mikroorm-seeder": ["packages/nest-mikroorm-seeder/src/index.ts"]
+    },
     "target": "ES2020",
     "module": "Preserve",
     "moduleResolution": "Bundler",
@@ -12,6 +20,7 @@
     "isolatedModules": true,
     "types": ["reflect-metadata", "vitest/globals"],
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "ignoreDeprecations": "6.0"
   }
 }

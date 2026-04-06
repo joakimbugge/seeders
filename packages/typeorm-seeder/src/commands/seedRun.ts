@@ -9,7 +9,7 @@ import { isTypeScriptImportError, printTypeScriptError } from './errors.js';
  * Loads all `@Seeder`-decorated classes from the given glob patterns and runs
  * them via `runSeeders`, which handles topological ordering and built-in logging.
  */
-export async function seedRunCommand(args: string[]): Promise<void> {
+export async function seedRunCommand(args: string[]) {
   const { values, positionals } = parseArgs({
     args,
     options: {

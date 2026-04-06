@@ -1,4 +1,4 @@
-import type { SeedFactory as BaseSeedFactory } from '@joakimbugge/seeder';
+import type { EntityInstance, SeedFactory as BaseSeedFactory } from '@joakimbugge/seeder';
 import { Seed as BaseSeed } from '@joakimbugge/seeder';
 import type { SeedOptions } from '@joakimbugge/seeder';
 import type { SeedContext } from './context.js';
@@ -68,9 +68,14 @@ export const Seed = BaseSeed as {
    * role!: Role
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  <TEntity = any>(factory: SeedFactory<unknown, TEntity>): PropertyDecorator;
+  <TEntity extends EntityInstance = EntityInstance>(
+    factory: SeedFactory<unknown, TEntity>,
+  ): PropertyDecorator;
 
   /** Marks a property with a factory callback and additional options. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  <TEntity = any>(factory: SeedFactory<unknown, TEntity>, options: SeedOptions): PropertyDecorator;
+  <TEntity extends EntityInstance = EntityInstance>(
+    factory: SeedFactory<unknown, TEntity>,
+    options: SeedOptions,
+  ): PropertyDecorator;
 };

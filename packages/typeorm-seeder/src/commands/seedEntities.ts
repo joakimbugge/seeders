@@ -10,7 +10,7 @@ import { isTypeScriptImportError, printTypeScriptError } from './errors.js';
  * Loads entity constructors from the given glob patterns, filters to those with
  * at least one `@Seed` decorator, then seeds and persists `count` instances of each.
  */
-export async function seedEntitiesCommand(args: string[]): Promise<void> {
+export async function seedEntitiesCommand(args: string[]) {
   const { values, positionals } = parseArgs({
     args,
     options: {

@@ -10,7 +10,7 @@ export class SeederRegistry {
   private readonly seeders: (SeederCtor | string)[] = [];
 
   /** Adds seeders to the global list. Called by {@link SeederFeatureService} on module init. */
-  register(seeders: (SeederCtor | string)[]): void {
+  register(seeders: (SeederCtor | string)[]) {
     this.seeders.push(...seeders);
   }
 

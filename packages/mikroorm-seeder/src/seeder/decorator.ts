@@ -26,6 +26,7 @@ export interface SeederOptions {
  * Marks a class as a seeder with no explicit dependency configuration.
  */
 export function Seeder(): ClassDecorator;
+
 /**
  * Marks a class as a seeder and registers dependency metadata.
  *
@@ -38,6 +39,7 @@ export function Seeder(): ClassDecorator;
  * }
  */
 export function Seeder(options: SeederOptions): ClassDecorator;
+
 /**
  * Shared implementation for both overloads.
  * Normalizes missing options to an empty dependency list.

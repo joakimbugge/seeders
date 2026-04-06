@@ -8,7 +8,7 @@ import { DEFAULT_HISTORY_TABLE } from './constants.js';
  * Removes a seeder entry from the history table so it will be executed again
  * on the next application boot.
  */
-export async function seedUntrackCommand(args: string[]): Promise<void> {
+export async function seedUntrackCommand(args: string[]) {
   const { values, positionals } = parseArgs({
     args,
     options: {

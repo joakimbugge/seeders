@@ -5,7 +5,7 @@ interface SeederMeta {
 const registry = new WeakMap<Function, SeederMeta>();
 
 /** Registers seeder metadata for the given class constructor. Called internally by the `@Seeder` decorator. */
-export function registerSeeder(target: Function, meta: SeederMeta): void {
+export function registerSeeder(target: Function, meta: SeederMeta) {
   registry.set(target, meta);
 }
 

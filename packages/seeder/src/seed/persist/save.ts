@@ -20,6 +20,7 @@ export async function save<T extends EntityInstance, TContext extends SeedContex
   metadataAdapter: MetadataAdapter,
   persistenceAdapter: PersistenceAdapter<TContext>,
 ): Promise<T>;
+
 /**
  * Creates and persists one instance per class in the provided tuple.
  * Relation seeding defaults to `false` for this overload.
@@ -27,38 +28,38 @@ export async function save<T extends EntityInstance, TContext extends SeedContex
  * @internal The `metadataAdapter` and `persistenceAdapter` parameters are supplied by ORM packages
  * and are not part of the user-facing API.
  */
-export async function save<T extends readonly EntityConstructor[], TContext extends SeedContext>(
+export async function save<T extends EntityConstructor[], TContext extends SeedContext>(
   EntityClasses: [...T],
   options: TContext,
   metadataAdapter: MetadataAdapter,
   persistenceAdapter: PersistenceAdapter<TContext>,
 ): Promise<MapToInstances<T>>;
+
 export async function save<T extends EntityInstance, TContext extends SeedContext>(
-  classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
+  ClassOrClasses: EntityConstructor<T> | EntityConstructor[],
   options: TContext & { values?: SeedValues<T> },
   metadataAdapter: MetadataAdapter,
   persistenceAdapter: PersistenceAdapter<TContext>,
 ): Promise<T | EntityInstance[]> {
-  if (Array.isArray(classOrClasses)) {
-    const effectiveOptions = { relations: false, ...options, count: 1 } as TContext & {
-      count: number;
-    };
-
-    return (await Promise.all(
-      (classOrClasses as EntityConstructor[]).map((cls) =>
-        saveBatch(cls, effectiveOptions, metadataAdapter, persistenceAdapter).then(
-          ([entity]) => entity!,
-        ),
+  if (Array.isArray(ClassOrClasses)) {
+    return await Promise.all(
+      ClassOrClasses.map((cls) =>
+        saveBatch(
+          cls,
+          { relations: false, ...options, count: 1 },
+          metadataAdapter,
+          persistenceAdapter,
+        ).then(([entity]) => entity),
       ),
-    )) as EntityInstance[];
+    );
   }
 
   const [entity] = await saveBatch(
-    classOrClasses as EntityConstructor<T>,
+    ClassOrClasses,
     { ...options, count: 1 },
     metadataAdapter,
     persistenceAdapter,
   );
 
-  return entity!;
+  return entity;
 }

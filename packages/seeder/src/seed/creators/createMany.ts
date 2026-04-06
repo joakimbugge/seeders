@@ -5,8 +5,8 @@ import type {
   MapToInstanceArrays,
   SeedContext,
 } from '../registry.js';
-import { applyValues, createManyInstances } from '../utils/createOne.js';
 import type { SeedValues } from '../utils/createOne.js';
+import { applyValues, createManyInstances } from '../utils/createOne.js';
 
 /** Base options for the `createMany` overload. */
 export interface CreateManyOptions<T extends EntityInstance = EntityInstance> extends SeedContext {
@@ -25,41 +25,35 @@ export async function createMany<T extends EntityInstance>(
   options: CreateManyOptions<T>,
   adapter: MetadataAdapter,
 ): Promise<T[]>;
+
 /**
  * Creates `count` instances for each class in the tuple.
  * Relation seeding defaults to `false` for this overload.
  *
  * @internal The `adapter` parameter is supplied by ORM packages and is not part of the user-facing API.
  */
-export async function createMany<T extends readonly EntityConstructor[]>(
+export async function createMany<T extends EntityConstructor[]>(
   EntityClasses: [...T],
   options: CreateManyOptions,
   adapter: MetadataAdapter,
 ): Promise<MapToInstanceArrays<T>>;
+
 export async function createMany<T extends EntityInstance>(
-  classOrClasses: EntityConstructor<T> | readonly EntityConstructor[],
-  { count, values, ...context }: CreateManyOptions<T>,
+  ClassOrClasses: EntityConstructor<T> | EntityConstructor<T>[],
+  options: CreateManyOptions<T>,
   adapter: MetadataAdapter,
 ): Promise<T[] | EntityInstance[][]> {
-  if (Array.isArray(classOrClasses)) {
-    const effectiveContext: SeedContext = { relations: false, ...context };
-
-    return (await Promise.all(
-      (classOrClasses as EntityConstructor[]).map((cls) =>
-        createManyInstances(cls, count, effectiveContext, adapter),
-      ),
-    )) as EntityInstance[][];
+  if (Array.isArray(ClassOrClasses)) {
+    return await Promise.all(
+      ClassOrClasses.map((cls) => createManyInstances(cls, options, adapter)),
+    );
   }
 
-  const instances = await createManyInstances(
-    classOrClasses as EntityConstructor<T>,
-    count,
-    context,
-    adapter,
-  );
+  const instances = await createManyInstances(ClassOrClasses, options, adapter);
+  const { values } = options;
 
   if (values) {
-    await Promise.all(instances.map((instance, i) => applyValues(instance, values, context, i)));
+    await Promise.all(instances.map((instance, i) => applyValues(instance, values, options, i)));
   }
 
   return instances;
