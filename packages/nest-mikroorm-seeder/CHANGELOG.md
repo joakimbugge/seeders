@@ -1,5 +1,12 @@
 # @joakimbugge/nest-mikroorm-seeder
 
+## [0.2.0](https://github.com/joakimbugge/seeders/compare/nest-mikroorm-seeder-v0.1.1...nest-mikroorm-seeder-v0.2.0) (2026-04-10)
+
+
+### Features
+
+* loadEntities and loadSeeders now only exist in @joakimbugge/seeder ([6b396e1](https://github.com/joakimbugge/seeders/commit/6b396e1701b21b00f4335935e1f51c5434a1d7b2))
+
 ## 0.1.1
 
 ### Patch Changes
