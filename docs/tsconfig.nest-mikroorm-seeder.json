@@ -3,7 +3,8 @@
   "compilerOptions": {
     "types": [],
     "paths": {
-      "@joakimbugge/mikroorm-seeder": ["../packages/mikroorm-seeder/src/index.ts"]
+      "@joakimbugge/seeder": ["packages/seeder/src/index.ts"],
+      "@joakimbugge/mikroorm-seeder": ["packages/mikroorm-seeder/src/index.ts"]
     }
   },
   "files": ["../packages/nest-mikroorm-seeder/src/index.ts"]
