@@ -18,7 +18,7 @@
     "declaration": true,
     "declarationMap": true,
     "isolatedModules": true,
-    "types": ["reflect-metadata", "vitest/globals"],
+    "types": ["node", "reflect-metadata", "vitest/globals"],
     "skipLibCheck": true,
     "noEmit": true,
     "ignoreDeprecations": "6.0"
