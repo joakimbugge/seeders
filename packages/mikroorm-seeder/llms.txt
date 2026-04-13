@@ -102,7 +102,7 @@ class User {
   address!: Address
 }
 
-const user = await create(User)
+const user = await seed(User).create()
 // user.address → fully populated Address instance
 ```
 

@@ -32,3 +32,50 @@ Verify these compiler options are enabled in your `tsconfig.json` — TypeORM re
   }
 }
 ```
+
+## Basic usage
+
+Import entity decorators from `typeorm`, annotate properties with `@Seed()`, then call `create()` or `save()`:
+
+```ts
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm'
+import { faker } from '@faker-js/faker'
+import { Seed, seed } from '@joakimbugge/typeorm-seeder'
+
+@Entity()
+class Author {
+  @PrimaryGeneratedColumn()
+  id!: number
+
+  @Seed(() => faker.person.fullName())
+  @Column()
+  name!: string
+
+  @Seed({ count: 3 })
+  @OneToMany(() => Book, (b) => b.author)
+  books!: Book[]
+}
+
+@Entity()
+class Book {
+  @PrimaryGeneratedColumn()
+  id!: number
+
+  @Seed(() => faker.lorem.words(4))
+  @Column()
+  title!: string
+
+  @Seed()
+  @ManyToOne(() => Author, (a) => a.books)
+  author!: Author
+}
+
+// Build and return directly — no database needed
+const author = await seed(Author).create()
+// author.name → full name
+// author.books → 3 Book instances each with their own seeded properties
+
+// Persist to the database and return
+const saved = await seed(Author).save({ dataSource })
+// saved.id → assigned by TypeORM after save
+```

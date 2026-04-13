@@ -35,7 +35,7 @@ Import entity decorators from `@mikro-orm/decorators/legacy`, annotate propertie
 ```ts
 import { Entity, PrimaryKey, Property, OneToMany, ManyToOne } from '@mikro-orm/decorators/legacy'
 import { faker } from '@faker-js/faker'
-import { Seed, create, save } from '@joakimbugge/mikroorm-seeder'
+import { Seed, seed } from '@joakimbugge/mikroorm-seeder'
 
 @Entity()
 class Author {
@@ -65,12 +65,12 @@ class Book {
   author!: Author
 }
 
-// Create in memory — no database required
-const author = await create(Author)
+// Build and return directly — no database needed
+const author = await seed(Author).create()
 // author.name → full name
 // author.books → 3 Book instances each with their own seeded properties
 
-// Create and persist to the database
-const saved = await save(Author, { em })
+// Persist to the database and return
+const saved = await seed(Author).save({ em })
 // saved.id → assigned by MikroORM after flush
 ```

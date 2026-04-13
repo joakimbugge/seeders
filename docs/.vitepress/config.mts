@@ -53,14 +53,47 @@ export default defineConfig({
           text: 'typeorm-seeder',
           items: [
             { text: 'Getting started', link: '/guide/' },
+            { text: 'What is seeding?', link: '/guide/what-is-seeding' },
+            { text: 'How it works', link: '/guide/how-it-works' },
             { text: 'Decorating entities', link: '/guide/decorating-entities' },
             { text: 'Seeding entities', link: '/guide/seeding-entities' },
-            { text: 'Tree entities', link: '/guide/tree-entities' },
+          ],
+        },
+        {
+          text: 'Advanced patterns',
+          items: [
+            { text: 'Tree entities', link: '/guide/advanced-patterns/tree-entities' },
+            { text: 'Circular relations', link: '/guide/decorating-entities#circular-relations' },
+            { text: 'Batch dependencies', link: '/guide/decorating-entities#depending-on-earlier-instances-in-a-batch' },
+            { text: 'Depending on previous properties', link: '/guide/decorating-entities#depending-on-earlier-properties' },
+          ],
+        },
+        {
+          text: 'Organizing seeding logic',
+          items: [
             { text: 'Seeder suites', link: '/guide/seeder-suites' },
-            { text: 'Running scripts', link: '/guide/running-scripts' },
-            { text: 'Logging', link: '/guide/logging' },
             { text: 'Hooks', link: '/guide/hooks' },
+            { text: 'Logging', link: '/guide/logging' },
+          ],
+        },
+        {
+          text: 'Running seeding',
+          items: [
+            { text: 'Running scripts', link: '/guide/running-scripts' },
             { text: 'CLI', link: '/guide/cli' },
+          ],
+        },
+        {
+          text: 'Reference',
+          items: [
+            { text: 'Troubleshooting', link: '/guide/troubleshooting' },
+            { text: 'API docs', link: '/api/typeorm-seeder/' },
+          ],
+        },
+        {
+          text: 'Frameworks',
+          items: [
+            { text: 'NestJS', link: '/nest/' },
           ],
         },
       ],
@@ -72,6 +105,7 @@ export default defineConfig({
             { text: 'Feature modules', link: '/nest/feature-modules' },
             { text: 'Run once', link: '/nest/run-once' },
             { text: 'Seed scripts', link: '/nest/seed-scripts' },
+            { text: 'Troubleshooting', link: '/nest/troubleshooting' },
           ],
         },
       ],
@@ -80,13 +114,46 @@ export default defineConfig({
           text: 'mikroorm-seeder',
           items: [
             { text: 'Getting started', link: '/mikroorm/' },
+            { text: 'What is seeding?', link: '/guide/what-is-seeding' },
+            { text: 'How it works', link: '/guide/how-it-works' },
             { text: 'Decorating entities', link: '/mikroorm/decorating-entities' },
             { text: 'Seeding entities', link: '/mikroorm/seeding-entities' },
+          ],
+        },
+        {
+          text: 'Advanced patterns',
+          items: [
+            { text: 'Circular relations', link: '/mikroorm/decorating-entities#circular-relations' },
+            { text: 'Batch dependencies', link: '/mikroorm/decorating-entities#depending-on-earlier-instances-in-a-batch' },
+            { text: 'Depending on previous properties', link: '/mikroorm/decorating-entities#depending-on-earlier-properties' },
+          ],
+        },
+        {
+          text: 'Organizing seeding logic',
+          items: [
             { text: 'Seeder suites', link: '/mikroorm/seeder-suites' },
-            { text: 'Running scripts', link: '/mikroorm/running-scripts' },
-            { text: 'Logging', link: '/mikroorm/logging' },
             { text: 'Hooks', link: '/mikroorm/hooks' },
+            { text: 'Logging', link: '/mikroorm/logging' },
+          ],
+        },
+        {
+          text: 'Running seeding',
+          items: [
+            { text: 'Running scripts', link: '/mikroorm/running-scripts' },
             { text: 'CLI', link: '/mikroorm/cli' },
+          ],
+        },
+        {
+          text: 'Reference',
+          items: [
+            { text: 'Troubleshooting', link: '/guide/troubleshooting' },
+            { text: 'API docs', link: '/api/mikroorm-seeder/' },
+          ],
+        },
+        {
+          text: 'Frameworks',
+          items: [
+            { text: 'NestJS', link: '/nest-mikroorm/' },
           ],
         },
       ],
@@ -98,6 +165,7 @@ export default defineConfig({
             { text: 'Feature modules', link: '/nest-mikroorm/feature-modules' },
             { text: 'Run once', link: '/nest-mikroorm/run-once' },
             { text: 'Seed scripts', link: '/nest-mikroorm/seed-scripts' },
+            { text: 'Troubleshooting', link: '/nest-mikroorm/troubleshooting' },
           ],
         },
       ],
