@@ -1,7 +1,6 @@
 import type { MetadataAdapter } from '../adapter.js';
 import type { EntityConstructor, EntityInstance, SeedContext, SeedFactory } from '../registry.js';
 import { getSeeds } from '../registry.js';
-import { CreateManyOptions } from '../creators/createMany';
 
 /**
  * A map of property overrides for seeded entities.
@@ -23,6 +22,9 @@ function getAncestors(context: SeedContext): Set<EntityConstructor> {
 function withAncestor(context: SeedContext, cls: EntityConstructor): InternalContext {
   const ancestors = getAncestors(context);
 
+  // Inherit `previous` as-is. Child factories can read parent-batch entries via
+  // ctx.previous?.get(ParentClass). The child's own type starts empty because
+  // createManyInstances resets that entry at the start of each new batch.
   return { ...context, _ancestors: new Set([...ancestors, cls]) };
 }
 
@@ -59,14 +61,30 @@ export async function applyValues<T extends EntityInstance>(
   }
 }
 
+/** Internal batch options — includes `previous` for the creation pipeline. Not part of the public API. */
+interface BatchOptions<T extends EntityInstance> extends SeedContext {
+  count: number;
+  values?: SeedValues<T>;
+}
+
 export async function createManyInstances<T extends EntityInstance>(
   EntityClass: EntityConstructor<T>,
-  options: CreateManyOptions<T>,
+  options: BatchOptions<T>,
   adapter: MetadataAdapter,
 ): Promise<T[]> {
-  return await Promise.all(
-    Array.from({ length: options.count }, (_, i) => createOne(EntityClass, options, i, adapter)),
-  );
+  const instances: T[] = [];
+
+  for (let i = 0; i < options.count; i++) {
+    // Build a new Map each iteration so each instance gets a stable snapshot.
+    // Inherit all parent entries, then set this type's entry to a snapshot of
+    // completed instances so far — unrelated sibling batches of the same type
+    // are never visible because each batch starts fresh from the parent Map.
+    const previous = new Map(options.previous ?? []);
+    previous.set(EntityClass, [...instances]);
+    instances.push(await createOne(EntityClass, { ...options, previous }, i, adapter));
+  }
+
+  return instances;
 }
 
 /**

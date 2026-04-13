@@ -17,7 +17,7 @@ export type {
   SeederOptions,
 } from '@joakimbugge/seeder';
 export { ConsoleLogger, Seeder } from '@joakimbugge/seeder';
-export type { SeedContext } from './seed/context.js';
+export type { SeedContext, SeederRunContext } from './seed/context.js';
 export type { SeedFactory } from './seed/decorator.js';
 export type { SingleSeed, MultiSeed } from './seed/builder.js';
 export type { PersistContext } from './adapters/persistenceAdapter';

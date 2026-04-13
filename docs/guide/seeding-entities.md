@@ -139,6 +139,48 @@ Annotating `self` with the entity class (`self: Event` above) gives full type in
 
 Properties declared *below* the current property are not yet set and will be `undefined` on `self` at that point.
 
+## Depending on earlier instances in a batch
+
+When using `createMany` or `saveMany`, each factory receives a `previous` map on the context. `ctx.previous.get(EntityClass)` returns a snapshot of all instances of that type created so far in the current batch — so instance `i` sees instances `0..i-1`:
+
+```ts
+@Entity()
+class Booking {
+  @Seed((ctx) => {
+    const last = (ctx.previous?.get(Booking) as Booking[] | undefined)?.at(-1)
+    return last ? last.to.plus({ days: 1 }) : DateTime.now()
+  })
+  @Column()
+  from!: DateTime
+
+  @Seed((_, self: Booking) => self.from.plus({ days: faker.number.int({ min: 2, max: 14 }) }))
+  @Column()
+  to!: DateTime
+}
+
+const bookings = await seed(Booking).createMany(5)
+// bookings[0].from → now
+// bookings[1].from → bookings[0].to + 1 day
+// bookings[2].from → bookings[1].to + 1 day  … and so on
+```
+
+`previous` is a `Map` keyed by entity class, so when a child entity is created as part of a relation it can also read the parent's batch:
+
+```ts
+@Entity()
+class Comment {
+  @Seed((ctx) => {
+    // How many Posts have already been created in this batch?
+    const posts = ctx.previous?.get(Post) as Post[] | undefined
+    return posts?.at(-1)?.id ?? null
+  })
+  @Column({ nullable: true })
+  latestPostId!: number | null
+}
+```
+
+Each `createMany` call starts with an empty entry for the type being batched, so Books created for `Author[0]` and Books created for `Author[1]` each see only their own siblings — never each other's.
+
 ::: tip Running a seed script?
 See [Running scripts](/guide/running-scripts) for how to execute seed code directly with Node.js or ts-node, including the `reflect-metadata` import requirement and TypeScript execution options.
 :::

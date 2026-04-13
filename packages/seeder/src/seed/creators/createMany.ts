@@ -9,7 +9,10 @@ import type { SeedValues } from '../utils/createOne.js';
 import { applyValues, createManyInstances } from '../utils/createOne.js';
 
 /** Base options for the `createMany` overload. */
-export interface CreateManyOptions<T extends EntityInstance = EntityInstance> extends SeedContext {
+export interface CreateManyOptions<T extends EntityInstance = EntityInstance> extends Omit<
+  SeedContext,
+  'previous'
+> {
   count: number;
   values?: SeedValues<T>;
 }
@@ -53,7 +56,20 @@ export async function createMany<T extends EntityInstance>(
   const { values } = options;
 
   if (values) {
-    await Promise.all(instances.map((instance, i) => applyValues(instance, values, options, i)));
+    // `previous` is an internal pipeline detail omitted from the public CreateManyOptions type.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const basePrevious = (options as SeedContext).previous as
+      | ReadonlyMap<Function, readonly any[]>
+      | undefined;
+
+    await Promise.all(
+      instances.map((instance, i) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const previous = new Map<Function, readonly any[]>(basePrevious ?? []);
+        previous.set(ClassOrClasses, instances.slice(0, i));
+        return applyValues(instance, values, { ...options, previous }, i);
+      }),
+    );
   }
 
   return instances;

@@ -1,19 +1,20 @@
 import { registerSeeder } from './registry.js';
 import type { SeedContext } from '../seed/registry.js';
+import type { SeederRunContext } from './context.js';
 
 /**
  * Interface that seeder classes must implement.
  *
  * The optional `TContext` parameter lets ORM packages expose a narrowed version
  * whose `run` method receives the ORM-specific context (e.g. `dataSource`, `em`).
- * Defaults to the base {@link SeedContext}.
+ * Defaults to {@link SeederRunContext}, which extends {@link SeedContext} with `results`.
  */
-export interface SeederInterface<TContext extends SeedContext = SeedContext> {
+export interface SeederInterface<TContext extends SeedContext = SeederRunContext> {
   run(context: TContext): Promise<unknown>;
 }
 
 /** Configuration options for the {@link Seeder} decorator. */
-export interface SeederOptions<TContext extends SeedContext = SeedContext> {
+export interface SeederOptions<TContext extends SeedContext = SeederRunContext> {
   /**
    * Seeder classes that must complete before this one runs.
    * Resolved transitively — dependencies of dependencies are included automatically.
@@ -31,12 +32,12 @@ export function Seeder(): ClassDecorator;
  * @example
  * @Seeder({ dependencies: [UserSeeder] })
  * class PostSeeder implements SeederInterface {
- *   async run(ctx: SeedContext) {
+ *   async run(ctx: SeederRunContext) {
  *     await seed(Post).saveMany(50, ctx)
  *   }
  * }
  */
-export function Seeder<TContext extends SeedContext = SeedContext>(
+export function Seeder<TContext extends SeedContext = SeederRunContext>(
   options: SeederOptions<TContext>,
 ): ClassDecorator;
 

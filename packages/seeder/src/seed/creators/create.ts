@@ -9,7 +9,7 @@ import { applyValues, createOne } from '../utils/createOne.js';
 import type { SeedValues } from '../utils/createOne.js';
 
 /** Base options for the single-class `create` overload. */
-export interface CreateOptions<T extends EntityInstance> extends SeedContext {
+export interface CreateOptions<T extends EntityInstance> extends Omit<SeedContext, 'previous'> {
   values?: SeedValues<T>;
 }
 
@@ -33,7 +33,7 @@ export async function create<T extends EntityInstance>(
  */
 export async function create<T extends EntityConstructor[]>(
   EntityClasses: [...T],
-  context: SeedContext | undefined,
+  context: Omit<SeedContext, 'previous'> | undefined,
   adapter: MetadataAdapter,
 ): Promise<MapToInstances<T>>;
 

@@ -4,18 +4,18 @@ For production seeding scripts or structured test fixtures, organize your seedin
 
 ```ts
 import { Seeder, runSeeders, seed } from '@joakimbugge/typeorm-seeder'
-import type { SeederInterface, SeedContext } from '@joakimbugge/typeorm-seeder'
+import type { SeederInterface, SeederRunContext } from '@joakimbugge/typeorm-seeder'
 
 @Seeder()
 class UserSeeder implements SeederInterface {
-  async run(ctx: SeedContext) {
+  async run(ctx: SeederRunContext) {
     await seed(User).saveMany(10, ctx)
   }
 }
 
 @Seeder({ dependencies: [UserSeeder] })
 class PostSeeder implements SeederInterface {
-  async run(ctx: SeedContext) {
+  async run(ctx: SeederRunContext) {
     await seed(Post).saveMany(50, ctx)
   }
 }
@@ -57,7 +57,7 @@ A seeder's `run` method can return a value. `runSeeders` collects these into a `
 ```ts
 @Seeder()
 class UserSeeder implements SeederInterface {
-  async run(ctx: SeedContext) {
+  async run(ctx: SeederRunContext) {
     return await seed(User).createMany(10, ctx)
   }
 }
@@ -68,6 +68,39 @@ const users = results.get(UserSeeder) as User[]
 
 This is especially useful with `create` and `createMany` — since those don't write to the database, the return value is often the only way to get the instances back. The map contains an entry for every seeder that ran; skipped seeders are not included.
 
+## Accessing dependency results in run()
+
+`runSeeders` forwards a live `results` map through `SeederRunContext`. When a dependent seeder's `run` method is called, `ctx.results` already contains the return values of every seeder that has completed — including all transitive dependencies:
+
+```ts
+@Seeder()
+class UserSeeder implements SeederInterface {
+  async run(ctx: SeederRunContext) {
+    return await seed(User).createMany(5, ctx)   // return value is stored in results
+  }
+}
+
+@Seeder({ dependencies: [UserSeeder] })
+class BookingSeeder implements SeederInterface {
+  async run(ctx: SeederRunContext) {
+    const users = ctx.results?.get(UserSeeder) as User[]
+
+    return await seed(Booking).createMany(10, {
+      ...ctx,
+      values: { user: () => faker.helpers.arrayElement(users) },
+    })
+  }
+}
+
+await runSeeders([BookingSeeder], { dataSource })
+```
+
+`ctx.results` is the same `Map` instance that `runSeeders` returns, so any code that runs after `runSeeders` completes can also read from it. Seeders that ran concurrently at the same dependency level are all present by the time the next level starts.
+
+::: info
+Spreading `ctx` into `createMany` or `saveMany` options also makes `ctx.results` available inside `@Seed` factory callbacks — useful when a decorator-level factory needs to pick from a previously seeded pool.
+:::
+
 ## Seeding without `@Seed()`
 
 `@Seed()` is a convenience — it is not required. Complex seeding logic that would clutter entity decorators belongs in the seeder suite instead. Use the `values` option to inject the result at call time, keeping your entities simple:
@@ -75,7 +108,7 @@ This is especially useful with `create` and `createMany` — since those don't w
 ```ts
 @Seeder({ dependencies: [UserSeeder] })
 class BookingSeeder implements SeederInterface {
-  async run({ dataSource }: SeedContext): Promise<void> {
+  async run({ dataSource }: SeederRunContext): Promise<void> {
     const users = await dataSource!.getRepository(User).find()
     const user = faker.helpers.arrayElement(users)
 
@@ -85,7 +118,7 @@ class BookingSeeder implements SeederInterface {
 }
 ```
 
-If you need full control — inserting specific rows, running raw queries, or using TypeORM's `EntityManager` — the `dataSource` from `SeedContext` gives you direct access to any TypeORM API.
+If you need full control — inserting specific rows, running raw queries, or using TypeORM's `EntityManager` — the `dataSource` from `SeederRunContext` gives you direct access to any TypeORM API.
 
 ::: info
 `@Seeder`, `runSeeders`, `SeederInterface`, and related types originate in [`@joakimbugge/seeder`](/seeder/) — the ORM-agnostic core. They are re-exported from `@joakimbugge/typeorm-seeder` for convenience, so no additional dependency is needed.

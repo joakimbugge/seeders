@@ -14,6 +14,28 @@ export interface SeedContext {
    * @default true
    */
   relations?: boolean;
+
+  /**
+   * Instances created earlier in the current {@link createMany} batch, keyed by entity class.
+   * When creating instance `i`, `previous.get(EntityClass)` contains instances `0..i-1` in order.
+   *
+   * Each entry is a snapshot taken just before the corresponding instance is created, so the
+   * array length always equals the number of completed instances of that type so far.
+   *
+   * Child entities inherit the parent's map, so a child factory can also read parent-batch
+   * entries. The child's own type starts with an empty array when its batch begins —
+   * instances from an unrelated sibling batch of the same type are never visible.
+   *
+   * @example
+   * // Each booking starts the day after the previous one ends.
+   * @Seed((ctx, self: Booking) => {
+   *   const last = (ctx.previous?.get(Booking) as Booking[] | undefined)?.at(-1)
+   *   return last ? last.to.plus({ days: 1 }) : DateTime.now()
+   * })
+   * from!: DateTime
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  previous?: ReadonlyMap<Function, readonly any[]>;
 }
 
 /**

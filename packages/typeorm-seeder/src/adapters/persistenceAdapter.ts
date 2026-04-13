@@ -7,7 +7,7 @@ import type {
 import type { DataSource } from 'typeorm';
 
 /** Context required when persisting entities — `dataSource` is mandatory. */
-export interface PersistContext extends SeedContext {
+export interface PersistContext extends Omit<SeedContext, 'previous'> {
   dataSource: DataSource;
 }
 

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { SeedContext } from '../../src';
+import type { SeedContext, SeederRunContext } from '../../src';
 import { runSeeders, Seeder } from '../../src';
 import type { SeederCtor } from '../../src';
 
@@ -474,6 +474,94 @@ describe('seeder suites', () => {
       });
 
       expect(results.has(SkippedReturnSeeder)).toBe(false);
+    });
+  });
+
+  describe('results context', () => {
+    it('exposes an empty results map to root seeders', async () => {
+      let sizeAtCallTime: number | undefined;
+
+      @Seeder()
+      class RootSeeder {
+        async run(ctx: SeederRunContext) {
+          sizeAtCallTime = ctx.results?.size;
+        }
+      }
+
+      await runSeeders([RootSeeder], {});
+
+      expect(sizeAtCallTime).toBe(0);
+    });
+
+    it('exposes the dependency return value via ctx.results when a dependent seeder runs', async () => {
+      const users = [{ id: 1 }, { id: 2 }];
+      let receivedInDependent: unknown;
+
+      @Seeder()
+      class ResultsDepA {
+        async run(_ctx: SeederRunContext) {
+          return users;
+        }
+      }
+
+      @Seeder({ dependencies: [ResultsDepA] })
+      class ResultsDepB {
+        async run(ctx: SeederRunContext) {
+          receivedInDependent = ctx.results?.get(ResultsDepA);
+        }
+      }
+
+      await runSeeders([ResultsDepB], {});
+
+      expect(receivedInDependent).toBe(users);
+    });
+
+    it('ctx.results is the same Map instance returned by runSeeders', async () => {
+      let ctxResults: ReadonlyMap<Function, unknown> | undefined;
+
+      @Seeder()
+      class SameMapSeeder {
+        async run(ctx: SeederRunContext) {
+          ctxResults = ctx.results;
+        }
+      }
+
+      const returned = await runSeeders([SameMapSeeder], {});
+
+      expect(ctxResults).toBe(returned);
+    });
+
+    it('accumulates results across a chain so each level sees all prior results', async () => {
+      const snapshots: unknown[][] = [];
+
+      @Seeder()
+      class ChainA {
+        async run(_ctx: SeederRunContext) {
+          return 'a';
+        }
+      }
+
+      @Seeder({ dependencies: [ChainA] })
+      class ChainB {
+        async run(ctx: SeederRunContext) {
+          snapshots.push([...ctx.results!.values()]);
+          return 'b';
+        }
+      }
+
+      @Seeder({ dependencies: [ChainB] })
+      class ChainC {
+        async run(ctx: SeederRunContext) {
+          snapshots.push([...ctx.results!.values()]);
+          return 'c';
+        }
+      }
+
+      await runSeeders([ChainC], {});
+
+      // ChainB sees only A's result; ChainC sees A and B's results
+      expect(snapshots[0]).toEqual(['a']);
+      expect(snapshots[1]).toEqual(['a', 'b']);
     });
   });
 });

@@ -4,6 +4,7 @@ import { ConsoleLogger } from './logger.js';
 import type { SeederLogger } from './logger.js';
 import type { SeederInterface } from './decorator.js';
 import type { SeedContext } from '../seed/registry.js';
+import type { SeederRunContext } from './context.js';
 
 /** Constructor type for a class decorated with `@Seeder`. */
 export type SeederCtor = new () => SeederInterface;
@@ -142,6 +143,11 @@ export async function runSeeders(
   const results = new Map<SeederCtor, unknown>();
   const log = resolveLog(logging, logger);
 
+  // Build SeederRunContext by adding the live results map to the base context.
+  // Each seeder's run() method and any @Seed factory callbacks (when ctx is spread
+  // into createMany/saveMany options) can read previously completed seeders' results.
+  const ctx: SeederRunContext = { ...context, results };
+
   for (const level of buildLevels(seeders)) {
     await Promise.all(
       level.map(async (SeederClass) => {
@@ -155,7 +161,7 @@ export async function runSeeders(
         const start = Date.now();
 
         try {
-          results.set(SeederClass, await new SeederClass().run(context));
+          results.set(SeederClass, await new SeederClass().run(ctx));
         } catch (err) {
           const durationMs = Date.now() - start;
 
