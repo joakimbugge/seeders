@@ -1,8 +1,8 @@
-import type { PersistenceAdapter, SeedContext } from '@joakimbugge/seeder';
+import type { PersistenceAdapter, BaseSeedContext } from '@joakimbugge/seeder';
 import type { EntityManager } from '@mikro-orm/core';
 
 /** Context required when persisting entities — `em` is mandatory. */
-export interface PersistContext extends Omit<SeedContext, 'previous'> {
+export interface PersistContext extends Omit<BaseSeedContext, 'previous'> {
   em: EntityManager;
 }
 

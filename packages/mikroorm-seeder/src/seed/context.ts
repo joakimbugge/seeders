@@ -1,8 +1,5 @@
 import type { EntityManager } from '@mikro-orm/core';
-import type {
-  SeedContext as BaseSeedContext,
-  SeederRunContext as BaseSeederRunContext,
-} from '@joakimbugge/seeder';
+import type { BaseSeedContext, BaseSeederRunContext } from '@joakimbugge/seeder';
 
 /** Context passed through a seed operation. Available inside factory callbacks and `SeederInterface.run`. */
 export type SeedContext = BaseSeedContext & {

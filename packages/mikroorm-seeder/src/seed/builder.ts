@@ -1,10 +1,6 @@
-import type {
-  EntityConstructor,
-  EntityInstance,
-  MultiSeed as BaseMultiSeed,
-  SingleSeed as BaseSingleSeed,
-} from '@joakimbugge/seeder';
+import type { BaseMultiSeed, BaseSingleSeed } from '@joakimbugge/seeder';
 import { makeMultiSeedBuilder, makeSeedBuilder } from '@joakimbugge/seeder';
+import type { EntityConstructor, EntityInstance } from '../types.js';
 import { PersistContext, persistenceAdapter } from '../adapters/persistenceAdapter';
 import { metadataAdapter } from '../adapters/metadataAdapter';
 

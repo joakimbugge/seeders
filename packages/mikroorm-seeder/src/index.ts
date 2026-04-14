@@ -2,10 +2,8 @@ export { Seed } from './seed/decorator.js';
 export { seed } from './seed/builder.js';
 export { runSeeders } from './seeder/runner.js';
 export type { SeederCtor, RunSeedersOptions } from './seeder/runner.js';
+export type { EntityInstance, EntityConstructor, SeedOptions } from './types.js';
 export type {
-  EntityInstance,
-  EntityConstructor,
-  SeedOptions,
   SeedEntry,
   MapToInstances,
   MapToInstanceArrays,

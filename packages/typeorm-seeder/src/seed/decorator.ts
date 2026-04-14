@@ -1,6 +1,6 @@
-import type { EntityInstance, SeedFactory as BaseSeedFactory } from '@joakimbugge/seeder';
+import type { BaseSeedFactory } from '@joakimbugge/seeder';
 import { Seed as BaseSeed } from '@joakimbugge/seeder';
-import type { SeedOptions } from '@joakimbugge/seeder';
+import type { EntityInstance, SeedOptions } from '../types.js';
 import type { SeedContext } from './context.js';
 
 /**

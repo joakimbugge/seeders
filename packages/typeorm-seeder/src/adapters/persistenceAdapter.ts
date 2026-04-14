@@ -1,13 +1,9 @@
-import type {
-  EntityConstructor,
-  EntityInstance,
-  PersistenceAdapter,
-  SeedContext,
-} from '@joakimbugge/seeder';
+import type { PersistenceAdapter, BaseSeedContext } from '@joakimbugge/seeder';
+import type { EntityConstructor, EntityInstance } from '../types.js';
 import type { DataSource } from 'typeorm';
 
 /** Context required when persisting entities — `dataSource` is mandatory. */
-export interface PersistContext extends Omit<SeedContext, 'previous'> {
+export interface PersistContext extends Omit<BaseSeedContext, 'previous'> {
   dataSource: DataSource;
 }
 
