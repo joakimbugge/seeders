@@ -36,17 +36,31 @@ npx ts-node src/seed.ts
 npx tsx src/seed.ts
 ```
 
-## Loading seeders from paths
+## Loading entities from paths
 
-:::info
-`loadSeeders` is ORM-agnostic and lives in `@joakimbugge/seeder`, not the MikroORM package. Import it from there.
-:::
+`loadEntities` resolves a mixed array of entity constructors and glob patterns into a flat array of constructors:
+
+```ts
+import { loadEntities, seed } from '@joakimbugge/mikroorm-seeder'
+
+const classes = await loadEntities([User, 'dist/entities/**/*.js'])
+await seed(classes).saveMany(10, { em })
+```
+
+String entries are expanded with glob and each matched file is dynamically imported. Every exported class constructor found in the module is collected. Constructor entries are passed through as-is.
+
+When running with ts-node or tsx, you can point directly at source files:
+
+```ts
+const classes = await loadEntities(['src/entities/**/*.ts'])
+```
+
+## Loading seeders from paths
 
 `loadSeeders` resolves a mixed array of seeder constructors and glob patterns into a flat array of constructors — only classes decorated with `@Seeder` are collected:
 
 ```ts
-import { loadSeeders } from '@joakimbugge/seeder'
-import { runSeeders } from '@joakimbugge/mikroorm-seeder'
+import { loadSeeders, runSeeders } from '@joakimbugge/mikroorm-seeder'
 
 const seeders = await loadSeeders(['dist/seeders/**/*.js'])
 await runSeeders(seeders, { em })

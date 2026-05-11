@@ -100,3 +100,7 @@ When a property has both a `@Seed` factory and a `values` entry, the `@Seed` fac
 ::: info
 `values` are applied **after** all `@Seed` factories have finished, so they are never visible on `self` inside a `@Seed` factory callback.
 :::
+
+::: tip Running a seed script?
+See [Running scripts](/mikroorm/running-scripts) for how to execute seed code directly with Node.js or ts-node, including the `reflect-metadata` import requirement and TypeScript execution options.
+:::

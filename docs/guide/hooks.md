@@ -65,7 +65,7 @@ Class-level hooks fire first, then `runSeeders`-level hooks.
 
 ## Skipping seeders
 
-Pass a `skip` callback to conditionally bypass individual seeders. Return `true` to skip, `false` (or nothing) to run:
+`skip` is a `runSeeders` option rather than a lifecycle hook, but it fits here since it controls whether a seeder's hooks fire at all. Pass a `skip` callback to conditionally bypass individual seeders. Return `true` to skip, `false` (or nothing) to run:
 
 ```ts
 const alreadyRun = new Set(['UserSeeder'])

@@ -110,7 +110,7 @@ class Event {
 }
 ```
 
-Annotating `self` with the entity class (`self: Event` above) gives full type inference and autocompletion. Without the annotation `self` is typed as `any`, so property access still works — the annotation is only needed for type safety.
+Annotating `self` with the entity class (`self: Event` above) gives full type inference.
 
 Properties declared *below* the current property are not yet set and will be `undefined` on `self` at that point.
 

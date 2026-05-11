@@ -44,14 +44,6 @@ class Book {
 const book = await seed(Book).create()
 ```
 
-## When to use seeding in your project
-
-- **Unit tests**: Generate test data without a database
-- **Integration tests**: Build realistic datasets, verify behavior across relations
-- **CI fixtures**: Consistent test data across all test runs
-- **Demo databases**: Pre-populate development environment with sample data
-- **Documentation examples**: Show API endpoints with realistic payloads
-
 ## Next steps
 
 - [How it works](/guide/how-it-works) for an overview of the four seeding methods

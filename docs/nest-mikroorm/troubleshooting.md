@@ -11,32 +11,17 @@
 **Solutions:**
 
 ```ts
-// 1. Enable run-once tracking in SeederModule
-@Module({})
-export class AppModule {
-  static register(): DynamicModule {
-    return {
-      module: AppModule,
-      imports: [
-        SeederModule.register({
-          // Seeders run once per application lifecycle, not per hot reload
-          seeders: [UserSeeder, PostSeeder],
-          runOnce: true,  // default: true
-        }),
-      ],
-    }
-  }
-}
+// runOnce: true is the default — seeders already in the history table are skipped
+SeederModule.forRoot({ seeders: [UserSeeder, PostSeeder] })
 
-// 2. Ensure seeders are declared in the module dependency
-@Seeder({ dependencies: [UserSeeder] })
-class PostSeeder implements SeederInterface {
-  // ...
-}
+// If runOnce is explicitly set to false, every boot re-runs all seeders
+SeederModule.forRoot({ seeders: [UserSeeder, PostSeeder], runOnce: false }) // ← remove this
 
-// 3. Check application bootstrap order — seeds run during onApplicationBootstrap
-// If your data setup depends on other modules, they must be initialized first
+// If the schema (including the history table) is dropped on every start,
+// all seeders always run — this is usually intentional in development
 ```
+
+If seeders are not running at all, confirm `SeederModule` is imported and that the `enabled` option (if set) evaluates to `true`.
 
 ---
 
@@ -44,5 +29,5 @@ class PostSeeder implements SeederInterface {
 
 - Check [Getting started](/nest-mikroorm/) for module setup
 - See [Seed scripts](/nest-mikroorm/seed-scripts) for running seeders manually
-- Review MikroORM [troubleshooting](/guide/troubleshooting) for non-NestJS issues
+- See the [troubleshooting guide](/guide/troubleshooting) for common seeding issues
 - Open an issue on [GitHub](https://github.com/joakimbugge/seeders/issues)

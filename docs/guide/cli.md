@@ -121,7 +121,7 @@ pnpm exec @joakimbugge/typeorm-seeder seed:untrack UserSeeder -d ./src/datasourc
 
 :::
 
-If your NestJS module uses a custom `historyTableName`, pass `--table` (`-t`) to match:
+If you use a custom `historyTableName`, pass `--table` (`-t`) to match:
 
 ```bash
 npx @joakimbugge/typeorm-seeder seed:untrack UserSeeder -d ./src/datasource.ts --table seed_history

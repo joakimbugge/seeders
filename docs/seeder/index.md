@@ -2,7 +2,7 @@
 
 `@joakimbugge/seeder` is the ORM-agnostic foundation that `typeorm-seeder` and `mikroorm-seeder` are built on. It handles the full seeding pipeline — factory invocation, relation traversal, cycle protection, and persistence delegation — while leaving ORM integration to two small adapter interfaces.
 
-**You do not need to install this package to use seeding with TypeORM or MikroORM.** It is published separately for cases where you want to support a different data layer.
+**You do not need to install this package to use seeding with TypeORM or MikroORM.** It is published separately for cases where you want to support a different data layer — Prisma, Drizzle, a raw database driver, or any other persistence mechanism.
 
 ## Architecture
 
@@ -124,7 +124,7 @@ const users = await builder.createMany(10)
 // Fully seeded User instances — no database call made
 ```
 
-The same applies to `makeMultiSeedBuilder`.
+`makeMultiSeedBuilder` is the equivalent for seeding multiple entity types at once — `seed([Author, Book])` in the ORM packages. It accepts an array of entity constructors and returns a builder whose `create` / `createMany` / `save` / `saveMany` methods return a tuple of results, one per class. The same optional `persistenceAdapter` rule applies: omit it and only `create` / `createMany` are available on the type.
 
 ## Seeder suites
 

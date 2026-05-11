@@ -52,7 +52,7 @@ class ReportSeeder { … }        // starts after both complete
 
 ## Returning seeded entities
 
-A seeder's `run` method can return a value. `runSeeders` collects these into a typed map keyed by seeder class — no casting needed.
+A seeder's `run` method can return a value. `runSeeders` collects these into a typed map keyed by seeder class.
 
 The minimal approach is to annotate the return type on `run`:
 
@@ -65,7 +65,7 @@ class UserSeeder implements SeederInterface {
 }
 
 const results = await runSeeders([UserSeeder], { em })
-const users = results.get(UserSeeder) // User[] — inferred, no cast
+const users = results.get(UserSeeder) // User[]
 ```
 
 To also have TypeScript enforce the return type as part of the interface contract — catching drift if the implementation changes — pass it as the second type parameter to `SeederInterface`:
@@ -165,8 +165,5 @@ await orm.getSeeder().seed(DatabaseSeeder)
 
 The `@Seeder()` decorator and `runSeeders` are not involved here — dependency ordering is handled by `this.call()` instead. If you already use `@mikro-orm/seeder` for CLI-driven seeding, `@Seed()` and `seed()` integrate naturally into that workflow.
 
-::: info
-`@Seeder`, `runSeeders`, `SeederInterface`, and related types originate in [`@joakimbugge/seeder`](/seeder/) — the ORM-agnostic core. They are re-exported from `@joakimbugge/mikroorm-seeder` for convenience, so no additional dependency is needed.
-:::
 
 Next: [Running scripts](/mikroorm/running-scripts) covers how to execute a seeder suite directly with Node.js or ts-node.

@@ -22,11 +22,11 @@ Supply a custom logger via the `logger` option — any object implementing `Seed
 await runSeeders([UserSeeder], {
   logging: true,
   logger: {
-    log: (msg) => myLogger.info(msg),
-    warn: (msg) => myLogger.warn(msg),
-    info: () => {},
-    error: () => {},
-    debug: () => {},
+    log: (msg) => myLogger.info(msg),   // seeder progress messages
+    warn: (msg) => myLogger.warn(msg),  // seeder failures
+    info: () => {},   // unused — no-op is fine
+    error: () => {}, // unused — no-op is fine
+    debug: () => {}, // unused — no-op is fine
   },
 })
 ```

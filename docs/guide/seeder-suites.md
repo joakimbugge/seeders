@@ -52,7 +52,7 @@ class ReportSeeder { … }        // starts after both complete
 
 ## Returning seeded entities
 
-A seeder's `run` method can return a value. `runSeeders` collects these into a typed map keyed by seeder class — no casting needed.
+A seeder's `run` method can return a value. `runSeeders` collects these into a typed map keyed by seeder class.
 
 The minimal approach is to annotate the return type on `run`:
 
@@ -65,7 +65,7 @@ class UserSeeder implements SeederInterface {
 }
 
 const results = await runSeeders([UserSeeder], { dataSource })
-const users = results.get(UserSeeder) // User[] — inferred, no cast
+const users = results.get(UserSeeder) // User[]
 ```
 
 To also have TypeScript enforce the return type as part of the interface contract — catching drift if the implementation changes — pass it as the second type parameter to `SeederInterface`:
@@ -135,8 +135,5 @@ class BookingSeeder implements SeederInterface {
 
 If you need full control — inserting specific rows, running raw queries, or using TypeORM's `EntityManager` — the `dataSource` from `SeederRunContext` gives you direct access to any TypeORM API.
 
-::: info
-`@Seeder`, `runSeeders`, `SeederInterface`, and related types originate in [`@joakimbugge/seeder`](/seeder/) — the ORM-agnostic core. They are re-exported from `@joakimbugge/typeorm-seeder` for convenience, so no additional dependency is needed.
-:::
 
 Next: [Running scripts](/guide/running-scripts) covers how to execute a seeder suite directly with Node.js or ts-node.

@@ -70,6 +70,10 @@ SeederModule.forRoot({
 })
 ```
 
+::: warning
+An EntityManager passed this way must already be available before the app bootstraps. The module does not initialize MikroORM on its behalf.
+:::
+
 ## Async configuration
 
 Use `forRootAsync` to resolve options from the DI container — useful when the `EntityManager` or environment config is injected:
