@@ -1,5 +1,25 @@
 # @joakimbugge/mikroorm-seeder
 
+## [0.6.1](https://github.com/joakimbugge/seeders/compare/mikroorm-seeder-v0.6.0...mikroorm-seeder-v0.6.1) (2026-05-11)
+
+
+### Bug Fixes
+
+* add seeder suite return type generic to prevent casting ([dedad13](https://github.com/joakimbugge/seeders/commit/dedad135f4a655e02f6412ed7196205590965615))
+* prevent types naming conflicts between seeder and orm package ([4b8dd8b](https://github.com/joakimbugge/seeders/commit/4b8dd8b58c39c281ba9cb3d52144fe1d91d68e37))
+
+
+### Build
+
+* **deps-dev:** bump @mikro-orm/decorators from 7.0.6 to 7.0.12 ([#70](https://github.com/joakimbugge/seeders/issues/70)) ([29bdf47](https://github.com/joakimbugge/seeders/commit/29bdf47b089af5b9ad49ccf636dd01fadd1b41fa))
+* **deps-dev:** bump @mikro-orm/reflection from 7.0.9 to 7.0.11 ([#61](https://github.com/joakimbugge/seeders/issues/61)) ([166e096](https://github.com/joakimbugge/seeders/commit/166e0968afbb2c77fa8abc41f555b92674d02c96))
+* **deps:** bump mikroorm to 7.0.15 and nest to 11.1.19 ([2e5ad16](https://github.com/joakimbugge/seeders/commit/2e5ad16f3b76f7d539a9bec17414076c73bb01d9))
+
+
+### Miscellaneous
+
+* set engine.node to &gt;20 ([f715a83](https://github.com/joakimbugge/seeders/commit/f715a83fcd3242e567b5118c954d2087c57b72f9))
+
 ## [0.6.0](https://github.com/joakimbugge/seeders/compare/mikroorm-seeder-v0.5.0...mikroorm-seeder-v0.6.0) (2026-04-13)
 
 
