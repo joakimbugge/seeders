@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.2](https://github.com/joakimbugge/seeders/compare/seeder-v0.3.1...seeder-v0.3.2) (2026-05-11)
+
+
+### Build
+
+* **deps-dev:** bump @types/node from 22.19.17 to 25.6.2 ([#79](https://github.com/joakimbugge/seeders/issues/79)) ([2d44c67](https://github.com/joakimbugge/seeders/commit/2d44c679058ca612199220c567f9e1e91fcc6c39))
+
+
+### Documentation
+
+* link to all docs in README ([50c8a22](https://github.com/joakimbugge/seeders/commit/50c8a22ced0e0cef42da83e354144f63a8394795))
+
 ## [0.3.1](https://github.com/joakimbugge/seeders/compare/seeder-v0.3.0...seeder-v0.3.1) (2026-05-11)
 
 
