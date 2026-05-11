@@ -55,8 +55,8 @@
     "node": ">=20.0.0"
   },
   "peerDependencies": {
-    "@joakimbugge/seeder": ">=0.1.0",
     "@joakimbugge/mikroorm-seeder": ">=0.1.1",
+    "@joakimbugge/seeder": ">=0.1.0",
     "@mikro-orm/core": ">=7.0.0",
     "@mikro-orm/nestjs": ">=7.0.0",
     "@nestjs/common": ">=10.0.0",
@@ -64,14 +64,14 @@
     "reflect-metadata": ">=0.1.0"
   },
   "devDependencies": {
-    "@joakimbugge/seeder": "workspace:^",
     "@joakimbugge/mikroorm-seeder": "workspace:^",
-    "@mikro-orm/core": "^7.0.9",
-    "@mikro-orm/decorators": "^7.0.12",
+    "@joakimbugge/seeder": "workspace:^",
+    "@mikro-orm/core": "^7.0.15",
+    "@mikro-orm/decorators": "^7.0.15",
     "@mikro-orm/nestjs": "^7.0.0",
-    "@mikro-orm/sqlite": "^7.0.8",
-    "@nestjs/common": "^11.1.18",
-    "@nestjs/core": "^11.1.18",
+    "@mikro-orm/sqlite": "^7.0.15",
+    "@nestjs/common": "^11.1.19",
+    "@nestjs/core": "^11.1.19",
     "@nestjs/testing": "^11.1.19",
     "reflect-metadata": "^0.2.2"
   }
