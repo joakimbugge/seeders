@@ -37,6 +37,7 @@ export type { SeederInterface, SeederOptions } from './seeder/decorator.js';
 export type {
   SeederRunContext,
   SeederRunContext as BaseSeederRunContext,
+  SeederResultMap,
 } from './seeder/context.js';
 export { registerSeeder, getSeederMeta } from './seeder/registry.js';
 export type { SeederMeta } from './seeder/registry.js';
@@ -45,7 +46,6 @@ export type { SeederLogger } from './seeder/logger.js';
 export { runSeeders } from './seeder/runner.js';
 export type {
   SeederCtor,
-  SeederResultMap,
   RunSeedersOptions,
   RunSeedersOptions as BaseRunSeedersOptions,
 } from './seeder/runner.js';

@@ -1,6 +1,21 @@
 import type { SeedContext } from '../seed/registry.js';
 
 /**
+ * Typed result map — returned by {@link runSeeders} and available on `ctx.results` inside `run`.
+ *
+ * The `get` overload infers the return type from the seeder constructor, so no casting is needed:
+ *
+ * @example
+ * const results = await runSeeders([UserSeeder, PostSeeder]);
+ * const users = results.get(UserSeeder); // User[]
+ * const posts = results.get(PostSeeder); // Post[]
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface SeederResultMap extends Omit<ReadonlyMap<Function, unknown>, 'get'> {
+  get<TResult>(key: new () => { run(...args: any[]): Promise<TResult> }): TResult | undefined;
+}
+
+/**
  * Context passed to a seeder's `run` method by {@link runSeeders}.
  * Extends {@link SeedContext} with `results` — a live map of return values
  * from seeders that have already completed.
@@ -12,7 +27,7 @@ import type { SeedContext } from '../seed/registry.js';
  * @Seeder({ dependencies: [UserSeeder] })
  * class BookingSeeder implements SeederInterface {
  *   async run(ctx: SeederRunContext) {
- *     const users = ctx.results?.get(UserSeeder) as User[]
+ *     const users = ctx.results?.get(UserSeeder) // User[]
  *   }
  * }
  */
@@ -28,7 +43,7 @@ export interface SeederRunContext extends SeedContext {
    * @Seeder({ dependencies: [UserSeeder] })
    * class BookingSeeder implements SeederInterface {
    *   async run(ctx: SeederRunContext) {
-   *     const users = ctx.results?.get(UserSeeder) as User[]
+   *     const users = ctx.results?.get(UserSeeder) // User[]
    *     return seed(Booking).createMany(10, {
    *       ...ctx,
    *       values: { user: () => faker.helpers.arrayElement(users) },
@@ -36,6 +51,5 @@ export interface SeederRunContext extends SeedContext {
    *   }
    * }
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  results?: ReadonlyMap<Function, any>;
+  results?: SeederResultMap;
 }

@@ -214,7 +214,7 @@ await runSeeders([PostSeeder], { em })
 
 ```ts
 const results = await runSeeders([UserSeeder], { em })
-const users = results.get(UserSeeder) as User[]
+const users = results.get(UserSeeder) // User[]
 ```
 
 ### Using with MikroORM's native seeder package

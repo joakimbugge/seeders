@@ -4,25 +4,11 @@ import { ConsoleLogger } from './logger.js';
 import type { SeederLogger } from './logger.js';
 import type { SeederInterface } from './decorator.js';
 import type { SeedContext } from '../seed/registry.js';
-import type { SeederRunContext } from './context.js';
+import type { SeederRunContext, SeederResultMap } from './context.js';
 
 /** Constructor type for a class decorated with `@Seeder`. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SeederCtor<TResult = unknown> = new () => SeederInterface<any, TResult>;
-
-/**
- * Typed result map returned by {@link runSeeders}.
- *
- * The `get` overload infers the return type from the seeder constructor, so no casting is needed:
- *
- * @example
- * const results = await runSeeders([UserSeeder, PostSeeder]);
- * const users = results.get(UserSeeder); // User[]
- * const posts = results.get(PostSeeder); // Post[]
- */
-export interface SeederResultMap extends Omit<ReadonlyMap<SeederCtor, unknown>, 'get'> {
-  get<TResult>(key: SeederCtor<TResult>): TResult | undefined;
-}
 
 /** Options for {@link runSeeders}. Extends {@link SeedContext} with lifecycle hooks and logging control. */
 export type RunSeedersOptions<TContext extends SeedContext = SeedContext> = TContext & {
@@ -175,7 +161,7 @@ export async function runSeeders(seeders: SeederCtor[], options: RunSeedersOptio
   // Build SeederRunContext by adding the live results map to the base context.
   // Each seeder's run() method and any @Seed factory callbacks (when ctx is spread
   // into createMany/saveMany options) can read previously completed seeders' results.
-  const ctx: SeederRunContext = { ...context, results };
+  const ctx: SeederRunContext = { ...context, results: results as SeederResultMap };
 
   await onBefore?.();
 

@@ -198,7 +198,7 @@ await runSeeders([PostSeeder], { dataSource })
 
 ```ts
 const results = await runSeeders([UserSeeder], { dataSource })
-const users = results.get(UserSeeder) as User[]
+const users = results.get(UserSeeder) // User[]
 ```
 
 ### Seeding without @Seed()

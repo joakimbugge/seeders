@@ -98,7 +98,7 @@ class UserSeeder implements SeederInterface {
 @Seeder({ dependencies: [UserSeeder] })
 class BookingSeeder implements SeederInterface {
   async run(ctx: SeederRunContext) {
-    const users = ctx.results?.get(UserSeeder) as User[]
+    const users = ctx.results?.get(UserSeeder) // User[]
 
     return await seed(Booking).createMany(10, {
       ...ctx,

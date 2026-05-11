@@ -20,7 +20,7 @@ export type SeedContext = BaseSeedContext & {
  * @Seeder({ dependencies: [UserSeeder] })
  * class PostSeeder implements SeederInterface {
  *   async run(ctx: SeederRunContext) {
- *     const users = ctx.results?.get(UserSeeder) as User[]
+ *     const users = ctx.results?.get(UserSeeder) // User[]
  *     await seed(Post).saveMany(50, { ...ctx, values: { author: () => faker.helpers.arrayElement(users) } })
  *   }
  * }
