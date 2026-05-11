@@ -10,6 +10,17 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      mikroorm:
+        patterns:
+          - "@mikro-orm/*"
+      nestjs:
+        patterns:
+          - "@nestjs/*"
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
 
   - package-ecosystem: npm
     directory: /packages/typeorm-seeder
@@ -20,13 +31,28 @@ updates:
     directory: /packages/nest-typeorm-seeder
     schedule:
       interval: weekly
+    groups:
+      nestjs:
+        patterns:
+          - "@nestjs/*"
 
   - package-ecosystem: npm
     directory: /packages/mikroorm-seeder
     schedule:
       interval: weekly
+    groups:
+      mikroorm:
+        patterns:
+          - "@mikro-orm/*"
 
   - package-ecosystem: npm
     directory: /packages/nest-mikroorm-seeder
     schedule:
       interval: weekly
+    groups:
+      mikroorm:
+        patterns:
+          - "@mikro-orm/*"
+      nestjs:
+        patterns:
+          - "@nestjs/*"
