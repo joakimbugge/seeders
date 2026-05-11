@@ -1,5 +1,17 @@
 # @joakimbugge/mikroorm-seeder
 
+## [0.6.3](https://github.com/joakimbugge/seeders/compare/mikroorm-seeder-v0.6.2...mikroorm-seeder-v0.6.3) (2026-05-11)
+
+
+### Features
+
+* infer ctx.results return type without casting ([7627ff3](https://github.com/joakimbugge/seeders/commit/7627ff35de460fadd18ee6f517eb3c3b6c13f0dc))
+
+
+### Documentation
+
+* update llms.txt files ([d7a420b](https://github.com/joakimbugge/seeders/commit/d7a420b136099c06714052fed857c65c1de941ed))
+
 ## [0.6.2](https://github.com/joakimbugge/seeders/compare/mikroorm-seeder-v0.6.1...mikroorm-seeder-v0.6.2) (2026-05-11)
 
 
