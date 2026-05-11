@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.12.2](https://github.com/joakimbugge/seeders/compare/typeorm-seeder-v0.12.1...typeorm-seeder-v0.12.2) (2026-05-11)
+
+
+### Miscellaneous
+
+* re-export loadEntities and loadSeeders from ORM packages ([af73e78](https://github.com/joakimbugge/seeders/commit/af73e78194af07fae8654e0fa525f98945f253d8))
+
+
+### Tests
+
+* add adapter tests for mikroorm and typeorm ([244bfde](https://github.com/joakimbugge/seeders/commit/244bfdeb8cab28b666d97c5fecdc790fcccf9fa4))
+
 ## [0.12.1](https://github.com/joakimbugge/seeders/compare/typeorm-seeder-v0.12.0...typeorm-seeder-v0.12.1) (2026-05-11)
 
 
