@@ -15,7 +15,7 @@ export type {
   SeederOptions,
   SeederResultMap,
 } from '@joakimbugge/seeder';
-export { ConsoleLogger, Seeder } from '@joakimbugge/seeder';
+export { ConsoleLogger, Seeder, loadEntities, loadSeeders } from '@joakimbugge/seeder';
 export type { SeedContext, SeederRunContext } from './seed/context.js';
 export type { SeedFactory } from './seed/decorator.js';
 export type { SingleSeed, MultiSeed } from './seed/builder.js';
