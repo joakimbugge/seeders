@@ -45,6 +45,10 @@ After CI passes on a push to `main`, Release Please reads the conventional commi
 
 Release Please determines which packages a commit belongs to by looking at which files were changed — not by commit scope. A commit touching `packages/mikroorm-seeder/src/...` is attributed to `@joakimbugge/mikroorm-seeder` only. A commit touching files in multiple package directories is attributed to all of them.
 
+## llms.txt
+
+Each package has a `llms.txt` (and `docs/public/llms.txt` for the site). When updating docs or READMEs, also update the relevant `llms.txt` files to keep them in sync.
+
 ## What not to do
 
 - Do not run `pnpm changeset` — changesets have been removed.

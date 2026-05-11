@@ -274,17 +274,38 @@ await runSeeders([UserSeeder], {
 
 ## Hooks
 
+### Class-level hooks
+
+Implement optional methods directly on the seeder class:
+
+```ts
+@Seeder()
+class UserSeeder implements SeederInterface {
+  async onBefore() { console.log('UserSeeder starting...') }
+  async onSuccess(durationMs: number) { console.log(`Done in ${durationMs}ms`) }
+  async onError(error: unknown) { console.error('UserSeeder failed', error) }
+  async onFinally(durationMs: number) { /* cleanup */ }
+
+  async run(ctx: SeedContext) {
+    await seed(User).saveMany(10, ctx)
+  }
+}
+```
+
+### Global hooks (`runSeeders` options)
+
 ```ts
 await runSeeders([UserSeeder, PostSeeder], {
   dataSource,
-  onBefore: (seeder) => console.log(`Starting ${seeder.name}...`),
-  onAfter: (seeder, durationMs) => console.log(`${seeder.name} done in ${durationMs}ms`),
+  onBefore: () => console.log('Starting seeders...'),
+  onSuccess: (seeders, durationMs) => console.log(`${seeders.length} seeders ran in ${durationMs}ms`),
   onError: (seeder, error) => console.error(`${seeder.name} failed`, error),
-  skip: (seeder) => alreadyRun.has(seeder.name),  // return true to skip
+  onFinally: (durationMs) => console.log(`Total: ${durationMs}ms`),
+  skip: (seeder) => alreadyRun.has(seeder.name),
 })
 ```
 
-Skipped seeders do not trigger `onBefore`, `onAfter`, or `onError`.
+Skipped seeders do not trigger class-level hooks (`onBefore`, `onSuccess`, `onError`, `onFinally`).
 
 ## Running seed scripts directly
 
@@ -305,7 +326,7 @@ npx ts-node src/seed.ts                                # CommonJS
 ### Loading entities/seeders from glob patterns
 
 ```ts
-import { loadEntities, loadSeeders } from '@joakimbugge/seeder'
+import { loadEntities, loadSeeders } from '@joakimbugge/typeorm-seeder'
 import { seed, runSeeders } from '@joakimbugge/typeorm-seeder'
 
 const entities = await loadEntities(['dist/entities/**/*.js'])
