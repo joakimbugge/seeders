@@ -4,6 +4,8 @@ ORM-agnostic foundation for decorator-based entity seeding. This is the core pac
 
 **If you are using TypeORM or MikroORM, install the ORM-specific package instead** — you do not need this package directly.
 
+Coded by AI. Reviewed by humans.
+
 📖 **[Full documentation](https://joakimbugge.github.io/seeders/seeder/)** · [API reference](https://joakimbugge.github.io/seeders/api/seeder/)
 
 ---

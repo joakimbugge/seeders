@@ -10,6 +10,7 @@ Monorepo for decorator-based entity seeding. Four packages — framework-agnosti
 | [`nest-typeorm-seeder`](packages/nest-typeorm-seeder) | [![npm](https://img.shields.io/npm/v/@joakimbugge/nest-typeorm-seeder)](https://www.npmjs.com/package/@joakimbugge/nest-typeorm-seeder) | NestJS module for TypeORM |
 | [`mikroorm-seeder`](packages/mikroorm-seeder) | [![npm](https://img.shields.io/npm/v/@joakimbugge/mikroorm-seeder)](https://www.npmjs.com/package/@joakimbugge/mikroorm-seeder) | Core seeding library for MikroORM |
 | [`nest-mikroorm-seeder`](packages/nest-mikroorm-seeder) | [![npm](https://img.shields.io/npm/v/@joakimbugge/nest-mikroorm-seeder)](https://www.npmjs.com/package/@joakimbugge/nest-mikroorm-seeder) | NestJS module for MikroORM |
+| [`seeder`](packages/seeder) | [![npm](https://img.shields.io/npm/v/@joakimbugge/seeder)](https://www.npmjs.com/package/@joakimbugge/seeder) | ORM-agnostic core (adapters, `@Seed`, `runSeeders`) |
 
 ---
 
@@ -48,7 +49,7 @@ await runSeeders([PostSeeder], { dataSource })
 // UserSeeder runs first, then PostSeeder
 ```
 
-**[Full documentation →](packages/typeorm-seeder/README.md)**
+**[Full documentation →](https://joakimbugge.github.io/seeders/)** · **[README →](https://github.com/joakimbugge/seeders/blob/main/packages/typeorm-seeder/README.md)**
 
 ---
 
@@ -68,7 +69,7 @@ import { SeederModule } from '@joakimbugge/nest-typeorm-seeder'
 export class AppModule {}
 ```
 
-**[Full documentation →](packages/nest-typeorm-seeder/README.md)**
+**[Full documentation →](https://joakimbugge.github.io/seeders/nest/)** · **[README →](https://github.com/joakimbugge/seeders/blob/main/packages/nest-typeorm-seeder/README.md)**
 
 ---
 
@@ -93,7 +94,7 @@ const author = await seed(Author).save({ em })
 // author.books  → 3 persisted Book instances
 ```
 
-**[Full documentation →](packages/mikroorm-seeder/README.md)**
+**[Full documentation →](https://joakimbugge.github.io/seeders/mikroorm/)** · **[README →](https://github.com/joakimbugge/seeders/blob/main/packages/mikroorm-seeder/README.md)**
 
 ---
 
@@ -113,7 +114,7 @@ import { SeederModule } from '@joakimbugge/nest-mikroorm-seeder'
 export class AppModule {}
 ```
 
-**[Full documentation →](packages/nest-mikroorm-seeder/README.md)**
+**[Full documentation →](https://joakimbugge.github.io/seeders/nest-mikroorm/)** · **[README →](https://github.com/joakimbugge/seeders/blob/main/packages/nest-mikroorm-seeder/README.md)**
 
 ---
 
@@ -121,7 +122,7 @@ export class AppModule {}
 
 ### Prerequisites
 
-- Node.js >= 18.19.0
+- Node.js >= 20.0.0
 - [pnpm](https://pnpm.io/) >= 10
 
 ### Setup
