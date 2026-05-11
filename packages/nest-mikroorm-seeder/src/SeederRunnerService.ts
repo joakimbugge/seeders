@@ -103,13 +103,19 @@ export class SeederRunnerService implements OnApplicationBootstrap {
     const Wrapped = class extends SeederClass {
       async onBefore(): Promise<void> {
         await super.onBefore?.();
-        if (logging) {logger.log(`[${SeederClass.name}] Starting...`);}
+        if (logging) {
+          logger.log(`[${SeederClass.name}] Starting...`);
+        }
       }
 
       async onSuccess(durationMs: number): Promise<void> {
         await super.onSuccess?.(durationMs);
-        if (runOnce) {await service.recordRun(em, tableName, SeederClass.name);}
-        if (logging) {logger.log(`[${SeederClass.name}] Done in ${durationMs}ms`);}
+        if (runOnce) {
+          await service.recordRun(em, tableName, SeederClass.name);
+        }
+        if (logging) {
+          logger.log(`[${SeederClass.name}] Done in ${durationMs}ms`);
+        }
       }
 
       async onError(error: unknown): Promise<void> {
