@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.9.2](https://github.com/joakimbugge/seeders/compare/nest-typeorm-seeder-v0.9.1...nest-typeorm-seeder-v0.9.2) (2026-05-11)
+
+
+### Features
+
+* new lifecycle hooks (onBefore, onSuccess, onError, onFinally) ([4b32a9d](https://github.com/joakimbugge/seeders/commit/4b32a9d6253c4ae9bc7b77ae64a70cc3a17f206b))
+
+
+### Bug Fixes
+
+* prevent re-assigning `this` ([537700c](https://github.com/joakimbugge/seeders/commit/537700c36c3497d3367b15a3e9adc58e6a521302))
+
+
+### Build
+
+* **deps-dev:** bump @nestjs/testing from 11.1.17 to 11.1.19 ([#68](https://github.com/joakimbugge/seeders/issues/68)) ([73fa635](https://github.com/joakimbugge/seeders/commit/73fa635ed618c81a032f7b8afcea60c6fd02c4e1))
+* **deps:** bump mikroorm to 7.0.15 and nest to 11.1.19 ([2e5ad16](https://github.com/joakimbugge/seeders/commit/2e5ad16f3b76f7d539a9bec17414076c73bb01d9))
+
+
+### Miscellaneous
+
+* fix formatting ([115c27e](https://github.com/joakimbugge/seeders/commit/115c27e7cad4c0989a549d5804188b873b9a7e44))
+* set engine.node to &gt;20 ([f715a83](https://github.com/joakimbugge/seeders/commit/f715a83fcd3242e567b5118c954d2087c57b72f9))
+
 ## [0.9.1](https://github.com/joakimbugge/seeders/compare/nest-typeorm-seeder-v0.9.0...nest-typeorm-seeder-v0.9.1) (2026-04-13)
 
 
