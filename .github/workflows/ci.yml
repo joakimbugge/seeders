@@ -35,6 +35,7 @@ jobs:
         run: pnpm -r run test:cov
 
       - name: Upload coverage to Codecov
+        if: github.actor != 'dependabot[bot]'
         uses: codecov/codecov-action@v6
         with:
           files: packages/typeorm-seeder/coverage/lcov.info,packages/nest-typeorm-seeder/coverage/lcov.info,packages/mikroorm-seeder/coverage/lcov.info,packages/nest-mikroorm-seeder/coverage/lcov.info
