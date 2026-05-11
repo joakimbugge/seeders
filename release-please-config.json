@@ -6,17 +6,16 @@
   "versioning": "always-bump-patch",
   "changelog-sections": [
     { "type": "feat", "section": "Features" },
-    { "type": "feature", "section": "Features" },
     { "type": "fix", "section": "Bug Fixes" },
     { "type": "perf", "section": "Performance Improvements" },
     { "type": "revert", "section": "Reverts" },
-    { "type": "docs", "section": "Documentation", "hidden": false },
-    { "type": "style", "section": "Styles", "hidden": false },
-    { "type": "chore", "section": "Miscellaneous Chores", "hidden": false },
-    { "type": "refactor", "section": "Code Refactoring", "hidden": false },
-    { "type": "test", "section": "Tests", "hidden": false },
-    { "type": "build", "section": "Build System", "hidden": false },
-    { "type": "ci", "section": "Continuous Integration", "hidden": false }
+    { "type": "build", "section": "Build" },
+    { "type": "chore", "section": "Miscellaneous" },
+    { "type": "ci", "section": "CI" },
+    { "type": "docs", "section": "Documentation" },
+    { "type": "refactor", "section": "Refactoring" },
+    { "type": "style", "section": "Styles" },
+    { "type": "test", "section": "Tests" }
   ],
   "packages": {
     "packages/seeder": {},
