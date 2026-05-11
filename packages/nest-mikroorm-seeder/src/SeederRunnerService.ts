@@ -98,7 +98,7 @@ export class SeederRunnerService implements OnApplicationBootstrap {
     logging: boolean,
   ): new () => any {
     const logger = this.logger;
-    const service = this;
+    const recordRun = this.recordRun.bind(this);
 
     const Wrapped = class extends SeederClass {
       async onBefore(): Promise<void> {
@@ -111,7 +111,7 @@ export class SeederRunnerService implements OnApplicationBootstrap {
       async onSuccess(durationMs: number): Promise<void> {
         await super.onSuccess?.(durationMs);
         if (runOnce) {
-          await service.recordRun(em, tableName, SeederClass.name);
+          await recordRun(em, tableName, SeederClass.name);
         }
         if (logging) {
           logger.log(`[${SeederClass.name}] Done in ${durationMs}ms`);
