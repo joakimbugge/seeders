@@ -52,7 +52,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=16.13.0"
+    "node": ">=20.0.0"
   },
   "peerDependencies": {
     "@joakimbugge/seeder": ">=0.1.0",

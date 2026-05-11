@@ -54,7 +54,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=18.19.0"
+    "node": ">=20.0.0"
   },
   "peerDependencies": {
     "reflect-metadata": ">=0.1.0",
@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "reflect-metadata": "^0.2.2",
-    "typeorm": "1.0.0-nightly.20260405"
+    "typeorm": "0.3.29"
   },
   "dependencies": {
     "@joakimbugge/seeder": "workspace:^",
