@@ -66,10 +66,10 @@
   "devDependencies": {
     "@joakimbugge/mikroorm-seeder": "workspace:^",
     "@joakimbugge/seeder": "workspace:^",
-    "@mikro-orm/core": "^7.0.15",
-    "@mikro-orm/decorators": "^7.0.15",
+    "@mikro-orm/core": "^7.0.16",
+    "@mikro-orm/decorators": "^7.0.16",
     "@mikro-orm/nestjs": "^7.0.0",
-    "@mikro-orm/sqlite": "^7.0.15",
+    "@mikro-orm/sqlite": "^7.0.16",
     "@nestjs/common": "^11.1.19",
     "@nestjs/core": "^11.1.19",
     "@nestjs/testing": "^11.1.19",
