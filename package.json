@@ -24,7 +24,7 @@
     "concurrently": "^9.2.1",
     "lefthook": "^2.1.4",
     "oxfmt": "^0.48.0",
-    "oxlint": "^1.58.0",
+    "oxlint": "^1.64.0",
     "tsdown": "^0.22.0",
     "tsx": "^4.21.0",
     "typedoc": "^0.28.19",
