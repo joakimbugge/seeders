@@ -70,10 +70,10 @@
     }
   },
   "devDependencies": {
-    "@mikro-orm/core": "^7.0.15",
-    "@mikro-orm/decorators": "^7.0.15",
-    "@mikro-orm/reflection": "^7.0.15",
-    "@mikro-orm/sqlite": "^7.0.15",
+    "@mikro-orm/core": "^7.1.0",
+    "@mikro-orm/decorators": "^7.1.0",
+    "@mikro-orm/reflection": "^7.1.0",
+    "@mikro-orm/sqlite": "^7.1.0",
     "reflect-metadata": "^0.2.2"
   },
   "dependencies": {
