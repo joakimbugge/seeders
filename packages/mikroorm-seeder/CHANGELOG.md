@@ -1,5 +1,12 @@
 # @joakimbugge/mikroorm-seeder
 
+## [0.6.4](https://github.com/joakimbugge/seeders/compare/mikroorm-seeder-v0.6.3...mikroorm-seeder-v0.6.4) (2026-06-30)
+
+
+### Build
+
+* **deps:** upgrade dependencies to latest across the workspace ([2bb2046](https://github.com/joakimbugge/seeders/commit/2bb204656aeb867e755f5acdb02dde3cacf46e56))
+
 ## [0.6.3](https://github.com/joakimbugge/seeders/compare/mikroorm-seeder-v0.6.2...mikroorm-seeder-v0.6.3) (2026-05-11)
 
 

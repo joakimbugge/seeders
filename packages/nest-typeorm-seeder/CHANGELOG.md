@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.3](https://github.com/joakimbugge/seeders/compare/nest-typeorm-seeder-v0.9.2...nest-typeorm-seeder-v0.9.3) (2026-06-30)
+
+
+### Features
+
+* support TypeORM v1 ([0a6e5b8](https://github.com/joakimbugge/seeders/commit/0a6e5b88254213c2ab21367e3fdd1207cbc71f11))
+
 ## [0.9.2](https://github.com/joakimbugge/seeders/compare/nest-typeorm-seeder-v0.9.1...nest-typeorm-seeder-v0.9.2) (2026-05-11)
 
 

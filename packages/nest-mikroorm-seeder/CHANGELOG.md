@@ -1,5 +1,12 @@
 # @joakimbugge/nest-mikroorm-seeder
 
+## [0.3.3](https://github.com/joakimbugge/seeders/compare/nest-mikroorm-seeder-v0.3.2...nest-mikroorm-seeder-v0.3.3) (2026-06-30)
+
+
+### Build
+
+* **deps:** upgrade dependencies to latest across the workspace ([2bb2046](https://github.com/joakimbugge/seeders/commit/2bb204656aeb867e755f5acdb02dde3cacf46e56))
+
 ## [0.3.2](https://github.com/joakimbugge/seeders/compare/nest-mikroorm-seeder-v0.3.1...nest-mikroorm-seeder-v0.3.2) (2026-05-11)
 
 
