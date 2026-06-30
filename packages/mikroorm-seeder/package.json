@@ -70,14 +70,14 @@
     }
   },
   "devDependencies": {
-    "@mikro-orm/core": "^7.0.15",
-    "@mikro-orm/decorators": "^7.0.15",
-    "@mikro-orm/reflection": "^7.0.15",
-    "@mikro-orm/sqlite": "^7.0.15",
+    "@mikro-orm/core": "^7.1.5",
+    "@mikro-orm/decorators": "^7.1.5",
+    "@mikro-orm/reflection": "^7.1.5",
+    "@mikro-orm/sqlite": "^7.1.5",
     "reflect-metadata": "^0.2.2"
   },
   "dependencies": {
     "@joakimbugge/seeder": "workspace:^",
-    "tinyglobby": "^0.2.16"
+    "tinyglobby": "^0.2.17"
   }
 }

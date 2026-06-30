@@ -16,22 +16,22 @@
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "@types/node": "^25.6.2",
-    "@faker-js/faker": "^10.4.0",
-    "@swc/core": "^1.15.30",
-    "@vitest/coverage-v8": "^4.1.6",
-    "better-sqlite3": "^12.9.0",
-    "concurrently": "^9.2.1",
-    "lefthook": "^2.1.4",
-    "oxfmt": "^0.48.0",
-    "oxlint": "^1.58.0",
-    "tsdown": "^0.22.0",
-    "tsx": "^4.21.0",
+    "@types/node": "^26.0.1",
+    "@faker-js/faker": "^10.5.0",
+    "@swc/core": "^1.15.43",
+    "@vitest/coverage-v8": "^4.1.9",
+    "better-sqlite3": "^12.11.1",
+    "concurrently": "^10.0.3",
+    "lefthook": "^2.1.9",
+    "oxfmt": "^0.57.0",
+    "oxlint": "^1.72.0",
+    "tsdown": "^0.22.3",
+    "tsx": "^4.22.4",
     "typedoc": "^0.28.19",
-    "typedoc-plugin-markdown": "^4.0.0",
+    "typedoc-plugin-markdown": "^4.12.0",
     "typescript": "^6.0.3",
     "unplugin-swc": "^1.5.9",
-    "vitepress": "^1.6.0",
-    "vitest": "^4.1.6"
+    "vitepress": "^1.6.4",
+    "vitest": "^4.1.9"
   }
 }
