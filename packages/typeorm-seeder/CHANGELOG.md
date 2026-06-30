@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.4](https://github.com/joakimbugge/seeders/compare/typeorm-seeder-v0.12.3...typeorm-seeder-v0.12.4) (2026-06-30)
+
+
+### Features
+
+* support TypeORM v1 ([0a6e5b8](https://github.com/joakimbugge/seeders/commit/0a6e5b88254213c2ab21367e3fdd1207cbc71f11))
+
 ## [0.12.3](https://github.com/joakimbugge/seeders/compare/typeorm-seeder-v0.12.2...typeorm-seeder-v0.12.3) (2026-05-11)
 
 
