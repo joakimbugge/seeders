@@ -41,6 +41,44 @@ describe('SeederRunnerService', () => {
     });
   });
 
+  describe('dependency ordering', () => {
+    it('runs a seeder only after the seeder it depends on has finished', async () => {
+      const dataSource = await createDataSource().initialize();
+      const events: string[] = [];
+
+      @Seeder()
+      class FirstSeeder implements SeederInterface {
+        async run(): Promise<void> {
+          events.push('first:start');
+          await new Promise((resolve) => setTimeout(resolve, 10));
+          events.push('first:end');
+        }
+      }
+
+      @Seeder({ dependencies: [FirstSeeder] })
+      class SecondSeeder implements SeederInterface {
+        async run(): Promise<void> {
+          events.push('second:start');
+        }
+      }
+
+      // Listed dependent-first on purpose: only real topological ordering yields the
+      // expected sequence. The run-once wrapper subclasses the seeders, so the fix must
+      // carry the @Seeder dependency metadata onto the wrappers — otherwise both run
+      // concurrently and 'second:start' lands before 'first:end'.
+      const moduleRef = await compileModule({
+        imports: [SeederModule.forRoot({ seeders: [SecondSeeder, FirstSeeder], dataSource })],
+      });
+
+      await moduleRef.init();
+
+      expect(events).toEqual(['first:start', 'first:end', 'second:start']);
+
+      await moduleRef.close();
+      await dataSource.destroy();
+    });
+  });
+
   describe('runOnce', () => {
     async function bootstrap(
       dataSource: import('typeorm').DataSource,

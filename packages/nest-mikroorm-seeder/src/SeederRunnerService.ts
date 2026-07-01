@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { runSeeders } from '@joakimbugge/mikroorm-seeder';
-import { loadSeeders } from '@joakimbugge/seeder';
+import { getSeederMeta, loadSeeders, registerSeeder } from '@joakimbugge/seeder';
 import { type EntityManager, MikroORM } from '@mikro-orm/core';
 import type { SeederModuleOptions } from './SeederModule.js';
 import { SeederRegistry } from './SeederRegistry.js';
@@ -55,6 +55,8 @@ export class SeederRunnerService implements OnApplicationBootstrap {
       const wrappedSeeders = seeders.map((SeederClass) =>
         this.wrapSeeder(SeederClass, em, tableName, runOnce, logging),
       );
+
+      this.carryDependencyMetadata(seeders, wrappedSeeders);
 
       await runSeeders(wrappedSeeders, {
         em,
@@ -145,6 +147,30 @@ export class SeederRunnerService implements OnApplicationBootstrap {
     }
 
     return Wrapped;
+  }
+
+  /**
+   * Re-registers each wrapper's `@Seeder` dependency metadata. That metadata lives in a
+   * WeakMap keyed by the exact constructor, so the dynamic wrapper subclasses do not
+   * inherit it — without this, `runSeeders` would see no dependencies and run every
+   * seeder concurrently instead of in topological order. The original metadata points at
+   * the original classes, so each dependency is remapped to its wrapper (matched by name)
+   * to keep the graph built from the same instances that carry runOnce tracking.
+   */
+  private carryDependencyMetadata(originals: (new () => any)[], wrapped: (new () => any)[]): void {
+    const wrappedByName = new Map(wrapped.map((seeder) => [seeder.name, seeder]));
+
+    originals.forEach((original, index) => {
+      const meta = getSeederMeta(original);
+
+      if (meta) {
+        registerSeeder(wrapped[index], {
+          dependencies: meta.dependencies.map(
+            (dependency) => wrappedByName.get(dependency.name) ?? dependency,
+          ),
+        });
+      }
+    });
   }
 
   /**
