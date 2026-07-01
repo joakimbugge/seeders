@@ -55,10 +55,9 @@ export type RunSeedersOptions<TContext extends SeedContext = SeedContext> = TCon
    * constructors can inject dependencies instead of being instantiated directly.
    */
   instantiate?: (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     SeederClass: SeederCtor,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ) => SeederInterface<any, any> | Promise<SeederInterface<any, any>>;
+  ) => SeederInterface<TContext, any> | Promise<SeederInterface<TContext, any>>;
 };
 
 /**
