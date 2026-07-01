@@ -738,4 +738,82 @@ describe('seeder suites', () => {
       expect(snapshots[1]).toEqual(['a', 'b']);
     });
   });
+
+  describe('instantiate', () => {
+    it('uses the custom factory to create each seeder instead of `new`', async () => {
+      const marker = vi.fn();
+
+      @Seeder()
+      class FactorySeeder {
+        async run(_ctx: SeedContext) {
+          marker();
+        }
+      }
+
+      const instantiate = vi.fn((SeederClass: SeederCtor) => new SeederClass());
+
+      await runSeeders([FactorySeeder], { logging: false, instantiate });
+
+      expect(instantiate).toHaveBeenCalledOnce();
+      expect(instantiate).toHaveBeenCalledWith(FactorySeeder);
+      expect(marker).toHaveBeenCalledOnce();
+    });
+
+    it('awaits an async factory and runs the resolved instance', async () => {
+      const order: string[] = [];
+
+      @Seeder()
+      class AsyncFactorySeeder {
+        async run(_ctx: SeedContext) {
+          order.push('run');
+        }
+      }
+
+      await runSeeders([AsyncFactorySeeder], {
+        logging: false,
+        instantiate: async (SeederClass) => {
+          order.push('create');
+          return new SeederClass();
+        },
+      });
+
+      expect(order).toEqual(['create', 'run']);
+    });
+
+    it('lets the factory supply constructor dependencies the seeder needs', async () => {
+      @Seeder()
+      class DependentSeeder {
+        constructor(private readonly greeting: string) {}
+
+        async run(_ctx: SeederRunContext) {
+          return this.greeting;
+        }
+      }
+
+      const results = await runSeeders([DependentSeeder], {
+        logging: false,
+        // A raw `new DependentSeeder()` would leave `greeting` undefined; the factory
+        // supplies it, mirroring how a DI container injects constructor dependencies.
+        instantiate: (SeederClass) =>
+          new (SeederClass as new (greeting: string) => DependentSeeder)('hei'),
+      });
+
+      expect(results.get(DependentSeeder)).toBe('hei');
+    });
+
+    it('falls back to `new` when no factory is provided', async () => {
+      const marker = vi.fn();
+
+      @Seeder()
+      class DefaultSeeder {
+        async run(_ctx: SeedContext) {
+          marker();
+        }
+      }
+
+      await runSeeders([DefaultSeeder], { logging: false });
+
+      expect(marker).toHaveBeenCalledOnce();
+    });
+  });
 });

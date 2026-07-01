@@ -2,9 +2,11 @@ import { runSeeders as baseRunSeeders } from '@joakimbugge/seeder';
 import type { BaseRunSeedersOptions } from '@joakimbugge/seeder';
 import type { SeedContext } from '../seed/context.js';
 
-/** Constructor type for a class decorated with `@Seeder`. */
+/** Constructor type for a class decorated with `@Seeder`. Permits constructor parameters so DI-injected seeders are assignable. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SeederCtor<TResult = unknown> = new () => { run(context: any): Promise<TResult> };
+export type SeederCtor<TResult = unknown> = new (...args: any[]) => {
+  run(context: any): Promise<TResult>;
+};
 
 /** Options for {@link runSeeders}. Extends the base options with MikroORM-specific logging. */
 export type RunSeedersOptions = Omit<BaseRunSeedersOptions<SeedContext>, 'logging'> & {

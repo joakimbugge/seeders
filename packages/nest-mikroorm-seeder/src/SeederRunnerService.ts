@@ -60,6 +60,10 @@ export class SeederRunnerService implements OnApplicationBootstrap {
         em,
         relations: this.options.relations,
         logging: false,
+        // Construct each seeder through Nest's DI container so seeder constructors
+        // can inject providers (ConfigService, repositories, etc.). Falls back to a
+        // plain `new` for seeders with no dependencies.
+        instantiate: (SeederClass) => this.moduleRef.create(SeederClass),
         skip: (seeder) => {
           const shouldSkip = executedSeeders.has(seeder.name);
 
@@ -130,6 +134,16 @@ export class SeederRunnerService implements OnApplicationBootstrap {
     };
 
     Object.defineProperty(Wrapped, 'name', { value: SeederClass.name });
+
+    // The dynamic subclass does not carry the original's constructor parameter
+    // metadata, which Nest's DI reads (as own metadata) to resolve dependencies.
+    // Copy it across so `moduleRef.create(Wrapped)` injects the same dependencies
+    // the original seeder declares.
+    const paramTypes = Reflect.getMetadata('design:paramtypes', SeederClass);
+    if (paramTypes) {
+      Reflect.defineMetadata('design:paramtypes', paramTypes, Wrapped);
+    }
+
     return Wrapped;
   }
 

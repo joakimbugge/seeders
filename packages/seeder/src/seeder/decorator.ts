@@ -32,7 +32,7 @@ export interface SeederOptions<TContext extends SeedContext = SeederRunContext> 
    * Resolved transitively — dependencies of dependencies are included automatically.
    * {@link runSeeders} topologically sorts the full set and detects circular dependencies.
    */
-  dependencies?: (new () => SeederInterface<TContext, any>)[];
+  dependencies?: (new (...args: any[]) => SeederInterface<TContext, any>)[];
 }
 
 /** Marks a class as a seeder with no explicit dependency configuration. */

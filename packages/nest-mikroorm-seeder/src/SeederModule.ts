@@ -5,8 +5,9 @@ import { SeederRunnerService, SEEDER_MODULE_OPTIONS } from './SeederRunnerServic
 import { SeederRegistry } from './SeederRegistry.js';
 import { SeederFeatureService, FEATURE_SEEDERS_TOKEN } from './SeederFeatureService.js';
 
-/** Constructor type for a class decorated with `@Seeder`. */
-export type SeederCtor = new () => SeederInterface;
+/** Constructor type for a class decorated with `@Seeder`. Permits constructor parameters so DI-injected seeders are assignable. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SeederCtor = new (...args: any[]) => SeederInterface;
 
 /**
  * Inline callback executed after all seeders have run.

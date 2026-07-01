@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { describe, expect, it } from 'vitest';
-import { Injectable, Module } from '@nestjs/common';
+import { Global, Injectable, Module } from '@nestjs/common';
 import { DataSource } from 'typeorm';
+import { Seeder, type SeederInterface, type SeedContext } from '@joakimbugge/typeorm-seeder';
 import { SeederModule } from '../src';
 import { User, UserSeeder } from './fixtures/user.js';
 import { compileModule } from './utils/compileModule.js';
@@ -101,6 +102,47 @@ describe('SeederModule', () => {
       await moduleRef.init();
 
       expect(await dataSource.getRepository(User).count()).toBe(1);
+
+      await moduleRef.close();
+      await dataSource.destroy();
+    });
+  });
+
+  describe('dependency injection', () => {
+    it('resolves seeder constructor dependencies through the Nest container', async () => {
+      const dataSource = await createDataSource().initialize();
+
+      @Injectable()
+      class NameService {
+        readonly name = 'injected-name';
+      }
+
+      // Global so the provider is visible to SeederModule's injector when it
+      // constructs the seeder — mirroring how an app exposes a shared ConfigService.
+      @Global()
+      @Module({ providers: [NameService], exports: [NameService] })
+      class NameModule {}
+
+      @Seeder()
+      class InjectedSeeder implements SeederInterface {
+        constructor(private readonly nameService: NameService) {}
+
+        async run({ dataSource: ds }: SeedContext): Promise<void> {
+          const repository = ds!.getRepository(User);
+
+          await repository.save(repository.create({ name: this.nameService.name }));
+        }
+      }
+
+      const moduleRef = await compileModule({
+        imports: [NameModule, SeederModule.forRoot({ seeders: [InjectedSeeder], dataSource })],
+      });
+
+      await moduleRef.init();
+
+      const users = await dataSource.getRepository(User).find();
+      expect(users).toHaveLength(1);
+      expect(users[0].name).toBe('injected-name');
 
       await moduleRef.close();
       await dataSource.destroy();

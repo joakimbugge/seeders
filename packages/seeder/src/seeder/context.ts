@@ -12,7 +12,9 @@ import type { SeedContext } from '../seed/registry.js';
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface SeederResultMap extends Omit<ReadonlyMap<Function, unknown>, 'get'> {
-  get<TResult>(key: new () => { run(...args: any[]): Promise<TResult> }): TResult | undefined;
+  get<TResult>(
+    key: new (...args: any[]) => { run(...args: any[]): Promise<TResult> },
+  ): TResult | undefined;
 }
 
 /**

@@ -69,6 +69,24 @@ SeederModule.forRootAsync({
 })
 ```
 
+## Dependency injection in seeders
+
+Seeders are instantiated through Nest's DI container (`ModuleRef.create`), so their constructors can inject any provider that is visible to the application — repositories, `ConfigService`, domain services, etc. No extra registration is needed; a `@Seeder()` class with constructor parameters just works:
+
+```ts
+@Seeder()
+export class UserSeeder implements SeederInterface {
+  constructor(private readonly config: ConfigService) {}
+
+  async run({ dataSource }: SeedContext): Promise<void> {
+    const adminEmail = this.config.getOrThrow('SEED_ADMIN_EMAIL')
+    await seed(User).save({ dataSource, values: { email: adminEmail } })
+  }
+}
+```
+
+The injected provider must be resolvable from the seeder module's scope, i.e. exported by a module `SeederModule` imports or declared in a `@Global()` module. Seeders with no constructor dependencies are constructed with a plain `new`, exactly as before.
+
 ## Run once
 
 By default (`runOnce: true`) each seeder is recorded in a `seeders` table on first run and skipped on subsequent boots. This works like TypeORM migrations.

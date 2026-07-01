@@ -6,9 +6,15 @@ import type { SeederInterface } from './decorator.js';
 import type { SeedContext } from '../seed/registry.js';
 import type { SeederRunContext, SeederResultMap } from './context.js';
 
-/** Constructor type for a class decorated with `@Seeder`. */
+/**
+ * Constructor type for a class decorated with `@Seeder`.
+ *
+ * Constructor parameters are permitted so seeders can declare dependencies that a
+ * DI container injects (see the `instantiate` option); the default `new SeederClass()`
+ * path simply constructs them with no arguments.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SeederCtor<TResult = unknown> = new () => SeederInterface<any, TResult>;
+export type SeederCtor<TResult = unknown> = new (...args: any[]) => SeederInterface<any, TResult>;
 
 /** Options for {@link runSeeders}. Extends {@link SeedContext} with lifecycle hooks and logging control. */
 export type RunSeedersOptions<TContext extends SeedContext = SeedContext> = TContext & {
@@ -41,6 +47,18 @@ export type RunSeedersOptions<TContext extends SeedContext = SeedContext> = TCon
   onFinally?: (durationMs: number) => void | Promise<void>;
   /** Called for each seeder before it runs. Return `true` to skip it entirely. */
   skip?: (seeder: SeederCtor) => boolean | Promise<boolean>;
+  /**
+   * Custom factory used to create each seeder instance. Defaults to `new SeederClass()`.
+   *
+   * Framework integrations override this to construct seeders through their own
+   * dependency-injection container (e.g. NestJS `ModuleRef.create`), so seeder
+   * constructors can inject dependencies instead of being instantiated directly.
+   */
+  instantiate?: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    SeederClass: SeederCtor,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ) => SeederInterface<any, any> | Promise<SeederInterface<any, any>>;
 };
 
 /**
@@ -153,6 +171,7 @@ export async function runSeeders(seeders: SeederCtor[], options: RunSeedersOptio
     onError,
     onFinally,
     skip,
+    instantiate,
     ...context
   } = options;
   const results = new Map<SeederCtor, unknown>();
@@ -176,7 +195,7 @@ export async function runSeeders(seeders: SeederCtor[], options: RunSeedersOptio
             return;
           }
 
-          const instance = new SeederClass();
+          const instance = instantiate ? await instantiate(SeederClass) : new SeederClass();
 
           log?.progress(`[${SeederClass.name}] Starting...`);
           await instance.onBefore?.();
