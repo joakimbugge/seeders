@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.5](https://github.com/joakimbugge/seeders/compare/nest-typeorm-seeder-v0.9.4...nest-typeorm-seeder-v0.9.5) (2026-07-01)
+
+
+### Bug Fixes
+
+* run seeders in dependency order through the run-once wrapper ([57b09b8](https://github.com/joakimbugge/seeders/commit/57b09b860e6666f7a3f343ec7f7b578a10b80932))
+
 ## [0.9.4](https://github.com/joakimbugge/seeders/compare/nest-typeorm-seeder-v0.9.3...nest-typeorm-seeder-v0.9.4) (2026-07-01)
 
 
