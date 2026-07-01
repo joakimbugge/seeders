@@ -1,5 +1,12 @@
 # @joakimbugge/nest-mikroorm-seeder
 
+## [0.3.5](https://github.com/joakimbugge/seeders/compare/nest-mikroorm-seeder-v0.3.4...nest-mikroorm-seeder-v0.3.5) (2026-07-01)
+
+
+### Bug Fixes
+
+* run seeders in dependency order through the run-once wrapper ([57b09b8](https://github.com/joakimbugge/seeders/commit/57b09b860e6666f7a3f343ec7f7b578a10b80932))
+
 ## [0.3.4](https://github.com/joakimbugge/seeders/compare/nest-mikroorm-seeder-v0.3.3...nest-mikroorm-seeder-v0.3.4) (2026-07-01)
 
 
