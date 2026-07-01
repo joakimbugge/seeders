@@ -5,6 +5,17 @@ export default defineConfig({
   description: 'Decorator-based entity seeding for TypeORM and MikroORM',
   base: '/seeders/',
 
+  head: [
+    [
+      'script',
+      {
+        src: 'https://context7.com/widget.js',
+        'data-library': '/llmstxt/joakimbugge_github_io_seeders_llms_txt',
+        'data-color': '#3451b2',
+      },
+    ],
+  ],
+
   themeConfig: {
     nav: [
       {
