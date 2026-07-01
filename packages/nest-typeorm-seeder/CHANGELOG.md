@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.4](https://github.com/joakimbugge/seeders/compare/nest-typeorm-seeder-v0.9.3...nest-typeorm-seeder-v0.9.4) (2026-07-01)
+
+
+### Features
+
+* instantiate seeders through the DI container ([7a301c4](https://github.com/joakimbugge/seeders/commit/7a301c45471fe6f2f9fd0ab32dbe0e064cba4ab5))
+
 ## [0.9.3](https://github.com/joakimbugge/seeders/compare/nest-typeorm-seeder-v0.9.2...nest-typeorm-seeder-v0.9.3) (2026-06-30)
 
 

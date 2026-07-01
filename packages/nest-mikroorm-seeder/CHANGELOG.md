@@ -1,5 +1,12 @@
 # @joakimbugge/nest-mikroorm-seeder
 
+## [0.3.4](https://github.com/joakimbugge/seeders/compare/nest-mikroorm-seeder-v0.3.3...nest-mikroorm-seeder-v0.3.4) (2026-07-01)
+
+
+### Features
+
+* instantiate seeders through the DI container ([7a301c4](https://github.com/joakimbugge/seeders/commit/7a301c45471fe6f2f9fd0ab32dbe0e064cba4ab5))
+
 ## [0.3.3](https://github.com/joakimbugge/seeders/compare/nest-mikroorm-seeder-v0.3.2...nest-mikroorm-seeder-v0.3.3) (2026-06-30)
 
 

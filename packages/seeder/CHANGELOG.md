@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.5](https://github.com/joakimbugge/seeders/compare/seeder-v0.3.4...seeder-v0.3.5) (2026-07-01)
+
+
+### Features
+
+* instantiate seeders through the DI container ([7a301c4](https://github.com/joakimbugge/seeders/commit/7a301c45471fe6f2f9fd0ab32dbe0e064cba4ab5))
+
+
+### Refactoring
+
+* thread run context type through the instantiate hook ([81c27b8](https://github.com/joakimbugge/seeders/commit/81c27b857a714e6e149f1fea4f59c89c9bdd63cf))
+
 ## [0.3.4](https://github.com/joakimbugge/seeders/compare/seeder-v0.3.3...seeder-v0.3.4) (2026-06-30)
 
 

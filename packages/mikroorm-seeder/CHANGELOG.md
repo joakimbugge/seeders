@@ -1,5 +1,12 @@
 # @joakimbugge/mikroorm-seeder
 
+## [0.6.5](https://github.com/joakimbugge/seeders/compare/mikroorm-seeder-v0.6.4...mikroorm-seeder-v0.6.5) (2026-07-01)
+
+
+### Features
+
+* instantiate seeders through the DI container ([7a301c4](https://github.com/joakimbugge/seeders/commit/7a301c45471fe6f2f9fd0ab32dbe0e064cba4ab5))
+
 ## [0.6.4](https://github.com/joakimbugge/seeders/compare/mikroorm-seeder-v0.6.3...mikroorm-seeder-v0.6.4) (2026-06-30)
 
 
