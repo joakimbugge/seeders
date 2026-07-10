@@ -19,7 +19,7 @@
     "@types/node": "^26.0.1",
     "@faker-js/faker": "^10.5.0",
     "@swc/core": "^1.15.43",
-    "@vitest/coverage-v8": "^4.1.9",
+    "@vitest/coverage-v8": "^4.1.10",
     "better-sqlite3": "^12.11.1",
     "concurrently": "^10.0.3",
     "lefthook": "^2.1.9",
@@ -32,6 +32,6 @@
     "typescript": "^6.0.3",
     "unplugin-swc": "^1.5.9",
     "vitepress": "^1.6.4",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.10"
   }
 }
