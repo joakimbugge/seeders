@@ -4,6 +4,12 @@
   "workspaces": [
     "packages/*"
   ],
+  "allowScripts": {
+    "@swc/core": true,
+    "better-sqlite3": true,
+    "esbuild": true,
+    "lefthook": true
+  },
   "scripts": {
     "dev": "concurrently -n seeder,typeorm,nest-typeorm,mikroorm,nest-mikroorm -c auto \"npm run dev -w @joakimbugge/seeder\" \"npm run dev -w @joakimbugge/typeorm-seeder\" \"npm run dev -w @joakimbugge/nest-typeorm-seeder\" \"npm run dev -w @joakimbugge/mikroorm-seeder\" \"npm run dev -w @joakimbugge/nest-mikroorm-seeder\"",
     "dev:watch": "concurrently -n build,typecheck -c cyan,magenta \"npm run dev\" \"npm run typecheck:watch\"",
