@@ -122,14 +122,16 @@ export class AppModule {}
 
 ### Prerequisites
 
-- Node.js >= 20.0.0
-- npm >= 9 (npm workspaces)
+- Node.js >= 20.0.0 to consume the packages; >= 22.22.2 to develop them (npm 12 requires it)
+- npm >= 9 for workspaces; npm 12 to match CI
 
 ### Setup
 
 ```bash
 npm install
 ```
+
+npm 12 blocks dependency install scripts by default. The four dev dependencies that need them (`better-sqlite3`, `lefthook`, `esbuild`, `@swc/core`) are pre-approved in the root `allowScripts` field, so a plain `npm install` is enough. If a future dependency adds an install script, `npm install-scripts ls` shows what was skipped.
 
 ### Scripts
 
