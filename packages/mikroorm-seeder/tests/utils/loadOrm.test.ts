@@ -33,11 +33,17 @@ describe('loadOrm()', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('No MikroORM instance found'));
   });
 
+  // loadOrm() imports the fixture at runtime, which is the whole point of this test, so the
+  // first-touch cost of the @mikro-orm graph and better-sqlite3 lands inside the test body and
+  // counts against testTimeout. Every other test in this package reaches that graph through a
+  // static import instead, where the cost falls in the untimed collect phase. On a cold file
+  // cache — a fresh install, or CI right after `npm ci` — that import alone has exceeded the 5s
+  // default, so this test gets explicit headroom.
   it('resolves a MikroORM instance from an explicit path', async () => {
     const orm = await loadOrm(ormPath);
 
     expect(typeof orm.close).toBe('function');
 
     await orm.close();
-  });
+  }, 30_000);
 });
