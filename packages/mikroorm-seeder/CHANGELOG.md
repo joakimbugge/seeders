@@ -1,5 +1,12 @@
 # @joakimbugge/mikroorm-seeder
 
+## [0.6.7](https://github.com/joakimbugge/seeders/compare/mikroorm-seeder-v0.6.6...mikroorm-seeder-v0.6.7) (2026-08-13)
+
+
+### Tests
+
+* **mikroorm:** give loadOrm's dynamic-import test room on a cold cache ([#112](https://github.com/joakimbugge/seeders/issues/112)) ([4f21aa6](https://github.com/joakimbugge/seeders/commit/4f21aa6549fd1e2108b7e3c8dfc83172524e98e9))
+
 ## [0.6.6](https://github.com/joakimbugge/seeders/compare/mikroorm-seeder-v0.6.5...mikroorm-seeder-v0.6.6) (2026-08-13)
 
 
