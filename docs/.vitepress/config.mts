@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   title: 'seeders',
@@ -34,9 +34,7 @@ export default defineConfig({
       },
       {
         text: 'Core',
-        items: [
-          { text: 'Overview', link: '/seeder/' },
-        ],
+        items: [{ text: 'Overview', link: '/seeder/' }],
       },
       {
         text: 'API reference',
@@ -54,9 +52,7 @@ export default defineConfig({
       '/seeder/': [
         {
           text: 'seeder',
-          items: [
-            { text: 'Overview', link: '/seeder/' },
-          ],
+          items: [{ text: 'Overview', link: '/seeder/' }],
         },
       ],
       '/guide/': [
@@ -75,8 +71,14 @@ export default defineConfig({
           items: [
             { text: 'Tree entities', link: '/guide/advanced-patterns/tree-entities' },
             { text: 'Circular relations', link: '/guide/decorating-entities#circular-relations' },
-            { text: 'Batch dependencies', link: '/guide/decorating-entities#depending-on-earlier-instances-in-a-batch' },
-            { text: 'Depending on previous properties', link: '/guide/decorating-entities#depending-on-earlier-properties' },
+            {
+              text: 'Batch dependencies',
+              link: '/guide/decorating-entities#depending-on-earlier-instances-in-a-batch',
+            },
+            {
+              text: 'Depending on previous properties',
+              link: '/guide/decorating-entities#depending-on-earlier-properties',
+            },
           ],
         },
         {
@@ -103,9 +105,7 @@ export default defineConfig({
         },
         {
           text: 'Frameworks',
-          items: [
-            { text: 'NestJS', link: '/nest/' },
-          ],
+          items: [{ text: 'NestJS', link: '/nest/' }],
         },
       ],
       '/nest/': [
@@ -134,9 +134,18 @@ export default defineConfig({
         {
           text: 'Advanced patterns',
           items: [
-            { text: 'Circular relations', link: '/mikroorm/decorating-entities#circular-relations' },
-            { text: 'Batch dependencies', link: '/mikroorm/decorating-entities#depending-on-earlier-instances-in-a-batch' },
-            { text: 'Depending on previous properties', link: '/mikroorm/decorating-entities#depending-on-earlier-properties' },
+            {
+              text: 'Circular relations',
+              link: '/mikroorm/decorating-entities#circular-relations',
+            },
+            {
+              text: 'Batch dependencies',
+              link: '/mikroorm/decorating-entities#depending-on-earlier-instances-in-a-batch',
+            },
+            {
+              text: 'Depending on previous properties',
+              link: '/mikroorm/decorating-entities#depending-on-earlier-properties',
+            },
           ],
         },
         {
@@ -163,9 +172,7 @@ export default defineConfig({
         },
         {
           text: 'Frameworks',
-          items: [
-            { text: 'NestJS', link: '/nest-mikroorm/' },
-          ],
+          items: [{ text: 'NestJS', link: '/nest-mikroorm/' }],
         },
       ],
       '/nest-mikroorm/': [
@@ -195,4 +202,4 @@ export default defineConfig({
       message: 'Released under the MIT License.',
     },
   },
-})
+});

@@ -25,7 +25,9 @@ let pathsRewritten = 0;
 const missing = [];
 
 for (const pkg of readdirSync(packagesDir, { withFileTypes: true })) {
-  if (!pkg.isDirectory()) continue;
+  if (!pkg.isDirectory()) {
+    continue;
+  }
 
   const lcovPath = path.join(packagesDir, pkg.name, 'coverage', 'lcov.info');
 
@@ -40,7 +42,9 @@ for (const pkg of readdirSync(packagesDir, { withFileTypes: true })) {
   const output = readFileSync(lcovPath, 'utf8')
     .split('\n')
     .map((line) => {
-      if (!line.startsWith('SF:')) return line;
+      if (!line.startsWith('SF:')) {
+        return line;
+      }
 
       const raw = line.slice(3).trim();
       // v8 sometimes emits absolute paths; make those repo-relative before anything else.
@@ -48,7 +52,9 @@ for (const pkg of readdirSync(packagesDir, { withFileTypes: true })) {
       const normalized = toPosix(relative);
       const prefixed = normalized.startsWith('packages/') ? normalized : prefix + normalized;
 
-      if (!existsSync(path.join(repoRoot, prefixed))) missing.push(prefixed);
+      if (!existsSync(path.join(repoRoot, prefixed))) {
+        missing.push(prefixed);
+      }
 
       rewrittenInReport += 1;
       return `SF:${prefixed}`;
@@ -69,7 +75,9 @@ if (missing.length > 0) {
     `\nError: ${missing.length} coverage path(s) do not exist in the repository. Codecov would ` +
       'silently drop these, so failing instead:',
   );
-  for (const file of missing) console.error(`  ${file}`);
+  for (const file of missing) {
+    console.error(`  ${file}`);
+  }
   process.exit(1);
 }
 

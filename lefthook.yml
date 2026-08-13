@@ -1,9 +1,11 @@
 pre-commit:
   parallel: false
   commands:
+    # Root scripts, not per-workspace ones: the per-package scripts only cover that package's
+    # src/tests, so anything at the repo root (scripts/, docs/.vitepress) went unchecked.
     lint:
-      run: npm run lint:fix --workspaces --if-present
+      run: npm run lint:fix
       stage_fixed: true
     format:
-      run: npm run fmt --workspaces --if-present
+      run: npm run fmt
       stage_fixed: true

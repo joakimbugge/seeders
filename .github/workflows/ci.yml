@@ -36,6 +36,14 @@ jobs:
             exit 1
           fi
 
+      # Lefthook enforces these pre-commit, but only for contributors who have the hooks
+      # installed, and hooks can be skipped — so CI checks them too.
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run fmt:check
+
       - name: Build packages
         run: npm run build --workspaces --if-present
 
