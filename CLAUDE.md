@@ -48,6 +48,21 @@ After CI passes on a push to `main`, Release Please reads the conventional commi
 
 Release Please determines which packages a commit belongs to by looking at which files were changed — not by commit scope. A commit touching `packages/mikroorm-seeder/src/...` is attributed to `@joakimbugge/mikroorm-seeder` only. A commit touching files in multiple package directories is attributed to all of them.
 
+## Coverage
+
+Each package's `test:cov` writes `packages/<name>/coverage/lcov.info` with paths relative to that
+package, so all five report identical entries like `SF:src/seed/registry.ts`. Codecov resolves
+those against the whole repo, cannot tell the workspaces apart, and silently attributes coverage to
+the wrong package.
+
+CI therefore runs `node scripts/prefix-lcov.mjs` before uploading, which rewrites the paths to
+repo-relative form and fails if any of them do not exist on disk. If you add a package, no change
+is needed there — it discovers packages by directory — but do add a matching component to
+`codecov.yml` and its lcov path to the upload lists in `ci.yml` and `release.yml`.
+
+Per-package breakdowns come from Codecov **components**, not flags, because one CI job uploads
+everything at once. `patch` status is `informational` for now; remove that to make it a gate.
+
 ## Publish authentication
 
 Publishing uses npm **trusted publishing** (OIDC), not an `NPM_TOKEN` secret. npm mints a short-lived token from the workflow's OIDC identity, and provenance attestations are generated automatically.

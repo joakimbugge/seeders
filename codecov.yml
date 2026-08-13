@@ -1,0 +1,59 @@
+# Coverage is uploaded as a single session containing one lcov report per workspace package.
+#
+# scripts/prefix-lcov.mjs rewrites those reports first so their paths are relative to the
+# repository root. vitest emits package-relative paths, so without that step every package reports
+# `src/...` and Codecov cannot tell them apart — coverage from one package gets attributed to
+# another's files and most of the tree goes untracked.
+#
+# Per-package breakdowns come from components rather than flags: all five packages are tested and
+# uploaded by the same CI job, so there is nothing to carry forward between separate uploads.
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    # Coverage of changed lines only. Informational while the numbers are being re-established
+    # after the path fix; drop `informational` to turn it into a real gate.
+    patch:
+      default:
+        target: 70%
+        informational: true
+
+comment:
+  layout: 'condensed_header, diff, components, condensed_files, condensed_footer'
+  require_changes: true
+
+# Components give per-package coverage in the PR comment and the UI without adding a status check
+# per package. Paths mirror each package's vitest `coverage.include`.
+component_management:
+  individual_components:
+    - component_id: seeder
+      name: '@joakimbugge/seeder'
+      paths:
+        - packages/seeder/src/**
+    - component_id: typeorm_seeder
+      name: '@joakimbugge/typeorm-seeder'
+      paths:
+        - packages/typeorm-seeder/src/**
+    - component_id: nest_typeorm_seeder
+      name: '@joakimbugge/nest-typeorm-seeder'
+      paths:
+        - packages/nest-typeorm-seeder/src/**
+    - component_id: mikroorm_seeder
+      name: '@joakimbugge/mikroorm-seeder'
+      paths:
+        - packages/mikroorm-seeder/src/**
+    - component_id: nest_mikroorm_seeder
+      name: '@joakimbugge/nest-mikroorm-seeder'
+      paths:
+        - packages/nest-mikroorm-seeder/src/**
+
+ignore:
+  - '**/dist/**'
+  - '**/tests/**'
+  - '**/*.d.ts'
+  - 'packages/*/src/index.ts' # re-exports only; excluded from vitest coverage too
+  - 'docs/**'
+  - 'scripts/**'
