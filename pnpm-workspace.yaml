@@ -3,6 +3,9 @@ packages:
 allowBuilds:
   '@nestjs/core': true
   '@swc/core': true
+  # better-sqlite3 12 has no bundled binary — its install script fetches a prebuild for the running
+  # Node ABI, so skipping it leaves a binary built for whatever Node version installed it last.
+  # v13 drops the build step entirely, but typeorm and @mikro-orm/sqlite still peer-require ^12.
   better-sqlite3: true
   esbuild: true
   lefthook: true
