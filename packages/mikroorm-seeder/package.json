@@ -1,6 +1,6 @@
 {
   "name": "@joakimbugge/mikroorm-seeder",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "description": "Decorator-based seeder library for MikroORM",
   "repository": {
     "type": "git",
@@ -77,7 +77,7 @@
     "reflect-metadata": "^0.2.2"
   },
   "dependencies": {
-    "@joakimbugge/seeder": "^0.3.5",
+    "@joakimbugge/seeder": "^0.3.6",
     "tinyglobby": "^0.2.17"
   }
 }
