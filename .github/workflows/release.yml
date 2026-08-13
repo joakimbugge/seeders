@@ -40,10 +40,15 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:cov --workspaces --if-present
 
+      - name: Make coverage paths repo-relative
+        run: node scripts/prefix-lcov.mjs
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v7
         with:
-          files: packages/typeorm-seeder/coverage/lcov.info,packages/nest-typeorm-seeder/coverage/lcov.info,packages/mikroorm-seeder/coverage/lcov.info,packages/nest-mikroorm-seeder/coverage/lcov.info
+          files: packages/seeder/coverage/lcov.info,packages/typeorm-seeder/coverage/lcov.info,packages/nest-typeorm-seeder/coverage/lcov.info,packages/mikroorm-seeder/coverage/lcov.info,packages/nest-mikroorm-seeder/coverage/lcov.info
+          disable_search: true
+          fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
   release-please:

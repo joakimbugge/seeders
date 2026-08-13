@@ -45,9 +45,16 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:cov --workspaces --if-present
 
+      # vitest writes package-relative paths, which Codecov cannot attribute to the right
+      # workspace. This also fails the build if any rewritten path does not exist.
+      - name: Make coverage paths repo-relative
+        run: node scripts/prefix-lcov.mjs
+
       - name: Upload coverage to Codecov
         if: github.actor != 'dependabot[bot]'
         uses: codecov/codecov-action@v7
         with:
-          files: packages/typeorm-seeder/coverage/lcov.info,packages/nest-typeorm-seeder/coverage/lcov.info,packages/mikroorm-seeder/coverage/lcov.info,packages/nest-mikroorm-seeder/coverage/lcov.info
+          files: packages/seeder/coverage/lcov.info,packages/typeorm-seeder/coverage/lcov.info,packages/nest-typeorm-seeder/coverage/lcov.info,packages/mikroorm-seeder/coverage/lcov.info,packages/nest-mikroorm-seeder/coverage/lcov.info
+          disable_search: true
+          fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
