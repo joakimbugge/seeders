@@ -1,6 +1,6 @@
 {
   "name": "@joakimbugge/nest-mikroorm-seeder",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "NestJS module for @joakimbugge/mikroorm-seeder",
   "repository": {
     "type": "git",
@@ -64,7 +64,7 @@
     "reflect-metadata": ">=0.1.0"
   },
   "devDependencies": {
-    "@joakimbugge/mikroorm-seeder": "^0.6.6",
+    "@joakimbugge/mikroorm-seeder": "^0.6.7",
     "@joakimbugge/seeder": "^0.3.6",
     "@mikro-orm/core": "^7.1.11",
     "@mikro-orm/decorators": "^7.1.11",

@@ -1,5 +1,16 @@
 # @joakimbugge/nest-mikroorm-seeder
 
+## [0.3.7](https://github.com/joakimbugge/seeders/compare/nest-mikroorm-seeder-v0.3.6...nest-mikroorm-seeder-v0.3.7) (2026-08-13)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @joakimbugge/mikroorm-seeder bumped from ^0.6.6 to ^0.6.7
+  * peerDependencies
+    * @joakimbugge/mikroorm-seeder bumped from >=0.1.1 to >=0.6.7
+
 ## [0.3.6](https://github.com/joakimbugge/seeders/compare/nest-mikroorm-seeder-v0.3.5...nest-mikroorm-seeder-v0.3.6) (2026-08-13)
 
 

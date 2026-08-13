@@ -2,6 +2,6 @@
   "packages/seeder": "0.3.6",
   "packages/typeorm-seeder": "0.12.6",
   "packages/nest-typeorm-seeder": "0.9.6",
-  "packages/mikroorm-seeder": "0.6.6",
-  "packages/nest-mikroorm-seeder": "0.3.6"
+  "packages/mikroorm-seeder": "0.6.7",
+  "packages/nest-mikroorm-seeder": "0.3.7"
 }
