@@ -25,6 +25,7 @@ Package manager is **npm workspaces** — not pnpm. There is no `workspace:` pro
 - Linter: `oxlint` — not ESLint
 - Formatter: `oxfmt` — not Prettier
 - Tests: `vitest` with globals enabled (no imports needed for `describe`/`it`/`expect`)
+- Docs: `vitepress` **2.x alpha**, deliberately. 1.6.4 (the newest stable) is pinned to vite 5, which carries three unfixable advisories including a high-severity path traversal and a Windows NTLM hash disclosure. All three are dev-server-only and never reached consumers, but they made Dependabot's security updates fail on every push. vitepress 2 uses vite 8 and clears them. Do not "fix" this by downgrading to stable; revisit once vitepress 2.0 ships.
 
 # Versioning and release
 
