@@ -1,6 +1,6 @@
 {
   "name": "@joakimbugge/typeorm-seeder",
-  "version": "0.12.5",
+  "version": "0.12.6",
   "description": "Decorator-based seeder library for TypeORM",
   "repository": {
     "type": "git",
@@ -71,7 +71,7 @@
     "typeorm": "1.1.0"
   },
   "dependencies": {
-    "@joakimbugge/seeder": "^0.3.5",
+    "@joakimbugge/seeder": "^0.3.6",
     "tinyglobby": "^0.2.17"
   }
 }

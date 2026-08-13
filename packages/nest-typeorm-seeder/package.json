@@ -1,6 +1,6 @@
 {
   "name": "@joakimbugge/nest-typeorm-seeder",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "NestJS module for @joakimbugge/typeorm-seeder",
   "repository": {
     "type": "git",
@@ -63,8 +63,8 @@
     "typeorm": ">=0.3.0"
   },
   "devDependencies": {
-    "@joakimbugge/seeder": "^0.3.5",
-    "@joakimbugge/typeorm-seeder": "^0.12.5",
+    "@joakimbugge/seeder": "^0.3.6",
+    "@joakimbugge/typeorm-seeder": "^0.12.6",
     "@nestjs/common": "^11.1.29",
     "@nestjs/core": "^11.1.29",
     "@nestjs/testing": "^11.1.29",

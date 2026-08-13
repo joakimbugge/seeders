@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.6](https://github.com/joakimbugge/seeders/compare/seeder-v0.3.5...seeder-v0.3.6) (2026-08-13)
+
+
+### Miscellaneous
+
+* **deps:** update dev dependencies ([7ef87e3](https://github.com/joakimbugge/seeders/commit/7ef87e3b322393f406989183e7e18a33c5048264))
+* migrate from pnpm to npm workspaces ([#108](https://github.com/joakimbugge/seeders/issues/108)) ([5d4a81f](https://github.com/joakimbugge/seeders/commit/5d4a81f0695b9eb5faa8bcfacf6bd7f88408b64a))
+
 ## [0.3.5](https://github.com/joakimbugge/seeders/compare/seeder-v0.3.4...seeder-v0.3.5) (2026-07-01)
 
 
