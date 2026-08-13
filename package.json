@@ -1,18 +1,22 @@
 {
   "private": true,
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "npm@11.13.0",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev:watch": "concurrently -n build,typecheck -c cyan,magenta \"pnpm --parallel -r run dev\" \"pnpm run typecheck:watch\"",
+    "dev": "concurrently -n seeder,typeorm,nest-typeorm,mikroorm,nest-mikroorm -c auto \"npm run dev -w @joakimbugge/seeder\" \"npm run dev -w @joakimbugge/typeorm-seeder\" \"npm run dev -w @joakimbugge/nest-typeorm-seeder\" \"npm run dev -w @joakimbugge/mikroorm-seeder\" \"npm run dev -w @joakimbugge/nest-mikroorm-seeder\"",
+    "dev:watch": "concurrently -n build,typecheck -c cyan,magenta \"npm run dev\" \"npm run typecheck:watch\"",
     "typecheck:watch": "tsc -b tsconfig.typecheck.json --watch --preserveWatchOutput",
-    "build": "pnpm -r run build",
-    "lint:fix": "pnpm -r run lint:fix",
-    "fmt": "pnpm -r run fmt",
-    "test": "pnpm -r run test",
+    "build": "npm run build --workspaces --if-present",
+    "lint:fix": "npm run lint:fix --workspaces --if-present",
+    "fmt": "npm run fmt --workspaces --if-present",
+    "test": "npm run test:run --workspaces --if-present",
     "typecheck": "tsc -b tsconfig.typecheck.json",
     "test:cov": "vitest run --coverage",
     "docs:typedoc": "(cd docs && typedoc --options typedoc.seeder.json && typedoc --options typedoc.typeorm-seeder.json && typedoc --options typedoc.nest-typeorm-seeder.json && typedoc --options typedoc.mikroorm-seeder.json && typedoc --options typedoc.nest-mikroorm-seeder.json)",
-    "docs:dev": "pnpm run docs:typedoc && vitepress dev docs",
-    "docs:build": "pnpm run docs:typedoc && vitepress build docs",
+    "docs:dev": "npm run docs:typedoc && vitepress dev docs",
+    "docs:build": "npm run docs:typedoc && vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {

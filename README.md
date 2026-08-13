@@ -123,30 +123,30 @@ export class AppModule {}
 ### Prerequisites
 
 - Node.js >= 20.0.0
-- [pnpm](https://pnpm.io/) >= 10
+- npm >= 9 (npm workspaces)
 
 ### Setup
 
 ```bash
-pnpm install
+npm install
 ```
 
 ### Scripts
 
 | Command | Description |
 |---|---|
-| `pnpm -r run build` | Build all packages |
-| `pnpm -r run test:run` | Run all tests |
-| `pnpm -r run typecheck` | Type-check all packages |
-| `pnpm -r run lint` | Lint all packages |
-| `pnpm -r run fmt` | Format all packages |
-| `pnpm run dev:watch` | Run build and typecheck watchers for all packages in parallel |
+| `npm run build` | Build all packages |
+| `npm test` | Run all tests |
+| `npm run typecheck` | Type-check all packages |
+| `npm run lint --workspaces` | Lint all packages |
+| `npm run fmt` | Format all packages |
+| `npm run dev:watch` | Run build and typecheck watchers for all packages in parallel |
 
 ### Typecheck Configuration
 
 Root typechecking uses a dedicated [`tsconfig.typecheck.json`](tsconfig.typecheck.json) instead of the package build configs.
 
-- `pnpm typecheck` and `pnpm run typecheck:watch` run `tsc -b` against that root config.
+- `npm run typecheck` and `npm run typecheck:watch` run `tsc -b` against that root config.
 - The config uses project references so TypeScript checks workspace packages in dependency order during watch mode.
 - Package builds still use `tsdown` + each package's `tsconfig.build.json`; this keeps build output concerns separate from monorepo typecheck orchestration.
 

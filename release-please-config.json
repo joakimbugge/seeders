@@ -4,6 +4,9 @@
   "bootstrap-sha": "b4079ddb0c8fdda81ce431cc70dc69a8275e9f94",
   "always-update": true,
   "versioning": "always-bump-patch",
+  "plugins": [
+    "node-workspace"
+  ],
   "changelog-sections": [
     { "type": "feat", "section": "Features" },
     { "type": "fix", "section": "Bug Fixes" },

@@ -13,26 +13,23 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v6
-
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: pnpm
+          cache: npm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Build packages
-        run: pnpm -r run build
+        run: npm run build --workspaces --if-present
 
       - name: Type-check packages
-        run: pnpm -r run typecheck
+        run: npm run typecheck --workspaces --if-present
 
       - name: Run tests with coverage
-        run: pnpm -r run test:cov
+        run: npm run test:cov --workspaces --if-present
 
       - name: Upload coverage to Codecov
         if: github.actor != 'dependabot[bot]'
