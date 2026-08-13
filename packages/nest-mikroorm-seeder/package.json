@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "prepublishOnly": "pnpm run build",
+    "prepublishOnly": "npm run build",
     "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch --preserveWatchOutput",
@@ -64,8 +64,8 @@
     "reflect-metadata": ">=0.1.0"
   },
   "devDependencies": {
-    "@joakimbugge/mikroorm-seeder": "workspace:^",
-    "@joakimbugge/seeder": "workspace:^",
+    "@joakimbugge/mikroorm-seeder": "^0.6.5",
+    "@joakimbugge/seeder": "^0.3.5",
     "@mikro-orm/core": "^7.1.11",
     "@mikro-orm/decorators": "^7.1.11",
     "@mikro-orm/nestjs": "^7.0.2",

@@ -2,8 +2,8 @@ pre-commit:
   parallel: false
   commands:
     lint:
-      run: pnpm -r run lint:fix
+      run: npm run lint:fix --workspaces --if-present
       stage_fixed: true
     format:
-      run: pnpm -r run fmt
+      run: npm run fmt --workspaces --if-present
       stage_fixed: true

@@ -25,18 +25,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v6
-
       - name: Set up Node.js with npm registry
         uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: pnpm
+          cache: npm
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Publish packages from tags
         env:
@@ -50,6 +47,6 @@ jobs:
             fi
             path="packages/$pkg"
             git checkout "$tag" -- "$path"
-            pnpm --filter "./$path" run build
+            npm run build -w "./$path"
             cd "$path" && npm publish --access public --tag ${{ inputs.dist-tag }} && cd -
           done

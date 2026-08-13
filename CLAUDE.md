@@ -9,13 +9,15 @@ NestJS packages are thin DI wrappers around their core counterparts.
 ## Commands
 
 ```bash
-pnpm build          # Build all packages
-pnpm test           # Run all tests (vitest)
-pnpm typecheck      # Type-check all packages
-pnpm lint:fix       # Lint with oxlint
-pnpm fmt            # Format with oxfmt
-pnpm run dev:watch  # Build + typecheck watch mode for all packages in parallel
+npm run build       # Build all packages
+npm test            # Run all tests (vitest, non-watch)
+npm run typecheck   # Type-check all packages
+npm run lint:fix    # Lint with oxlint
+npm run fmt         # Format with oxfmt
+npm run dev:watch   # Build + typecheck watch mode for all packages in parallel
 ```
+
+Package manager is **npm workspaces** — not pnpm. There is no `workspace:` protocol: cross-package deps use real semver ranges, kept in sync by Release Please's `node-workspace` plugin. Target a single package with `-w`, e.g. `npm run build -w @joakimbugge/seeder`.
 
 ## Tooling
 
@@ -51,6 +53,6 @@ Each package has a `llms.txt` (and `docs/public/llms.txt` for the site). When up
 
 ## What not to do
 
-- Do not run `pnpm changeset` — changesets have been removed.
+- Do not run `npm run changeset` — changesets have been removed.
 - Do not manually edit `package.json` version fields — Release Please owns those.
 - Do not manually edit `CHANGELOG.md` files — Release Please owns those too.
